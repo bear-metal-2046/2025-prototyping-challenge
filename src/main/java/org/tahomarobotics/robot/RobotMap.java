@@ -15,8 +15,8 @@ package org.tahomarobotics.robot;
  */
 public final class RobotMap
 {
-    public static final int ELEVATOR_L = 0;
-    public static final int ELEVATOR_R = 0;
-    public static final int ARM_SHOULDER_MOTOR = 0;
-    public static final int ARM_WRIST_MOTOR = 0;
+    public static final int WINDMILL_ELEVATOR_L = 0;
+    public static final int WINDMILL_ELEVATOR_R = 0;
+    public static final int WINDMILL_SHOULDER_MOTOR = 0;
+    public static final int WINDMILL_WRIST_MOTOR = 0;
 }
