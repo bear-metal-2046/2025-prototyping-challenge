@@ -11,8 +11,8 @@ public class Windmill extends SubsystemIF {
     private static final TalonFX elevatorR = new TalonFX(RobotMap.WINDMILL_ELEVATOR_R);
 
     //Arm pivot motors
-    private static final TalonFX shoulderMotor = new TalonFX(RobotMap.WINDMILL_SHOULDER_MOTOR);
-    private static final TalonFX wristMotor = new TalonFX(RobotMap.WINDMILL_WRIST_MOTOR);
+    private static final TalonFX topMotor = new TalonFX(RobotMap.WINDMILL_TOP_MOTOR);
+    private static final TalonFX bottomMotor = new TalonFX(RobotMap.WINDMILL_BOTTOM_MOTOR);
 
     private static Pose currentPose = Pose.LOW;
 
@@ -49,6 +49,22 @@ public class Windmill extends SubsystemIF {
      */
     void setWristMotorPosition(double targetTheta) {
 
+    }
+
+    /**
+     * Set the rotational velocity of the shoulder joint
+     * @param targetVelocity - target velocity, degrees per second
+     */
+    void setShoulderVelocity(double targetVelocity) {
+        //shoulder velocity = top velocity - bottom velocity
+    }
+
+    /**
+     * Set the rotational velocity of the wrist joint
+     * @param targetVelocity - target velocity, degrees per second
+     */
+    void setWristVelocity(double targetVelocity) {
+        //wrist velocity = bottom velocity - top velocity
     }
 
     /**

@@ -17,6 +17,6 @@ public final class RobotMap
 {
     public static final int WINDMILL_ELEVATOR_L = 0;
     public static final int WINDMILL_ELEVATOR_R = 0;
-    public static final int WINDMILL_SHOULDER_MOTOR = 0;
-    public static final int WINDMILL_WRIST_MOTOR = 0;
+    public static final int WINDMILL_TOP_MOTOR = 0;
+    public static final int WINDMILL_BOTTOM_MOTOR = 0;
 }
