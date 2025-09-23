@@ -15,4 +15,8 @@ package org.tahomarobotics.robot;
  */
 public final class RobotMap
 {
+
+
+
+    public record SwerveModuleDescriptor(String moduleName, int driveId, int steerID, int encoderID) {}
 }
