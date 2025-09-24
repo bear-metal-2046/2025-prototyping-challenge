@@ -15,4 +15,5 @@ package org.tahomarobotics.robot;
  */
 public final class RobotMap
 {
+    public static final int ENDEFFECTOR = 0;
 }
