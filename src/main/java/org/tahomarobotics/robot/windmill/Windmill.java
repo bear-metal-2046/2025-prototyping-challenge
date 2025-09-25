@@ -86,7 +86,7 @@ public class Windmill extends SubsystemIF {
      */
     void setWristVelocity(double targetVelocity) {
         //wrist(target) velocity = top velocity - bottom velocity
-        //bottom velocity = top velocity - target
+        //bottom velocity = top velocity - target velocity
         //top velocity is always max unless at rest, then?
         if (targetVelocity != 0) {
             topMotor.setControl(velocityController.withVelocity(WindmillConstants.ARTICULATION_MAX_VELOCITY));
