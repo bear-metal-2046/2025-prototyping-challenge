@@ -25,10 +25,12 @@ package org.tahomarobotics.robot.util;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import org.tinylog.Logger;
 
@@ -88,6 +90,33 @@ public class RobustConfigurator {
      */
     public static StatusCode tryConfigureTalonFX(String deviceName, TalonFX motor, TalonFXConfiguration configuration) {
         return tryConfigure("TalonFX '" + deviceName + "'", () -> motor.getConfigurator().apply(configuration));
+    }
+
+    /**
+     * Attempts to configure a TalonFX and its follower.
+     *
+     * @param leaderName Name of the leader motor
+     * @param followerName Name of follower motor
+     * @param leader Leader motor
+     * @param follower Follower motor
+     * @param leaderConfiguration Leader configuration
+     * @param inverted Follower is inverted from leader if true. Follower directly follows leader if false.
+     * @return {Leader status code, follower status code}
+     */
+    public static StatusCode[] tryConfigureTalonFX(String leaderName, String followerName, TalonFX leader, TalonFX follower, TalonFXConfiguration leaderConfiguration, boolean inverted) {
+        StatusCode[] codes = new StatusCode[2];
+        codes[0] = tryConfigure("Leader TalonFX '" + leaderName + "'", () -> leader.getConfigurator().apply(leaderConfiguration));
+
+        InvertedValue followerInversion = leaderConfiguration.MotorOutput.Inverted;
+        if (inverted) {
+            InvertedValue leaderInversion = leaderConfiguration.MotorOutput.Inverted;
+            if (leaderInversion == InvertedValue.Clockwise_Positive) followerInversion = InvertedValue.CounterClockwise_Positive;
+            if (leaderInversion == InvertedValue.CounterClockwise_Positive) followerInversion = InvertedValue.Clockwise_Positive;
+        }
+        TalonFXConfiguration followerConfiguration = leaderConfiguration.withMotorOutput(new MotorOutputConfigs().withInverted(followerInversion));
+        codes[1] = tryConfigure("Follower TalonFX '" + followerName + "'", () -> follower.getConfigurator().apply(followerConfiguration));
+
+        return codes;
     }
 
     /**

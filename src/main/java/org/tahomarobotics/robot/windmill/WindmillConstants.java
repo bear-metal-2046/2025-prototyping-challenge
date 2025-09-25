@@ -10,9 +10,22 @@ public abstract class WindmillConstants {
     //degrees per second^2, will reach max velocity in two seconds
     static final double ARTICULATION_MAX_ACCELERATION = ARTICULATION_MAX_VELOCITY / 2;
 
+
     //todo: arbitrary, we don't know this yet
     static final double ARTICULATION_SENSOR_TO_MECHANISM_RATIO = 1;
     static final double ELEVATOR_SENSOR_TO_MECHANISM_RATIO = 1;
+
+
+    //Pose constants (meters, degrees), also arbitrary
+    static final double ELEVATOR_MIN_POSE = 0.1;
+    static final double ELEVATOR_MID_POSE = 0.5;
+    static final double ELEVATOR_MAX_POSE = 1;
+    static final int SHOULDER_MIN_POSE = 45;
+    static final int SHOULDER_MID_POSE = 45;
+    static final int SHOULDER_MAX_POSE = 45;
+    static final int WRIST_MIN_POSE = 45;
+    static final int WRIST_MID_POSE = 45;
+    static final int WRIST_MAX_POSE = 45;
 
     static final TalonFXConfiguration articulationMotorConfig = new TalonFXConfiguration()
             .withMotionMagic(new MotionMagicConfigs()
