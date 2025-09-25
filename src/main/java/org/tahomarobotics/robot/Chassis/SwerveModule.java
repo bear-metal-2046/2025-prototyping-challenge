@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Angle;
@@ -22,6 +23,7 @@ class SwerveModule extends SubsystemIF {
     private final TalonFX driveMotor;
     private final  TalonFX steerMotor;
     private final CANcoder steerEncoder;
+    private final String name;
 
     public static final String CANBUS_NAME = "Canivore";
     public static TalonFXConfiguration createDriveMotorConfiguration() {
@@ -46,6 +48,7 @@ class SwerveModule extends SubsystemIF {
     private final StatusSignal<AngularVelocity> steerVel;
 
     public SwerveModule(RobotMap.SwerveModuleDescriptor descriptor, double angularOffset) {
+        name = descriptor.moduleName();
         driveMotor = new TalonFX(descriptor.driveId(), CANBUS_NAME);
         steerMotor = new TalonFX(descriptor.steerID(), CANBUS_NAME);
         steerEncoder = new CANcoder(descriptor.encoderID(), CANBUS_NAME);
@@ -71,8 +74,12 @@ class SwerveModule extends SubsystemIF {
     public void setState(SwerveModuleState state) {
         double steerAngle = getSteerAngle();
         targetState = new SwerveModuleState(state.speedMetersPerSecond, Rotation2d.fromDegrees(state.angle.getDegrees()));
-        driveMotor.setControl(driveMotorVelocity.withVelocity(targetState.speedMetersPerSecond /* should be over DRIVE_POSITION_COEFFICIENT */ ));
+        driveMotor.setControl(driveMotorVelocity.withVelocity(targetState.speedMetersPerSecond /* should be 'targetState.speedMetersPerSecond/DRIVE_POSITION_COEFFICIENT' but to do that I would need to start doing chassis constants too */ ));
         steerMotor.setControl(steerMotorPosition.withPosition(targetState.angle.getRotations()));
     }
 
+    public void calibration () {
+        RobustConfigurator.trySetCANcoderAngularOffset(name + " Encoder ", steerEncoder, 0.0);
+        RobustConfigurator.trySetMotorNeutralMode(name + " Steer Motor ", steerMotor, NeutralModeValue.Coast);
+    }
 }
