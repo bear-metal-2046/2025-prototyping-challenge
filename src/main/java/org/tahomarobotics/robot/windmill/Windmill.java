@@ -1,8 +1,9 @@
 package org.tahomarobotics.robot.windmill;
 
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
+import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tahomarobotics.robot.util.SubsystemIF;
 
 public class Windmill extends SubsystemIF {
@@ -14,10 +15,17 @@ public class Windmill extends SubsystemIF {
     private static final TalonFX topMotor = new TalonFX(RobotMap.WINDMILL_TOP_MOTOR);
     private static final TalonFX bottomMotor = new TalonFX(RobotMap.WINDMILL_BOTTOM_MOTOR);
 
+    //Controllers
+    private static final MotionMagicVelocityVoltage velocityController = new MotionMagicVelocityVoltage();
+
     private static Pose currentPose = Pose.LOW;
 
     Windmill() {
-
+        RobustConfigurator.tryConfigureTalonFX("topMotor", topMotor, WindmillConstants.articulationMotorConfig);
+        RobustConfigurator.tryConfigureTalonFX("bottomMotor", bottomMotor, WindmillConstants.articulationMotorConfig);
+        RobustConfigurator.tryConfigureTalonFX("elevatorLMotor", elevatorL, WindmillConstants.elevatorMotorConfig);
+        RobustConfigurator.tryConfigureTalonFX("elevatorRMotor", elevatorR, WindmillConstants.elevatorMotorConfig);
+        //set update frequency?
     }
 
     @Override
@@ -56,7 +64,10 @@ public class Windmill extends SubsystemIF {
      * @param targetVelocity - target velocity, degrees per second
      */
     void setShoulderVelocity(double targetVelocity) {
-        //shoulder velocity = top velocity - bottom velocity
+        //shoulder velocity = top velocity + bottom velocity
+        //divide target velocity by two and rotate top and bottom motors by that value?
+        topMotor.setControl(velocityController.withVelocity(targetVelocity / 2.0));
+        bottomMotor.setControl(velocityController.withVelocity(targetVelocity / 2.0));
     }
 
     /**
@@ -64,7 +75,14 @@ public class Windmill extends SubsystemIF {
      * @param targetVelocity - target velocity, degrees per second
      */
     void setWristVelocity(double targetVelocity) {
-        //wrist velocity = bottom velocity - top velocity
+        //wrist(target) velocity = top velocity - bottom velocity
+        //bottom velocity = top velocity - target
+        //top velocity is always max unless at rest, then?
+        if (targetVelocity != 0) {
+            topMotor.setControl(velocityController.withVelocity(WindmillConstants.ARTICULATION_MAX_VELOCITY));
+            bottomMotor.setControl(velocityController.withVelocity(WindmillConstants.ARTICULATION_MAX_VELOCITY - targetVelocity));
+        }
+
     }
 
     /**
@@ -72,7 +90,10 @@ public class Windmill extends SubsystemIF {
      * @param newPose - target pose
      */
     void setPose(Pose newPose) {
-
+        currentPose = newPose;
+        setElevatorHeight(newPose.height);
+        setShoulderMotorPosition(newPose.thetaShoulder);
+        setWristMotorPosition(newPose.thetaWrist);
     }
 
     //Pose enum (arbitrary poses for now)
