@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Check PR description length
       run: |
-        PR_BODY="${{ github.event.pull_request.body }}"
+        PR_BODY='${{ github.event.pull_request.body }}'
         MIN_LENGTH=50
         
         # Remove markdown formatting for length check
