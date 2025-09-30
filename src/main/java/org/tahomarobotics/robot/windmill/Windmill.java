@@ -47,6 +47,7 @@ public class Windmill extends SubsystemIF {
     void setElevatorHeight(double targetHeight) {
         //clamp target height just in case
         targetHeight = MathUtil.clamp(targetHeight, WindmillConstants.ELEVATOR_MIN_POSE, WindmillConstants.ELEVATOR_MAX_POSE);
+        //r motor runs in reverse tandem with l motor
         elevatorL.setControl(positionController.withPosition(targetHeight));
         //what if the elevator fails to reach its target height?
         height = targetHeight;
@@ -76,8 +77,14 @@ public class Windmill extends SubsystemIF {
     void setShoulderVelocity(double targetVelocity) {
         //shoulder velocity = top velocity + bottom velocity
         //divide target velocity by two and rotate top and bottom motors by that value?
-        topMotor.setControl(velocityController.withVelocity(targetVelocity / 2.0));
-        bottomMotor.setControl(velocityController.withVelocity(targetVelocity / 2.0));
+        if (targetVelocity != 0) {
+            topMotor.setControl(velocityController.withVelocity(targetVelocity / 2.0));
+            bottomMotor.setControl(velocityController.withVelocity(targetVelocity / 2.0));
+        } else {
+            //can't divide by zero
+            topMotor.stopMotor();
+            bottomMotor.stopMotor();
+        }
     }
 
     /**
@@ -91,8 +98,10 @@ public class Windmill extends SubsystemIF {
         if (targetVelocity != 0) {
             topMotor.setControl(velocityController.withVelocity(WindmillConstants.ARTICULATION_MAX_VELOCITY));
             bottomMotor.setControl(velocityController.withVelocity(WindmillConstants.ARTICULATION_MAX_VELOCITY - targetVelocity));
+        } else {
+            topMotor.stopMotor();
+            bottomMotor.stopMotor();
         }
-
     }
 
     /**
