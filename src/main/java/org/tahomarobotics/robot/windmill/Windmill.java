@@ -54,14 +54,18 @@ public class Windmill extends SubsystemIF {
     }
 
     //todo: should probably clamp position like with elevator?
+    //p(t) = Δptop + Δpbottom + pshoulder? i think?
+    //to go to target: spin each motor 1/2 of setpoint - current?
     /**
      * Rotate shoulder motor
      * @param targetTheta - desired rotational position of shoulder motor
      */
     void setShoulderPosition(double targetTheta) {
-
+        topMotor.setControl(positionController.withPosition((targetTheta - topMotor.getPosition().getValueAsDouble()) / 2.0));
+        bottomMotor.setControl(positionController.withPosition((targetTheta - topMotor.getPosition().getValueAsDouble()) / 2.0));
     }
 
+    //
     /**
      * Rotate wrist motor
      * @param targetTheta - desired rotational position of wrist motor
