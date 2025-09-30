@@ -33,3 +33,10 @@ fi
 
 echo "✅ All tools installed successfully!"
 echo "Run with: codex, claude, gemini (depending on tool)."
+
+# install 
+gh auth login --with-token <<< "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"
+gh run list  --repo Mechanical-Advantage/AdvantageScope --event release --status success --workflow Build
+rm -rf ~/advantagescopelite-desktop
+gh run download 17482881872 --repo Mechanical-Advantage/AdvantageScope --name "advantagescopelite-desktop" --dir ~/advantagescopelite-desktop
+pip3 install --break-system-packages multipart

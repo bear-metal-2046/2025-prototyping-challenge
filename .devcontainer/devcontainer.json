@@ -8,9 +8,11 @@
     "ghcr.io/devcontainers/features/node:1":  { "version": "lts" },
 		"ghcr.io/devcontainers/features/git:1": {},
 		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/python:1": {},
 		"ghcr.io/devcontainers/features/java:1": {
       "version": "21.0.8",
-      "jdkDistro": "tem"
+      "jdkDistro": "tem",
+      "setAsDefault": "true"
     },
 		"ghcr.io/devcontainers-extra/features/gradle-sdkman:2": {},
 		"ghcr.io/devcontainers-extra/features/maven-sdkman:2": {}
