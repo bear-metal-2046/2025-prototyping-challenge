@@ -25,28 +25,29 @@
 package org.tahomarobotics.robot;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
+ * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
+ * All the robot's components and their relationships are declared here rather than scattered
+ * throughout the codebase.
  */
 public class RobotContainer implements AutoCloseable {
 
+    // Subsystems will be declared here as public final fields, including:
+    // - Chassis (drive subsystem)
+    // - Elevator
+    // - Arm
+    // - End effector
+    // - Vision
+    // - Robot visualization and simulation components
 
-    // public final subsystem command instances including 
-    // chassis, elevator, arm, end effector, oi, autonomous, vision 
-    // robot visualization and simulation
-    
-    
+
     public RobotContainer() {
 
-        // must be created first here this needs to override the instance provided
-        // by since org.ironmaple.simulation.SimulatedArena.getInstance() is used
-        // some of MapleSim
+        // Arena must be created first to override the default instance provided by
+        // org.ironmaple.simulation.SimulatedArena.getInstance() which is used by MapleSim
         //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
 
-        // create the instances (the only instance)
-        
+        // Create subsystem instances
+
     }
 
     @Override
