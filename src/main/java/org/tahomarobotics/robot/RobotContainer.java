@@ -21,16 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package org.tahomarobotics.robot;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and button mappings) should be declared here.
  */
-public final class RobotMap {
+public class RobotContainer implements AutoCloseable {
 
+
+    // public final subsystem command instances including 
+    // chassis, elevator, arm, end effector, oi, autonomous, vision 
+    // robot visualization and simulation
+    
+    
+    public RobotContainer() {
+
+        // must be created first here this needs to override the instance provided
+        // by since org.ironmaple.simulation.SimulatedArena.getInstance() is used
+        // some of MapleSim
+        //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
+
+        // create the instances (the only instance)
+        
+    }
+
+    @Override
+    public void close() {
+        // close all subsystems
+    }
 }
