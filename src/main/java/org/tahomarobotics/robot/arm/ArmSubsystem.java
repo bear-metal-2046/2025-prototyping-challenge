@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
+import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
 public class ArmSubsystem extends AbstractSubsystem {
@@ -25,10 +26,12 @@ public class ArmSubsystem extends AbstractSubsystem {
         Logger.info("Arm elbow CANcoder instantiated.");
         wristEncoder = new CANcoder(RobotMap.WRIST_ENCODER);
         Logger.info("Arm wrist CANcoder instantiated.");
+
+        RobustConfigurator.tryConfigureTalonFX("Arm Top Motor", topMotor, ArmConstants.topMotorConfiguration);
+        RobustConfigurator.tryConfigureTalonFX("Arm Bottom Motor", bottomMotor, ArmConstants.bottomMotorConfiguration);
     }
 
     @Override
     public void subsystemPeriodic() {
-
     }
 }

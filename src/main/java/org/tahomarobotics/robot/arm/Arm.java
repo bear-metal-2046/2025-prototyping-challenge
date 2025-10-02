@@ -1,6 +1,7 @@
 package org.tahomarobotics.robot.arm;
 
 import org.tahomarobotics.robot.util.AbstractSubsystem;
+import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
 public class Arm implements AutoCloseable {
