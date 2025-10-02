@@ -1032,3 +1032,36 @@ Keep a tuning log for each subsystem:
 10. **Use CommandLogger**: Log command starts/ends for debugging
 
 This structure provides a solid foundation for any new subsystem while maintaining consistency with the existing codebase architecture.
+
+## Swerve Module Motor Configuration and Tuning
+
+All swerve drive and steer motor configuration is centralized in `ChassisConstants` (see `src/main/java/org/tahomarobotics/robot/chassis/ChassisConstants.java`).
+
+### Configuration Functions
+- `createDriveMotorConfiguration(int encoderId)`: Returns a Phoenix6 `TalonFXConfiguration` for a drive motor.
+- `createSteerMotorConfiguration(int encoderId)`: Returns a Phoenix6 `TalonFXConfiguration` for a steer motor, using the encoder ID for closed-loop feedback.
+
+### Example Usage
+In your swerve module class:
+```java
+public SwerveModule(int driveMotorId, int steerMotorId, int encoderId) {
+    driveMotor = new TalonFX(driveMotorId);
+    steerMotor = new TalonFX(steerMotorId);
+
+    driveMotor.getConfigurator().apply(ChassisConstants.createDriveMotorConfiguration(encoderId));
+    steerMotor.getConfigurator().apply(ChassisConstants.createSteerMotorConfiguration(encoderId));
+}
+```
+
+### Tuning and Constants
+Tune all relevant constants in `ChassisConstants`:
+- Gear ratios: `DRIVE_GEAR_RATIO`, `STEER_GEAR_RATIO`
+- Motor inversion: `DRIVE_MOTOR_INVERTED`, `STEER_MOTOR_INVERTED`
+- PID values: `DRIVE_KP`, `DRIVE_KD`, `STEER_KP`, `STEER_KD`
+
+This centralizes all configuration logic for easy adjustment and standardization across modules.
+
+### References
+- [Phoenix6 Documentation](https://v6.docs.ctr-electronics.com/en/latest/)
+- [robot-2025 ChassisConstants Example](https://github.com/bear-metal-2046/robot-2025/blob/main/src/main/java/org/tahomarobotics/robot/chassis/ChassisConstants.java)
+- [robot-2025 SwerveModule Example](https://github.com/bear-metal-2046/robot-2025/blob/main/src/main/java/org/tahomarobotics/robot/chassis/SwerveModule.java)
