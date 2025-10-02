@@ -24,6 +24,10 @@
 
 package org.tahomarobotics.robot;
 
+import org.tahomarobotics.robot.arm.Arm;
+import org.tahomarobotics.robot.arm.ArmSubsystem;
+import org.tinylog.Logger;
+
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
  * All the robot's components and their relationships are declared here rather than scattered
@@ -47,7 +51,8 @@ public class RobotContainer implements AutoCloseable {
         //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
 
         // Create subsystem instances
-
+        Logger.info("Creating RobotContainer Arm instance...");
+        Arm arm = new Arm(new ArmSubsystem());
     }
 
     @Override
