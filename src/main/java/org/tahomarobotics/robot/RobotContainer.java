@@ -23,8 +23,8 @@
  */
 
 package org.tahomarobotics.robot;
-import org.tahomarobotics.robot.elevator.Elevator;
-import org.tahomarobotics.robot.elevator.ElevatorSubsystem;
+
+import org.tahomarobotics.robot.arm.Arm;
 
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
@@ -41,6 +41,7 @@ public class RobotContainer implements AutoCloseable {
     // - Vision
     // - Robot visualization and simulation components
     public final Elevator elevator;
+    public final Arm arm;
 
     public RobotContainer() {
 
@@ -50,6 +51,7 @@ public class RobotContainer implements AutoCloseable {
 
         // Create subsystem instances here
         elevator = new Elevator(new ElevatorSubsystem());
+        arm = new Arm();
     }
 
     @Override

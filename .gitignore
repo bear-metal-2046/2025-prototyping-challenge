@@ -249,6 +249,8 @@ nbdist/
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+.gemini/*
+
 # Local History for Visual Studio Code
 .history/
 

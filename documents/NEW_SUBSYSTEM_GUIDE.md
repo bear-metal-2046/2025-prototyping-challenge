@@ -9,20 +9,13 @@ This guide provides a step-by-step process for creating new subsystems following
 Every subsystem follows this 4-class pattern:
 
 ```
-src/main/java/org/tahomarobotics/{subsystemname}/
+src/main/java/org/tahomarobotics/robot/{subsystemname}/
 ├── {SubsystemName}Constants.java    // Hardware constants and configuration
 ├── {SubsystemName}Subsystem.java    // WPILib subsystem (extends AbstractSubsystem)
 ├── {SubsystemName}.java             // Command factory and high-level interface
 └── {SubsystemName}Simulation.java   // Physics simulation (extends AbstractSimulation)
 ```
 
-### Additional Files (as needed)
-```
-├── {SubsystemName}Trajectories.java // Motion profiles and setpoints (complex mechanisms)
-├── {SubsystemName}IO.java           // AdvantageKit IO interface (if using IO pattern)
-├── {SubsystemName}IOReal.java       // Real hardware implementation
-└── {SubsystemName}IOSim.java        // Simulation implementation
-```
 
 ## Step-by-Step Creation Process
 
@@ -242,12 +235,12 @@ public boolean hasGamePiece() {
 ### Step 1: Create Package Directory
 ```bash
 # Create the subsystem package directory
-mkdir -p src/main/java/org/tahomarobotics/{subsystemname}
+mkdir -p src/main/java/org/tahomarobotics/robot/{subsystemname}
 ```
 
 **Example for "intake" subsystem:**
 ```bash
-mkdir -p src/main/java/org/tahomarobotics/intake
+mkdir -p src/main/java/org/tahomarobotics/robot/intake
 ```
 
 ### Step 2: Create Constants Class
@@ -279,7 +272,7 @@ mkdir -p src/main/java/org/tahomarobotics/intake
  * SOFTWARE.
  */
 
-package org.tahomarobotics.{subsystemname};
+package org.tahomarobotics.robot.{subsystemname};
 
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
@@ -356,7 +349,7 @@ public class {SubsystemName}Constants {
  * [... same license header as above ...]
  */
 
-package org.tahomarobotics.{subsystemname};
+package org.tahomarobotics.robot.{subsystemname};
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -366,17 +359,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 import org.littletonrobotics.junction.Logger;
-import org.tahomarobotics.Robot;
-import org.tahomarobotics.RobotMap;
-import org.tahomarobotics.util.AbstractSubsystem;
-import org.tahomarobotics.util.RobustConfigurator;
+import org.tahomarobotics.robot.Robot;
+import org.tahomarobotics.robot.RobotMap;
+import org.tahomarobotics.robot.util.AbstractSubsystem;
+import org.tahomarobotics.robot.util.RobustConfigurator;
 
 import java.util.function.BooleanSupplier;
 
 import static edu.wpi.first.units.Units.*;
-import static org.tahomarobotics.{subsystemname}.{SubsystemName}Constants.*;
+import static org.tahomarobotics.robot.{subsystemname}.{SubsystemName}Constants.*;
 
-public class {SubsystemName}Subsystem extends AbstractSubsystem {
+public class {SubsystemName}Subsystem extends AbstractSubsystem implements AutoCloseable {
     
     // Hardware
     private final TalonFX motor;
@@ -422,7 +415,7 @@ public class {SubsystemName}Subsystem extends AbstractSubsystem {
     }
     
     @Override
-    public void periodic() {
+    public void subsystemPeriodic() {
         // Refresh status signals
         BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal, currentSignal);
         
@@ -489,12 +482,12 @@ public class {SubsystemName}Subsystem extends AbstractSubsystem {
  * [... same license header as above ...]
  */
 
-package org.tahomarobotics.{subsystemname};
+package org.tahomarobotics.robot.{subsystemname};
 
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import org.tahomarobotics.util.CommandLogger;
+import org.tahomarobotics.robot.util.CommandLogger;
 
 import java.util.function.DoubleSupplier;
 
@@ -505,7 +498,13 @@ public class {SubsystemName} implements AutoCloseable {
     // Subsystem reference
     private final {SubsystemName}Subsystem subsystem;
     
-    public {SubsystemName}({SubsystemName}Subsystem subsystem) {
+    // Default constructor - creates new subsystem instance
+    public {SubsystemName}() {
+        this(new {SubsystemName}Subsystem());
+    }
+    
+    // Package-private constructor for unit testing
+    {SubsystemName}({SubsystemName}Subsystem subsystem) {
         this.subsystem = subsystem;
     }
     
@@ -575,7 +574,7 @@ public class {SubsystemName} implements AutoCloseable {
  * [... same license header as above ...]
  */
 
-package org.tahomarobotics.{subsystemname};
+package org.tahomarobotics.robot.{subsystemname};
 
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.LinearSystemId;
@@ -583,7 +582,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
-import org.tahomarobotics.sim.AbstractSimulation;
+import org.tahomarobotics.robot.sim.AbstractSimulation;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -652,18 +651,18 @@ public class {SubsystemName}Simulation extends AbstractSimulation {
 
 ```java
 // Add to imports
-import org.tahomarobotics.{subsystemname}.{SubsystemName};
-import org.tahomarobotics.{subsystemname}.{SubsystemName}Simulation;
-import org.tahomarobotics.{subsystemname}.{SubsystemName}Subsystem;
+import org.tahomarobotics.robot.{subsystemname}.{SubsystemName};
+import org.tahomarobotics.robot.{subsystemname}.{SubsystemName}Simulation;
+import org.tahomarobotics.robot.{subsystemname}.{SubsystemName}Subsystem;
 
 // Add fields
 public final {SubsystemName} {subsystemname};
 
 // Add to constructor
-{subsystemname} = new {SubsystemName}(new {SubsystemName}Subsystem());
+{subsystemname} = new {SubsystemName}();
 
 // Add to simulation section (if Robot.isSimulation())
-simulations.add(new {SubsystemName}Simulation({subsystemname}Subsystem));
+simulations.add(new {SubsystemName}Simulation({subsystemname}.subsystem));
 
 // Add to close() method
 {subsystemname}.close();
@@ -683,14 +682,14 @@ public static final class {SUBSYSTEM_NAME}_IDS {
 
 ### Step 8: Create Basic Test
 
-**File:** `src/test/java/org/tahomarobotics/{subsystemname}/{SubsystemName}Test.java`
+**File:** `src/test/java/org/tahomarobotics/robot/{subsystemname}/{SubsystemName}Test.java`
 
 ```java
-package org.tahomarobotics.{subsystemname};
+package org.tahomarobotics.robot.{subsystemname};
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Tag;
-import org.tahomarobotics.BaseTest;
+import org.tahomarobotics.robot.BaseTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -730,7 +729,7 @@ Create `{SubsystemName}SysIdRoutine.java`:
  * [License header...]
  */
 
-package org.tahomarobotics.{subsystemname};
+package org.tahomarobotics.robot.{subsystemname};
 
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -842,7 +841,7 @@ public Measure<AngularVelocity> getVelocity() {
  * Stops all motor movement - used by SysId for safety.
  */
 public void stop() {
-    motor.stopMotor();
+    setVoltage(Volts.of(0.0));
 }
 ```
 
@@ -1002,7 +1001,7 @@ Keep a tuning log for each subsystem:
 
 ## Quick Start Checklist
 
-- [ ] Create package directory: `src/main/java/org/tahomarobotics/{subsystemname}/`
+- [ ] Create package directory: `src/main/java/org/tahomarobotics/robot/{subsystemname}/`
 - [ ] Create `{SubsystemName}Constants.java` with hardware IDs and control constants
 - [ ] Create `{SubsystemName}Subsystem.java` extending AbstractSubsystem
 - [ ] Create `{SubsystemName}.java` command factory class
