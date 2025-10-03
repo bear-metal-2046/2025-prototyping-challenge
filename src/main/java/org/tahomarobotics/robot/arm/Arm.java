@@ -4,11 +4,11 @@ import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tinylog.Logger;
 
 public class Arm implements AutoCloseable {
-    private final ArmSubsystem subsystem;
+    private final ArmSubsystem arm;
 
-    public Arm(ArmSubsystem subsystem) {
+    public Arm() {
         Logger.info("Creating an instance of Arm...");
-        this.subsystem = subsystem;
+        arm = new Arm();
     }
 
     @Override
