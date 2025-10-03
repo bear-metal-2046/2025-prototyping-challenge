@@ -25,7 +25,6 @@
 package org.tahomarobotics.robot;
 
 import org.tahomarobotics.robot.arm.Arm;
-import org.tahomarobotics.robot.arm.ArmSubsystem;
 import org.tinylog.Logger;
 
 /**
@@ -42,6 +41,7 @@ public class RobotContainer implements AutoCloseable {
     // - End effector
     // - Vision
     // - Robot visualization and simulation components
+    Arm arm;
 
 
     public RobotContainer() {
@@ -51,8 +51,7 @@ public class RobotContainer implements AutoCloseable {
         //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
 
         // Create subsystem instances
-        Logger.info("Creating RobotContainer Arm instance...");
-        Arm arm = new Arm(new ArmSubsystem());
+        arm = new Arm();
     }
 
     @Override

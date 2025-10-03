@@ -8,7 +8,7 @@ public class Arm implements AutoCloseable {
 
     public Arm() {
         Logger.info("Creating an instance of Arm...");
-        arm = new Arm();
+        arm = new ArmSubsystem();
     }
 
     @Override
