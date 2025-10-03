@@ -25,7 +25,6 @@
 package org.tahomarobotics.robot;
 
 import org.tahomarobotics.robot.arm.Arm;
-import org.tinylog.Logger;
 
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
@@ -35,14 +34,7 @@ import org.tinylog.Logger;
 public class RobotContainer implements AutoCloseable {
 
     // Subsystems will be declared here as public final fields, including:
-    // - Chassis (drive subsystem)
-    // - Elevator
-    // - Arm
-    // - End effector
-    // - Vision
-    // - Robot visualization and simulation components
-    Arm arm;
-
+    public final Arm arm;
 
     public RobotContainer() {
 

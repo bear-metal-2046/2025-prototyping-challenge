@@ -6,7 +6,7 @@ import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tinylog.Logger;
 
-class ArmSubsystem extends AbstractSubsystem {
+public class ArmSubsystem extends AbstractSubsystem {
     //Motors
     private final TalonFX topMotor;
     private final TalonFX bottomMotor;
@@ -15,7 +15,7 @@ class ArmSubsystem extends AbstractSubsystem {
     private final CANcoder elbowEncoder;
     private final CANcoder wristEncoder;
 
-    public ArmSubsystem() {
+    ArmSubsystem() {
         Logger.info("Creating an instance of ArmSubsystem...");
         topMotor = new TalonFX(RobotMap.ARM_TOP_MOTOR);
         bottomMotor = new TalonFX(RobotMap.ARM_BOTTOM_MOTOR);
