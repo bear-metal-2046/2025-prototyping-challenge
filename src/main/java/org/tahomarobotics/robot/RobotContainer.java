@@ -23,6 +23,8 @@
  */
 
 package org.tahomarobotics.robot;
+import org.tahomarobotics.robot.elevator.Elevator;
+import org.tahomarobotics.robot.elevator.ElevatorSubsystem;
 
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
@@ -38,7 +40,7 @@ public class RobotContainer implements AutoCloseable {
     // - End effector
     // - Vision
     // - Robot visualization and simulation components
-
+    public final Elevator elevator;
 
     public RobotContainer() {
 
@@ -46,12 +48,11 @@ public class RobotContainer implements AutoCloseable {
         // org.ironmaple.simulation.SimulatedArena.getInstance() which is used by MapleSim
         //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
 
-        // Create subsystem instances
-
+        // Create subsystem instances here
+        elevator = new Elevator(new ElevatorSubsystem());
     }
 
     @Override
-    public void close() {
-        // close all subsystems
+    public void close() {;
     }
 }

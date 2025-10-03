@@ -32,5 +32,6 @@ package org.tahomarobotics.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class RobotMap {
-
+    public static final int ELEVATOR_MOTOR_LEFT = 10;
+    public static final int ELEVATOR_MOTOR_RIGHT = 11;
 }
