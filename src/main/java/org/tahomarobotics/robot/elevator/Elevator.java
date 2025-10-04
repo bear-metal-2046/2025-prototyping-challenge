@@ -13,7 +13,7 @@ public class Elevator implements AutoCloseable {
     }
 
     // Basic commands
-    public Command moveToPosition(double position) {
+    public Command setPosition(double position) {
         return elevator.runOnce(() -> elevator.moveToPosition(position))
                 .withName("Elevator move to Position");
     }

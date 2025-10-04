@@ -7,7 +7,7 @@ public final class ElevatorConstants {
     public static final double ROTATIONS_PER_METER = 10000.0;
     public static double metersToRotations(double m) { return m * ROTATIONS_PER_METER; }
 
-    // Preset heights (meters)
+    // placeholder preset heights (meters)
     public static final double HEIGHT_LOW_M = 0.35;
     public static final double HEIGHT_MID_M = 0.75;
     public static final double HEIGHT_HIGH_M = 1.35;
