@@ -6,7 +6,7 @@ import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
-public class ElevatorSubsystem extends AbstractSubsystem {
+class ElevatorSubsystem extends AbstractSubsystem {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
 

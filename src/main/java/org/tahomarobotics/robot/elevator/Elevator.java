@@ -7,8 +7,12 @@ import org.tinylog.Logger;
 public class Elevator implements AutoCloseable {
     private final ElevatorSubsystem elevator;
 
-    public Elevator(ElevatorSubsystem elevator) {
-        this.elevator = elevator;
+    public Elevator() {
+        this(new ElevatorSubsystem());
+    }
+
+    public Elevator(ElevatorSubsystem elevatorSubsystem) {
+        this.elevator = elevatorSubsystem;
         Logger.info("Elevator initialized");
     }
 
@@ -25,4 +29,3 @@ public class Elevator implements AutoCloseable {
     @Override
     public void close() throws Exception {}
 }
-
