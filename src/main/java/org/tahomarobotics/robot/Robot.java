@@ -40,7 +40,7 @@ public class Robot extends LoggedRobot {
 
     private final RobotContainer robotContainer;
 
-    private Robot() throws NoSuchFieldException {
+    private Robot() {
         this(new RobotContainer());
     }
 
