@@ -1,4 +1,4 @@
-package org.tahomarobotics.Chassis;
+package org.tahomarobotics.robot.Chassis;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -14,13 +14,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.RobustConfigurator;
-import org.tahomarobotics.robot.util.SubsystemIF;
-import org.tahomarobotics.robot.util.signals.LoggedStatusSignal;
 
 
-class SwerveModule extends SubsystemIF {
+class SwerveModule extends SubsystemBase {
 
     //Hardware
     private final TalonFX driveMotor;

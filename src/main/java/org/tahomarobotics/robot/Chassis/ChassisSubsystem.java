@@ -1,13 +1,13 @@
-package org.tahomarobotics.Chassis;
+package org.tahomarobotics.robot.Chassis;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
+import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.persistent.CalibrationData;
 
 import java.util.List;
 
-public class ChassisSubsystem extends SubsystemBase {
+public class ChassisSubsystem extends AbstractSubsystem {
     protected static final ChassisSubsystem INSTANCE = new ChassisSubsystem();
 
 
@@ -35,4 +35,8 @@ public class ChassisSubsystem extends SubsystemBase {
         );
     }
 
+    @Override
+    public void subsystemPeriodic() {
+
+    }
 }
