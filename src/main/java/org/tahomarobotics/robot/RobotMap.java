@@ -43,4 +43,20 @@ public final class RobotMap {
     // elevator
     public static final int ELEVATOR_MOTOR_LEFT = 10;
     public static final int ELEVATOR_MOTOR_RIGHT = 11;
+
+    public static final int PIGEON = 0;
+
+    public final static moduleId FRONT_LEFT_MODULE = new moduleId(
+            "Front Left Module", 1, 11, 21);
+    public final static moduleId FRONT_RIGHT_MODULE = new moduleId(
+            "Front Right Module", 2, 12, 22);
+    public final static moduleId BACK_LEFT_MODULE = new moduleId(
+            "Front Left Module", 3, 13, 23);
+    public final static moduleId BACK_RIGHT_MODULE = new moduleId(
+            "Front Right Module", 4, 14, 24);
+
+
+
+    public record moduleId(String moduleName, int driveId, int steerId, int cancoderId) {}
+
 }
