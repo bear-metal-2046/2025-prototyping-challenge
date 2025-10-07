@@ -38,4 +38,5 @@ public final class RobotMap {
     public static final int WRIST_ENCODER = 3;
     public static final int ELEVATOR_MOTOR_LEFT = 10;
     public static final int ELEVATOR_MOTOR_RIGHT = 11;
+    public static final int ENDEFFECTOR_MOTOR = 4;
 }

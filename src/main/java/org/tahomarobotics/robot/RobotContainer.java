@@ -24,6 +24,7 @@
 
 package org.tahomarobotics.robot;
 
+import org.tahomarobotics.robot.EndEffector.EndEffector;
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.elevator.Elevator;
 
@@ -43,6 +44,7 @@ public class RobotContainer implements AutoCloseable {
     // - Robot visualization and simulation components
     public final Elevator elevator;
     public final Arm arm;
+    public final EndEffector endEffector;
 
     public RobotContainer() {
 
@@ -53,6 +55,7 @@ public class RobotContainer implements AutoCloseable {
         // Create subsystem instances here
         elevator = new Elevator();
         arm = new Arm();
+        endEffector = new EndEffector();
     }
 
     @Override
