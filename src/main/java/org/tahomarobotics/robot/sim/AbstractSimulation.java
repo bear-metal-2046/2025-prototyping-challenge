@@ -21,23 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.tahomarobotics.robot;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
-public final class RobotMap {
-    public static final int ARM_TOP_MOTOR = 0;
-    public static final int ARM_BOTTOM_MOTOR = 1;
-    public static final int ELBOW_ENCODER = 2;
-    public static final int WRIST_ENCODER = 3;
-    public static final int ELEVATOR_MOTOR_LEFT = 10;
-    public static final int ELEVATOR_MOTOR_RIGHT = 11;
-    public static final int TOP_ENCODER = 0;
-    public static final int BOTTOM_ENCODER = 0;
+package org.tahomarobotics.robot.sim;
+
+import org.tahomarobotics.robot.util.ExecutionTimeLogger;
+
+public abstract class AbstractSimulation {
+
+    private final String name;
+
+    public AbstractSimulation (String name) {
+        this.name = name;
+    }
+
+    protected abstract void simulationPeriodic();
+
+    public void loggedPeriodic() {
+        ExecutionTimeLogger.logExecutionTime("Simulation/" + name, this::simulationPeriodic);
+    };
 }

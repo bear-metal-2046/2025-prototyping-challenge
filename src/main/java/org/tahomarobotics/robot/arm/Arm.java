@@ -17,4 +17,8 @@ public class Arm implements AutoCloseable {
     @Override
     public void close() throws Exception {
     }
+
+    public ArmSimulation getSimulation() {
+        return arm.getSimulation();
+    }
 }
