@@ -1,10 +1,8 @@
-package org.tahomarobotics.robot.Chassis;
+package org.tahomarobotics.robot.chassis;
 
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 public class ChassisConstants {
     public static final double wheelbase = 20.75 /* Need to get the real number*/;

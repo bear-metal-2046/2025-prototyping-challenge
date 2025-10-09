@@ -1,4 +1,4 @@
-package org.tahomarobotics.robot.Chassis;
+package org.tahomarobotics.robot.chassis;
 
 public class Chassis {
 

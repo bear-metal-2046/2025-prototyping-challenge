@@ -1,4 +1,4 @@
-package org.tahomarobotics.robot.Chassis;
+package org.tahomarobotics.robot.chassis;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import org.tahomarobotics.robot.RobotMap;

@@ -1,26 +1,18 @@
-package org.tahomarobotics.robot.Chassis;
+package org.tahomarobotics.robot.chassis;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
-import static org.tahomarobotics.robot.Chassis.ChassisConstants.createSteerMotorConfig;
-import  org.tahomarobotics.robot.Chassis.ChassisConstants;
+import static org.tahomarobotics.robot.chassis.ChassisConstants.createSteerMotorConfig;
 
 
 class SwerveModule extends SubsystemBase {
