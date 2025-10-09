@@ -38,7 +38,6 @@ public final class RobotMap {
     public static final int WRIST_ENCODER = 3;
     //Hardware IDs (find proper assigned numbers from Design Leads)
     //Source: Lines 287-289 NEW_SUBSYSTEM_GUIDE.md
-    // No Dio port needed as there is no limit switch I think
     public static final int ENDEFFECTOR_MOTOR = 4;
     public static final int ELEVATOR_MOTOR_LEFT = 10;
     public static final int ELEVATOR_MOTOR_RIGHT = 11;

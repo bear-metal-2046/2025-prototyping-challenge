@@ -12,7 +12,7 @@ public class EndEffector implements AutoCloseable{
 
     }
 
-    private EndEffector(EndEffectorSubsystem EndEffectorSubsystem) {
+    EndEffector(EndEffectorSubsystem EndEffectorSubsystem) {
         this.endEffector = EndEffectorSubsystem;
         Logger.info("Elevator initialized");
     }
