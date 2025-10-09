@@ -19,6 +19,8 @@ import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
+import static org.tahomarobotics.robot.Chassis.ChassisConstants.createSteerMotorConfig;
+import  org.tahomarobotics.robot.Chassis.ChassisConstants;
 
 
 class SwerveModule extends SubsystemBase {
@@ -35,9 +37,6 @@ class SwerveModule extends SubsystemBase {
     //Initialization
 
     public static TalonFXConfiguration createDriveMotorConfiguration() {
-        return new TalonFXConfiguration();
-    }
-    public static TalonFXConfiguration createSteerMotorConfiguration() {
         return new TalonFXConfiguration();
     }
 
@@ -64,7 +63,7 @@ class SwerveModule extends SubsystemBase {
         steerMotor = new TalonFX(descriptor.steerId(), CANBUS_NAME);
         steerEncoder = new CANcoder(descriptor.cancoderId(), CANBUS_NAME);
         RobustConfigurator.tryConfigureTalonFX(" Drive Motor", driveMotor, createDriveMotorConfiguration());
-        RobustConfigurator.tryConfigureTalonFX(" Steer Motor", steerMotor, createSteerMotorConfiguration());
+        RobustConfigurator.tryConfigureTalonFX(" Steer Motor", steerMotor, createSteerMotorConfig(descriptor.cancoderId(), ChassisConstants.steerRatio));
         RobustConfigurator.tryConfigureCANcoder(" Encoder ", steerEncoder, createEncoderConfiguration(angularOffset));
 
         Logger.info("Creating an instance of SwerveModule: Drive Motor, Steer Motor, and Encoder " );
