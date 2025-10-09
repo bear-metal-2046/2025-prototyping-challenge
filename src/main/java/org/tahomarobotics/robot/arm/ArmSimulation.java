@@ -6,6 +6,7 @@ import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.arm.ArmDifferentialTransform.DiffMotorPositions;
 import org.tahomarobotics.robot.arm.ArmDifferentialTransform.DiffMotorVelocities;
 import org.tahomarobotics.robot.arm.ArmDifferentialTransform.DiffMotorVoltages;
+import org.tahomarobotics.robot.arm.ArmDifferentialTransform.VirtualMotorPositions;
 import org.tahomarobotics.robot.arm.ArmDifferentialTransform.VirtualMotorVelocities;
 import org.tahomarobotics.robot.arm.ArmDifferentialTransform.VirtualMotorVoltages;
 import org.tahomarobotics.robot.sim.AbstractSimulation;
@@ -43,10 +44,9 @@ public class ArmSimulation extends AbstractSimulation{
 
     // Holds the current velocities of the differential motors
     private DiffMotorVelocities diffMotorVelocities = new DiffMotorVelocities(
-        RadiansPerSecond.of(0.0), 
+        RadiansPerSecond.of(0.0),
         RadiansPerSecond.of(0.0)
     );
-
 
     public ArmSimulation(TalonFXSimState topMotorSimState, TalonFXSimState bottomMotorSimState, 
     CANcoderSimState topEncoderSimState, CANcoderSimState bottomEncoderSimState, CANcoderSimState wristEncoderSimState) {
@@ -57,6 +57,16 @@ public class ArmSimulation extends AbstractSimulation{
         this.bottomEncoderSimState = bottomEncoderSimState;
         this.wristEncoderSimState = wristEncoderSimState;
 
+        // Set motor orientations to match real robot (positive voltage moves arm up)
+        topMotorSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.CounterClockwise_Positive;
+        bottomMotorSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.Clockwise_Positive;
+
+        // Set encoders to match real robot (inverted)
+        topEncoderSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.CounterClockwise_Positive;
+        bottomEncoderSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.Clockwise_Positive;
+
+        // top motor positive and bottom motor negative rotates wrist counter-clockwise looking from the front
+        wristEncoderSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.CounterClockwise_Positive;
 
         DCMotor elbowMotor = DCMotor.getKrakenX60Foc(2).withReduction(ELBOW_GEARBOX_RATIO);
 
@@ -75,12 +85,15 @@ public class ArmSimulation extends AbstractSimulation{
 
         wristSim = new DCMotorSim(
           LinearSystemId.createDCMotorSystem(wristMotor, WRIST_MOI, WRIST_GEARBOX_RATIO), 
-          wristMotor.withReduction(WRIST_GEARBOX_RATIO));
+          wristMotor);
     }
 
     @Override
     protected void simulationPeriodic() {
 
+        // update simulations
+        // -------------------------------------------------------------------
+        
         // Update supply voltages
         double supplyVoltage = RobotController.getBatteryVoltage();
         topMotorSimState.setSupplyVoltage(supplyVoltage);
@@ -106,6 +119,30 @@ public class ArmSimulation extends AbstractSimulation{
         wristSim.setInput(virtualMotorVoltages.wristMotorVoltage().in(Volts));
         wristSim.update(dT);
 
+        // update positions
+        // -------------------------------------------------------------------
+        
+        // convert simulated joint positions to motor positions (multiply by gearbox ratio)
+        VirtualMotorPositions virtualMotorPositions = new VirtualMotorPositions(
+            Radians.of(elbowSim.getAngleRads() * ELBOW_GEARBOX_RATIO),
+            Radians.of(wristSim.getAngularPositionRad() * WRIST_GEARBOX_RATIO)
+        );
+
+        // transform to differential motor positions
+        DiffMotorPositions diffMotorPositions = ArmDifferentialTransform.transform(virtualMotorPositions);
+
+        // update rotor positions in simulation states
+        topMotorSimState.setRawRotorPosition(diffMotorPositions.topMotorPosition());
+        bottomMotorSimState.setRawRotorPosition(diffMotorPositions.bottomMotorPosition());
+
+        // Update encoder simulation states from accumulated shaft positions
+        topEncoderSimState.setRawPosition(diffMotorPositions.topMotorPosition().div(ELBOW_GEARBOX_RATIO));
+        bottomEncoderSimState.setRawPosition(diffMotorPositions.bottomMotorPosition().div(ELBOW_GEARBOX_RATIO) );
+        wristEncoderSimState.setRawPosition(Radians.of(wristSim.getAngularPositionRad()).times(WRIST_ENCODER_GEARBOX_RATIO));
+
+        // update velocities
+        // -------------------------------------------------------------------
+        
         // Update motor velocities, joint velocities needs to be multiplied by gearbox ratio
         VirtualMotorVelocities virtualMotorVelocities = new VirtualMotorVelocities(
             RadiansPerSecond.of(elbowSim.getVelocityRadPerSec() * ELBOW_GEARBOX_RATIO), 
@@ -118,22 +155,11 @@ public class ArmSimulation extends AbstractSimulation{
         // update motor simulation states
         topMotorSimState.setRotorVelocity(diffMotorVelocities.topMotorAngularVelocity());
         bottomMotorSimState.setRotorVelocity(diffMotorVelocities.bottomMotorAngularVelocity());
-
-        // convert simulated joint positions to motor positions (multiply by gearbox ratio)
-        DiffMotorPositions diffMotorPositions = new DiffMotorPositions(
-            Radians.of(elbowSim.getAngleRads() * ELBOW_GEARBOX_RATIO), 
-            Radians.of(wristSim.getAngularPositionRad() * WRIST_GEARBOX_RATIO)
-        );
         
-        // update rotor positions in simulation states
-        topMotorSimState.setRawRotorPosition(diffMotorPositions.topMotorPosition());
-        bottomMotorSimState.setRawRotorPosition(diffMotorPositions.bottomMotorPosition());
-
-        // Update encoder simulation states
-        topEncoderSimState.setRawPosition(diffMotorPositions.topMotorPosition().div(ELBOW_GEARBOX_RATIO));
-        bottomEncoderSimState.setRawPosition(diffMotorPositions.bottomMotorPosition().div(ELBOW_GEARBOX_RATIO));
-
-        wristEncoderSimState.setRawPosition(Radians.of(wristSim.getAngularPositionRad()).times(WRIST_ENCODER_GEARBOX_RATIO));
+        // Update encoder simulation states from accumulated shaft positions
+        topEncoderSimState.setVelocity(diffMotorVelocities.topMotorAngularVelocity().div(ELBOW_GEARBOX_RATIO));
+        bottomEncoderSimState.setVelocity(diffMotorVelocities.bottomMotorAngularVelocity().div(ELBOW_GEARBOX_RATIO));
+        wristEncoderSimState.setVelocity(RadiansPerSecond.of(wristSim.getAngularVelocityRadPerSec()).times(WRIST_ENCODER_GEARBOX_RATIO));
 
     }
 }
