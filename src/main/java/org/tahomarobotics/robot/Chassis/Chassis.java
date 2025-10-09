@@ -7,6 +7,10 @@ public class Chassis {
     //ChassisSubsystem instance
     ChassisSubsystem chassis = ChassisSubsystem.INSTANCE;
 
+        public Chassis(){
 
+
+
+        }
 
 }

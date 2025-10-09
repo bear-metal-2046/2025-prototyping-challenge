@@ -17,6 +17,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.RobustConfigurator;
+import org.tinylog.Logger;
+
 
 
 class SwerveModule extends SubsystemBase {
@@ -64,6 +66,9 @@ class SwerveModule extends SubsystemBase {
         RobustConfigurator.tryConfigureTalonFX(" Drive Motor", driveMotor, createDriveMotorConfiguration());
         RobustConfigurator.tryConfigureTalonFX(" Steer Motor", steerMotor, createSteerMotorConfiguration());
         RobustConfigurator.tryConfigureCANcoder(" Encoder ", steerEncoder, createEncoderConfiguration(angularOffset));
+
+        Logger.info("Creating an instance of SwerveModule: Drive Motor, Steer Motor, and Encoder " );
+
 //        driveVel = driveMotor.getVelocity();
 //        new LoggedStatusSignal("drive Speed" , driveVel);
 //
