@@ -25,8 +25,8 @@ public class ArmSubsystem extends AbstractSubsystem {
 
     ArmSubsystem() {
         this(new TalonFX(RobotMap.ARM_TOP_MOTOR), new TalonFX(RobotMap.ARM_BOTTOM_MOTOR),
-            new CANcoder(RobotMap.TOP_ENCODER),   new CANcoder(RobotMap.BOTTOM_ENCODER),
-            new CANcoder(RobotMap.WRIST_ENCODER));
+            new CANcoder(RobotMap.ARM_TOP_ENCODER),   new CANcoder(RobotMap.ARM_BOTTOM_ENCODER),
+            new CANcoder(RobotMap.ARM_WRIST_ENCODER));
     }
 
     ArmSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANcoder topEncoder, CANcoder bottomEncoder, CANcoder wristEncoder) {
