@@ -86,6 +86,9 @@ public class ArmSimulation extends AbstractSimulation{
         wristSim = new DCMotorSim(
           LinearSystemId.createDCMotorSystem(wristMotor, WRIST_MOI, WRIST_GEARBOX_RATIO), 
           wristMotor);
+
+        wristSim.setState(0d, 0d);
+        wristSim.setInput(0d);
     }
 
     @Override
