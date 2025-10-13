@@ -11,6 +11,7 @@ import org.tinylog.Logger;
         Logger.info("End Effector Motor has been created");
        final TalonFX EndEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);}
 
+
     @Override
     public void subsystemPeriodic() {
 
