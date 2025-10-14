@@ -12,8 +12,8 @@ public class EndEffector implements AutoCloseable{
 
     }
 
-    EndEffector(EndEffectorSubsystem EndEffectorSubsystem) {
-        this.endEffector = EndEffectorSubsystem;
+    EndEffector(EndEffectorSubsystem endEffectorSubsystem) {
+        this.endEffector = endEffectorSubsystem;
         Logger.info("Elevator initialized");
     }
     @Override
