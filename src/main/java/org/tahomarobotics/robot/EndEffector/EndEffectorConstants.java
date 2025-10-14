@@ -10,7 +10,7 @@ public class EndEffectorConstants {
 
 
     public static final double GEAR_RATIO = 10.0; // this is a place holder not the acutual gear ratio
-    public static final TalonFXConfiguration motorConfig = new TalonFXConfiguration()
+    public static final TalonFXConfiguration EndEffectorMotorConfig = new TalonFXConfiguration()
             // SysId'd 02/11
             .withSlot0(new Slot0Configs()
                     .withKP(1.048663)
