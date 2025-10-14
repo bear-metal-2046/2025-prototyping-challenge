@@ -21,14 +21,12 @@ public class ChassisSubsystem extends AbstractSubsystem {
 
     //Constructor
 
-    protected ChassisSubsystem(List modules, Pigeon2 pigeon) {
+     ChassisSubsystem(List modules, Pigeon2 pigeon) {
         this.modules = modules;
         this.pigeon = pigeon;
     }
     //Constructor
-    ChassisSubsystem() {
-
-
+     ChassisSubsystem() {
 
         modules = List.of(
 
