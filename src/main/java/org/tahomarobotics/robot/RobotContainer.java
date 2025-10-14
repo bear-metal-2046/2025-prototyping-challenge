@@ -24,10 +24,11 @@
 
 package org.tahomarobotics.robot;
 
+import org.tahomarobotics.robot.Chassis.ChassisSubsystem;
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.elevator.Elevator;
 
-import org.tahomarobotics.robot.Chassis.Chassis;
+import org.tahomarobotics.robot.Chassis.chassis;
 
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
@@ -38,7 +39,7 @@ public class RobotContainer implements AutoCloseable {
 
     // Subsystems will be declared here as public final fields, including:
     // - Chassis (drive subsystem)
-    public final Chassis chassis;
+    public final chassis chassis;
     // - Elevator
     // - Arm
     // - End effector
@@ -54,7 +55,7 @@ public class RobotContainer implements AutoCloseable {
         //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
 
         // Create subsystem instances
-        chassis = new Chassis();
+        chassis = new chassis();
         // Create subsystem instances here
         elevator = new Elevator();
         arm = new Arm();
