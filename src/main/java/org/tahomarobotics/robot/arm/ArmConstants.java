@@ -8,9 +8,6 @@ import edu.wpi.first.math.util.Units;
 import org.tahomarobotics.robot.RobotMap;
 
 public class ArmConstants {
-    //Ratios
-    static final double SENSOR_TO_MECHANISM_RATIO = 0;
-
     //output rotations/input rotations
     static final double MOTOR_GEAR_RATIO = 60d / 10d * 48d / 12d;
 

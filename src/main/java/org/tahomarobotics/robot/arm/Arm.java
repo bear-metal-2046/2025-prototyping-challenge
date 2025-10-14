@@ -1,15 +1,17 @@
 package org.tahomarobotics.robot.arm;
 
-import org.tahomarobotics.robot.util.AbstractSubsystem;
-import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
 public class Arm implements AutoCloseable {
-    private final ArmSubsystem subsystem;
+    private final ArmSubsystem arm;
 
-    public Arm(ArmSubsystem subsystem) {
+    public Arm() {
+        this(new ArmSubsystem());
         Logger.info("Creating an instance of Arm...");
-        this.subsystem = subsystem;
+    }
+
+    Arm(ArmSubsystem arm) {
+        this.arm = arm;
     }
 
     @Override
