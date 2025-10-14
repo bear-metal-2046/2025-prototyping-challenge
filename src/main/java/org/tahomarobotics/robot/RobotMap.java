@@ -43,6 +43,7 @@ public final class RobotMap {
     // elevator
     public static final int ELEVATOR_MOTOR_LEFT = 10;
     public static final int ELEVATOR_MOTOR_RIGHT = 11;
+    public static final int ELEVATOR_ENCODER = 12;
 
     public static final String CANBUS_NAME = "Canivore";
 
