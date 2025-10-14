@@ -32,11 +32,34 @@ package org.tahomarobotics.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class RobotMap {
+
+    // arm
     public static final int ARM_TOP_MOTOR = 0;
     public static final int ARM_BOTTOM_MOTOR = 1;
-    public static final int ELBOW_ENCODER = 2;
-    public static final int WRIST_ENCODER = 3;
+    public static final int ARM_TOP_ENCODER = 20;
+    public static final int ARM_BOTTOM_ENCODER = 21;
+    public static final int ARM_WRIST_ENCODER = 22;
+
+    // elevator
     public static final int ELEVATOR_MOTOR_LEFT = 10;
     public static final int ELEVATOR_MOTOR_RIGHT = 11;
     public static final int ELEVATOR_ENCODER = 12;
+
+    public static final String CANBUS_NAME = "Canivore";
+
+    public static final int PIGEON = 0;
+
+    public final static moduleId FRONT_LEFT_MODULE = new moduleId(
+            "Front Left Module", 1, 11, 21);
+    public final static moduleId FRONT_RIGHT_MODULE = new moduleId(
+            "Front Right Module", 2, 12, 22);
+    public final static moduleId BACK_LEFT_MODULE = new moduleId(
+            "Front Left Module", 3, 13, 23);
+    public final static moduleId BACK_RIGHT_MODULE = new moduleId(
+            "Front Right Module", 4, 14, 24);
+
+
+
+    public record moduleId(String moduleName, int driveId, int steerId, int cancoderId) {}
+
 }
