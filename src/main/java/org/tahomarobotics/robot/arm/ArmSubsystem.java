@@ -13,8 +13,8 @@ public class ArmSubsystem extends AbstractSubsystem {
     private final TalonFX bottomMotor;
 
     //Absolute encoders
-    private final CANcoder elbowEncoder;
-    private final CANcoder wristEncoder;
+    private final CANcoder topEncoder;
+    private final CANcoder bottomEncoder;
 
     public ArmSubsystem() {
         Logger.info("Creating an instance of ArmSubsystem...");
@@ -22,10 +22,11 @@ public class ArmSubsystem extends AbstractSubsystem {
         Logger.info("Arm top motor instantiated.");
         bottomMotor = new TalonFX(RobotMap.ARM_BOTTOM_MOTOR);
         Logger.info("Arm bottom motor instantiated.");
-        elbowEncoder = new CANcoder(RobotMap.ELBOW_ENCODER);
-        Logger.info("Arm elbow CANcoder instantiated.");
-        wristEncoder = new CANcoder(RobotMap.WRIST_ENCODER);
-        Logger.info("Arm wrist CANcoder instantiated.");
+        topEncoder = new CANcoder(RobotMap.TOP_ENCODER);
+        Logger.info("Arm top encoder instantiated.");
+        bottomEncoder = new CANcoder(RobotMap.BOTTOM_ENCODER);
+        Logger.info("Arm bottom encoder instantiated.");
+
 
         RobustConfigurator.tryConfigureTalonFX("Arm Top Motor", topMotor, ArmConstants.topMotorConfiguration);
         RobustConfigurator.tryConfigureTalonFX("Arm Bottom Motor", bottomMotor, ArmConstants.bottomMotorConfiguration);

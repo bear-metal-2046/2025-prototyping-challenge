@@ -12,47 +12,33 @@ public class ArmConstants {
     static final double SENSOR_TO_MECHANISM_RATIO = 0;
 
     //output rotations/input rotations
-    static final double TOP_MOTOR_GEAR_RATIO = 24.0 / 1.0;
-    static final double BOTTOM_MOTOR_GEAR_RATIO = 24.0 / 1.0;
+    static final double MOTOR_GEAR_RATIO = 60d / 10d * 48d / 12d;
 
     static final TalonFXConfiguration topMotorConfiguration = new TalonFXConfiguration()
-            .withSlot0(
-                    new Slot0Configs()
-                            .withGravityType(GravityTypeValue.Arm_Cosine)
-                            .withKP(0)
-                            .withKD(0)
-                            .withKS(0)
-                            .withKV(0)
-                            .withKA(0)
-                            .withKG(0)
-            ).withMotorOutput(
+            .withMotorOutput(
                     new MotorOutputConfigs()
                             .withNeutralMode(NeutralModeValue.Brake)
                             .withInverted(InvertedValue.Clockwise_Positive)
             ).withClosedLoopGeneral(
                     new ClosedLoopGeneralConfigs()
-                            //doesn't have free rotation as far as i know
+                            //ensures that arm moves within its limits rather than attempting to rotate into the robot
                             .withContinuousWrap(false)
             ).withAudio(
                     new AudioConfigs()
                             .withBeepOnBoot(true)
                             .withBeepOnConfig(true)
+            ).withFeedback(
+                    new FeedbackConfigs()
+                            .withFeedbackRemoteSensorID(RobotMap.ARM_TOP_ENCODER)
+                            //post-STMR unit: output rotations
+                            .withSensorToMechanismRatio(MOTOR_GEAR_RATIO)
             );
 
     static final TalonFXConfiguration bottomMotorConfiguration = new TalonFXConfiguration()
-            .withSlot0(
-                    new Slot0Configs()
-                            .withGravityType(GravityTypeValue.Arm_Cosine)
-                            .withKP(0)
-                            .withKD(0)
-                            .withKS(0)
-                            .withKV(0)
-                            .withKA(0)
-                            .withKG(0)
-            ).withMotorOutput(
+            .withMotorOutput(
                     new MotorOutputConfigs()
                             .withNeutralMode(NeutralModeValue.Brake)
-                            .withInverted(InvertedValue.Clockwise_Positive)
+                            .withInverted(InvertedValue.CounterClockwise_Positive)
             ).withClosedLoopGeneral(
                     new ClosedLoopGeneralConfigs()
                             //also doesn't have free rotation afaik
@@ -61,5 +47,9 @@ public class ArmConstants {
                     new AudioConfigs()
                             .withBeepOnBoot(true)
                             .withBeepOnConfig(true)
+            ).withFeedback(
+                    new FeedbackConfigs()
+                            .withFeedbackRemoteSensorID(RobotMap.ARM_BOTTOM_ENCODER)
+                            .withSensorToMechanismRatio(MOTOR_GEAR_RATIO)
             );
 }

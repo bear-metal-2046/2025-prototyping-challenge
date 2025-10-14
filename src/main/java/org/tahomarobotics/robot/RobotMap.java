@@ -34,6 +34,6 @@ package org.tahomarobotics.robot;
 public final class RobotMap {
     public static final int ARM_TOP_MOTOR = 0;
     public static final int ARM_BOTTOM_MOTOR = 1;
-    public static final int ELBOW_ENCODER = 2;
-    public static final int WRIST_ENCODER = 3;
+    public static final int ARM_BOTTOM_ENCODER = 2;
+    public static final int ARM_TOP_ENCODER = 3;
 }
