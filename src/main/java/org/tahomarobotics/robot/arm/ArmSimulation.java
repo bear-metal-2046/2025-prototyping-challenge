@@ -2,6 +2,7 @@ package org.tahomarobotics.robot.arm;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.arm.ArmDifferentialTransform.DiffMotorPositions;
 import org.tahomarobotics.robot.arm.ArmDifferentialTransform.DiffMotorVelocities;
@@ -16,6 +17,7 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -28,7 +30,7 @@ public class ArmSimulation extends AbstractSimulation{
     private static final double ELBOW_GEARBOX_RATIO = 60d / 10d * 48d / 12d;
     private static final double WRIST_GEARBOX_RATIO = ELBOW_GEARBOX_RATIO * 45d / 15d;
 
-    private static final double WRIST_MOI = 0.00156; // kg*m^2, estimated
+    private static final double WRIST_MOI = 0.156; // kg*m^2, estimated
     
     private static final double dT = Robot.defaultPeriodSecs;
     private static final double WRIST_ENCODER_GEARBOX_RATIO = 52d / 15d;
@@ -68,7 +70,7 @@ public class ArmSimulation extends AbstractSimulation{
         // top motor positive and bottom motor negative rotates wrist counter-clockwise looking from the front
         wristEncoderSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.CounterClockwise_Positive;
 
-        DCMotor elbowMotor = DCMotor.getKrakenX60Foc(2).withReduction(ELBOW_GEARBOX_RATIO);
+        DCMotor elbowMotor = DCMotor.getKrakenX60Foc(1).withReduction(ELBOW_GEARBOX_RATIO);
 
         elbowSim = new SingleJointedArmSim(
             elbowMotor,
@@ -163,6 +165,26 @@ public class ArmSimulation extends AbstractSimulation{
         topEncoderSimState.setVelocity(diffMotorVelocities.topMotorAngularVelocity().div(ELBOW_GEARBOX_RATIO));
         bottomEncoderSimState.setVelocity(diffMotorVelocities.bottomMotorAngularVelocity().div(ELBOW_GEARBOX_RATIO));
         wristEncoderSimState.setVelocity(RadiansPerSecond.of(wristSim.getAngularVelocityRadPerSec()).times(WRIST_ENCODER_GEARBOX_RATIO));
+
+        System.out.printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
+
+            diffMotorVoltages.topMotorVoltage().in(Volts),
+            diffMotorVelocities.topMotorAngularVelocity().in(RadiansPerSecond)/ELBOW_GEARBOX_RATIO,
+            topMotorSimState.getSupplyCurrent(),
+
+            diffMotorVoltages.bottomMotorVoltage().in(Volts),
+            diffMotorVelocities.bottomMotorAngularVelocity().in(RadiansPerSecond)/ELBOW_GEARBOX_RATIO,
+            bottomMotorSimState.getSupplyCurrent(),
+
+            virtualMotorVoltages.elbowMotorVoltage().in(Volts),
+            RadiansPerSecond.of(elbowSim.getVelocityRadPerSec()).in(RadiansPerSecond)/ELBOW_GEARBOX_RATIO,
+            elbowSim.getCurrentDrawAmps(),
+
+            virtualMotorVoltages.wristMotorVoltage().in(Volts),
+            RadiansPerSecond.of(wristSim.getAngularVelocityRadPerSec()).in(RadiansPerSecond)/WRIST_GEARBOX_RATIO,
+            wristSim.getCurrentDrawAmps()
+        );
+
 
     }
 }

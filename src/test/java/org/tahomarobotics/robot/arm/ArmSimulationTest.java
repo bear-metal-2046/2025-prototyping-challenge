@@ -3,16 +3,21 @@ package org.tahomarobotics.robot.arm;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,8 +33,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.tahomarobotics.robot.RobotMap;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -40,6 +47,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @DisplayName("Arm Simulation Tests")
 class ArmSimulationTest {
+
+    private static final DCMotor MOTOR = DCMotor.getKrakenX60Foc(2);
+    private static final double ELBOW_GEARBOX_RATIO = 60.0 / 10.0 * 48.0 / 12.0; // 24:1
+    private static final double WRIST_GEARBOX_RATIO = 45d / 15d;
+    private static final double WRIST_ENCODER_GEARBOX_RATIO = 52d / 15d;
 
     @BeforeAll
     static void initializeHAL() {
@@ -173,7 +185,7 @@ class ArmSimulationTest {
     @DisplayName("Initial Conditions: Elbow at 90°, Wrist at 0°, Input shafts equal")
     void testInitialConditions() throws InterruptedException {
         // Constants from ArmSimulation
-        final double ELBOW_GEARBOX_RATIO = 60.0 / 10.0 * 48.0 / 12.0; // 24:1
+        
 
         // Run simulation for one cycle with default initialization (no control inputs)
         armSimulation.simulationPeriodic();
@@ -261,7 +273,7 @@ class ArmSimulationTest {
 
         double finalTopShaftPos = topEncoderPosition.getValueAsDouble();
         double finalBottomShaftPos = bottomEncoderPosition.getValueAsDouble();
-        
+
         // Calculate average shaft position (represents elbow motion)
         double initialAvgShaftPos = (initialTopShaftPos + initialBottomShaftPos) / 2.0;
         double finalAvgShaftPos = (finalTopShaftPos + finalBottomShaftPos) / 2.0;
@@ -284,8 +296,54 @@ class ArmSimulationTest {
             "Opposite motor voltages should cause shafts to move in opposite directions");
     }
 
+    @Test
+    @DisplayName("Wrist Rotation: Voltage/Speed characteristics at multiple speeds")
+    void testRotationVoltageSpeedCharacteristics() {
+        
+        // Test voltages to evaluate: 25%, 50%, 75%, and 100% of nominal voltage
+        final double[] TEST_VOLTAGES = {3.0, 6.0, 9.0, 12.0}; // Volts
+        final int WARMUP_CYCLES = 25; // 0.5 seconds to reach steady state
 
-    
+        // For continuous wrist rotation, we expect a roughly linear voltage/speed relationship
+        // at steady state (after acceleration phase)
+
+        for (double voltage : TEST_VOLTAGES) {
+            
+            // Run one cycle to set initial positions
+            armSimulation.simulationPeriodic();
+            waitForAll();
+
+            // Apply opposite voltages to rotate wrist without moving elbow
+            topMotor.setControl(new VoltageOut(voltage));
+            bottomMotor.setControl(new VoltageOut(-voltage));
+
+            // Warmup phase: allow motor to reach steady-state velocity
+            for (int i = 0; i < WARMUP_CYCLES; i++) {
+                armSimulation.simulationPeriodic();
+                waitForAll();
+            }
+            
+            double expectedElbowVelocity = Units.radiansToDegrees(MOTOR.getSpeed(0d, voltage)) / ELBOW_GEARBOX_RATIO;
+            double expectedWristVelocity = expectedElbowVelocity / WRIST_GEARBOX_RATIO;
+
+            
+            // read encoder velocity
+            double actualTopVelocity = topEncoderVelocity.getValue().in(DegreesPerSecond);
+            double actualBottomVelocity = bottomEncoderVelocity.getValue().in(DegreesPerSecond);
+            double actualWristVelocity = wristEncoderVelocity.getValue().in(DegreesPerSecond) / WRIST_ENCODER_GEARBOX_RATIO;
+
+            // Verify velocities are within expected range
+            assertTrue(Math.abs(actualWristVelocity - expectedWristVelocity) < 1.0,
+                "Wrist motor velocity deviated from expected (actual: " + actualWristVelocity + ", expected: " + expectedWristVelocity + ")");
+            assertTrue(Math.abs(actualTopVelocity - expectedElbowVelocity) < 1.0,
+                "Top motor velocity deviated from expected (actual: " + actualTopVelocity + ", expected: " + expectedElbowVelocity + ")");
+            assertTrue(Math.abs(actualBottomVelocity - expectedElbowVelocity) < 1.0,
+                "Bottom motor velocity deviated from expected (actual: " + actualBottomVelocity + ", expected: " + expectedElbowVelocity + ")");
+        }
+    }
+
+
+
     /*
      * Recommended test structure (once hardware mocking is set up):
      *

@@ -9,7 +9,7 @@ import edu.wpi.first.units.measure.*;
 
 public class ArmDifferentialTransform {
 
-    public static final DCMotor KRACKEN_X60_FOC = DCMotor.getKrakenX60Foc(2);
+    public static final DCMotor KRACKEN_X60_FOC = DCMotor.getKrakenX60Foc(1);
 
     public record DiffMotorVoltages(Voltage topMotorVoltage, Voltage bottomMotorVoltage) {}
     public record DiffMotorPositions(Angle topMotorPosition, Angle bottomMotorPosition) {}
