@@ -24,11 +24,10 @@
 
 package org.tahomarobotics.robot;
 
-import org.tahomarobotics.robot.Chassis.ChassisSubsystem;
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.elevator.Elevator;
 
-import org.tahomarobotics.robot.Chassis.chassis;
+import org.tahomarobotics.robot.chassis.chassis;
 
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.

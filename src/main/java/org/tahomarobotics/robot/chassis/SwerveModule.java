@@ -1,7 +1,5 @@
-package org.tahomarobotics.robot.Chassis;
+package org.tahomarobotics.robot.chassis;
 
-import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
