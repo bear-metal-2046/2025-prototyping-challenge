@@ -12,7 +12,6 @@ import org.tahomarobotics.robot.RobotMap;
 public class ElevatorConstants {
 
     // Gearing
-    //todo: placeholder value, replace with real one when available
     public static final double ELEVATOR_GEAR_REDUCTION = 52d / 12d;
 
     // Pulley
