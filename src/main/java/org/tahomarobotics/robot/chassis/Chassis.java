@@ -2,7 +2,7 @@ package org.tahomarobotics.robot.chassis;
 
 public class Chassis {
 
-    public static final Chassis INSTANCE = new Chassis(); /* needs to be put into RobotContainer but I cant find where RobotContainer should go*/
+    public static final Chassis INSTANCE = new Chassis();
     private final ChassisSubsystem chassis;
 
 
