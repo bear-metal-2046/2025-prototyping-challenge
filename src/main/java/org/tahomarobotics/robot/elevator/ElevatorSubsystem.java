@@ -1,5 +1,6 @@
 package org.tahomarobotics.robot.elevator;
 
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
@@ -13,9 +14,9 @@ class ElevatorSubsystem extends AbstractSubsystem {
     public ElevatorSubsystem() {
         Logger.info("Creating ElevatorSubsystem");
         leftMotor = new TalonFX(RobotMap.ELEVATOR_MOTOR_LEFT);
-        Logger.info("ElevatorSubsystem left motor initialized");
         rightMotor = new TalonFX(RobotMap.ELEVATOR_MOTOR_RIGHT);
-        Logger.info("ElevatorSubsystem right motor initialized");
+        RobustConfigurator.tryConfigureTalonFX("left motor", leftMotor, ElevatorConstants.elevatorMotorConfig);
+        rightMotor.setControl(new Follower(RobotMap.ELEVATOR_MOTOR_LEFT, true));
     }
 
     @Override
