@@ -1,4 +1,4 @@
-package org.tahomarobotics.robot.EndEffector;
+package org.tahomarobotics.robot.endeffector;
 
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;

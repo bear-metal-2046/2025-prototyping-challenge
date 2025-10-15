@@ -1,4 +1,4 @@
-package org.tahomarobotics.robot.EndEffector;
+package org.tahomarobotics.robot.endeffector;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import org.tahomarobotics.robot.RobotMap;
