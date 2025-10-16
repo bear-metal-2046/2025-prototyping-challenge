@@ -39,7 +39,8 @@ class SwerveModule extends SubsystemBase {
     private final StatusSignal<AngularVelocity> driveVelocity;
     private final StatusSignal<Current> driveCurrent, steerCurrent;
     private final StatusSignal<Voltage> driveVoltage, steerVoltage;
-
+    private final StatusSignal<Angle> encoderPosition;
+    private final StatusSignal<AngularVelocity> encoderVelocity;
 
     private final LoggedStatusSignal[] statusSignals;
 
@@ -69,6 +70,9 @@ class SwerveModule extends SubsystemBase {
                 new LoggedStatusSignal("Drive Velocity", driveMotor.getVelocity()),
                 new LoggedStatusSignal("Drive Current", driveMotor.getStatorCurrent()),
                 new LoggedStatusSignal("Drive Voltage", driveMotor.getMotorVoltage()),
+
+                new LoggedStatusSignal("Encoder Position", steerEncoder.getPosition()),
+                new LoggedStatusSignal("Encoder Velocity", steerEncoder.getVelocity())
         };
 
         steerPosition = steerMotor.getPosition();
@@ -83,6 +87,9 @@ class SwerveModule extends SubsystemBase {
         driveCurrent = driveMotor.getStatorCurrent();
         driveVoltage = driveMotor.getMotorVoltage();
 
+        encoderPosition = steerEncoder.getPosition();
+        encoderVelocity = steerEncoder.getVelocity();
+
         Logger.recordOutput("steer/position", (BooleanSupplier) steerPosition);
         Logger.recordOutput("steer/velocity", (BooleanSupplier) steerVelocity);
         Logger.recordOutput("steer/current", (BooleanSupplier) steerCurrent);
@@ -93,6 +100,9 @@ class SwerveModule extends SubsystemBase {
         Logger.recordOutput("drive/velocity", (BooleanSupplier) driveVelocity);
         Logger.recordOutput("drive/current", (BooleanSupplier) driveCurrent);
         Logger.recordOutput("drive/voltage", (BooleanSupplier) driveVoltage);
+
+        Logger.recordOutput("encoder/position", (BooleanSupplier) encoderPosition);
+        Logger.recordOutput("encoder/velocity", (BooleanSupplier) encoderVelocity);
 
 
 
