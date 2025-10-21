@@ -7,18 +7,17 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
+import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.util.signals.LoggedStatusSignal;
 import edu.wpi.first.units.measure.AngularVelocity;
 
-import java.util.function.BooleanSupplier;
-
 import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
 import static org.tahomarobotics.robot.chassis.ChassisConstants.*;
 
 
-class SwerveModule extends SubsystemBase {
+class SwerveModule extends AbstractSubsystem {
 
     //Identifiers
     private final String name;
@@ -37,7 +36,8 @@ class SwerveModule extends SubsystemBase {
     private final StatusSignal<Angle> drivePosition;
     private final StatusSignal<Angle> driveRotorPosition;
     private final StatusSignal<AngularVelocity> driveVelocity;
-    private final StatusSignal<Current> driveCurrent, steerCurrent;
+    private final StatusSignal<Current> driveStatorCurrent, steerStatorCurrent;
+    private final StatusSignal<Current> driveSupplyCurrent, steerSupplyCurrent;
     private final StatusSignal<Voltage> driveVoltage, steerVoltage;
     private final StatusSignal<Angle> encoderPosition;
     private final StatusSignal<AngularVelocity> encoderVelocity;
@@ -59,54 +59,69 @@ class SwerveModule extends SubsystemBase {
         RobustConfigurator.tryConfigureCANcoder(" Encoder ", steerEncoder, createEncoderConfig());
 
 
+        //steer
+        steerPosition = steerMotor.getPosition();
+        steerVelocity = steerMotor.getVelocity();
+        steerStatorCurrent = steerMotor.getStatorCurrent();
+        steerVoltage = steerMotor.getMotorVoltage();
+        steerSupplyCurrent = steerMotor.getSupplyCurrent();
+
+        //drive
+        drivePosition = driveMotor.getPosition();
+        driveRotorPosition = driveMotor.getRotorPosition();
+        driveVelocity = driveMotor.getVelocity();
+        driveStatorCurrent = driveMotor.getStatorCurrent();
+        driveVoltage = driveMotor.getMotorVoltage();
+        driveSupplyCurrent = driveMotor.getSupplyCurrent();
+
+        //encoder
+        encoderPosition = steerEncoder.getPosition();
+        encoderVelocity = steerEncoder.getVelocity();
+
+
+
         statusSignals = new LoggedStatusSignal[]{
                 new LoggedStatusSignal("Steer Position", steerMotor.getPosition()),
                 new LoggedStatusSignal("Steer Velocity", steerMotor.getVelocity()),
-                new LoggedStatusSignal("Steer Current", steerMotor.getStatorCurrent()),
+                new LoggedStatusSignal("Steer Stator Current", steerMotor.getStatorCurrent()),
                 new LoggedStatusSignal("Steer Voltage", steerMotor.getMotorVoltage()),
+                new LoggedStatusSignal("Steer Supply Current", steerMotor.getSupplyCurrent()),
+
 
                 new LoggedStatusSignal("Drive Position", driveMotor.getPosition()),
                 new LoggedStatusSignal("Drive Rotor Position", driveMotor.getRotorPosition()),
                 new LoggedStatusSignal("Drive Velocity", driveMotor.getVelocity()),
-                new LoggedStatusSignal("Drive Current", driveMotor.getStatorCurrent()),
+                new LoggedStatusSignal("Drive Stator Current", driveMotor.getStatorCurrent()),
                 new LoggedStatusSignal("Drive Voltage", driveMotor.getMotorVoltage()),
+                new LoggedStatusSignal("Drive Supply Current", driveMotor.getSupplyCurrent()),
+
 
                 new LoggedStatusSignal("Encoder Position", steerEncoder.getPosition()),
                 new LoggedStatusSignal("Encoder Velocity", steerEncoder.getVelocity())
         };
 
-        steerPosition = steerMotor.getPosition();
-        steerVelocity = steerMotor.getVelocity();
-        steerCurrent = steerMotor.getStatorCurrent();
-        steerVoltage = steerMotor.getMotorVoltage();
 
+    }
 
-        drivePosition = driveMotor.getPosition();
-        driveRotorPosition = driveMotor.getRotorPosition();
-        driveVelocity = driveMotor.getVelocity();
-        driveCurrent = driveMotor.getStatorCurrent();
-        driveVoltage = driveMotor.getMotorVoltage();
+    @Override
+    public void subsystemPeriodic() {
 
-        encoderPosition = steerEncoder.getPosition();
-        encoderVelocity = steerEncoder.getVelocity();
+        Logger.recordOutput("Chassis/steer/position", steerPosition.getValue());
+        Logger.recordOutput("steer/velocity", steerVelocity.getValue());
+        Logger.recordOutput("steer/current", steerSupplyCurrent.getValue());
+        Logger.recordOutput("steer/voltage", steerVoltage.getValue());
 
-        Logger.recordOutput("steer/position", (BooleanSupplier) steerPosition);
-        Logger.recordOutput("steer/velocity", (BooleanSupplier) steerVelocity);
-        Logger.recordOutput("steer/current", (BooleanSupplier) steerCurrent);
-        Logger.recordOutput("steer/voltage", (BooleanSupplier) steerVoltage);
+        Logger.recordOutput("drive/position", drivePosition.getValue());
+        Logger.recordOutput("drive/rotorPosition", driveRotorPosition.getValue());
+        Logger.recordOutput("drive/velocity", driveVelocity.getValue());
+        Logger.recordOutput("drive/current", driveStatorCurrent.getValue());
+        Logger.recordOutput("drive/voltage", driveVoltage.getValue());
 
-        Logger.recordOutput("drive/position", (BooleanSupplier) drivePosition);
-        Logger.recordOutput("drive/rotorPosition", (BooleanSupplier) driveRotorPosition);
-        Logger.recordOutput("drive/velocity", (BooleanSupplier) driveVelocity);
-        Logger.recordOutput("drive/current", (BooleanSupplier) driveCurrent);
-        Logger.recordOutput("drive/voltage", (BooleanSupplier) driveVoltage);
-
-        Logger.recordOutput("encoder/position", (BooleanSupplier) encoderPosition);
-        Logger.recordOutput("encoder/velocity", (BooleanSupplier) encoderVelocity);
-
-
+        Logger.recordOutput("encoder/position",  encoderPosition.getValue());
+        Logger.recordOutput("encoder/velocity", encoderVelocity.getValue());
 
 
 
     }
+
 }

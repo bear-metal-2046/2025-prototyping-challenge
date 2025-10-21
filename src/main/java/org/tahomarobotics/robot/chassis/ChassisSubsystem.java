@@ -1,9 +1,14 @@
 package org.tahomarobotics.robot.chassis;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
-import org.tinylog.Logger;
+import org.tahomarobotics.robot.util.signals.LoggedStatusSignal;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 
@@ -17,6 +22,15 @@ public class ChassisSubsystem extends AbstractSubsystem {
     private List<SwerveModule> modules;
     //Gyro
     private Pigeon2 pigeon = new Pigeon2(RobotMap.PIGEON, CANBUS_NAME);
+
+    private final StatusSignal<Angle> yaw = pigeon.getYaw();
+    private final StatusSignal<AngularVelocity>yawRate = pigeon.getAngularVelocityZWorld();
+
+
+    private final LoggedStatusSignal[] statusSignals = new LoggedStatusSignal[]{
+            new LoggedStatusSignal("Yaw", yaw),
+            new LoggedStatusSignal("Yaw Velocity", yawRate)
+    };
 
 
     //Constructor
@@ -37,12 +51,15 @@ public class ChassisSubsystem extends AbstractSubsystem {
 
 
         );
-        Logger.info("Creating an instance of ChassisSubsystem...");
+        Logger.recordMetadata("ChassisSubsystem creation", "creating new ChassisSubsystem");
 
     }
 
     @Override
     public void subsystemPeriodic() {
+
+         Logger.recordOutput("Yaw", yaw.getValue());
+         Logger.recordOutput("Yaw Rate", yawRate.getValue());
 
     }
 }
