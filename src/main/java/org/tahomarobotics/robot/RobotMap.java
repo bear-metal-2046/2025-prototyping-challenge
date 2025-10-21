@@ -48,8 +48,6 @@ public final class RobotMap {
     public static final int ARM_WRIST_ENCODER = 22;
 
     // elevator
-    public static final int ELEVATOR_MOTOR_LEFT = 10;
-    public static final int ELEVATOR_MOTOR_RIGHT = 11;
     public static final int ELEVATOR_ENCODER = 12;
 
     public static final String CANBUS_NAME = "Canivore";
