@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
 
-public class ChassisSubsystem extends AbstractSubsystem {
+public class ChassisSubsystem extends SubsystemBase {
 
 
 
@@ -56,10 +56,10 @@ public class ChassisSubsystem extends AbstractSubsystem {
     }
 
     @Override
-    public void subsystemPeriodic() {
+    public void periodic() {
 
-         Logger.recordOutput("Yaw", yaw.getValue());
-         Logger.recordOutput("Yaw Rate", yawRate.getValue());
+         Logger.recordOutput("Chassis/Yaw", yaw.getValue());
+         Logger.recordOutput("Chassis/Yaw Rate", yawRate.getValue());
 
     }
 }

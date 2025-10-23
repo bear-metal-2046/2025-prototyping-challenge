@@ -17,7 +17,7 @@ import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
 import static org.tahomarobotics.robot.chassis.ChassisConstants.*;
 
 
-class SwerveModule extends AbstractSubsystem {
+class SwerveModule extends SubsystemBase {
 
     //Identifiers
     private final String name;
@@ -104,21 +104,21 @@ class SwerveModule extends AbstractSubsystem {
     }
 
     @Override
-    public void subsystemPeriodic() {
+    public void periodic() {
 
         Logger.recordOutput("Chassis/steer/position", steerPosition.getValue());
-        Logger.recordOutput("steer/velocity", steerVelocity.getValue());
-        Logger.recordOutput("steer/current", steerSupplyCurrent.getValue());
-        Logger.recordOutput("steer/voltage", steerVoltage.getValue());
+        Logger.recordOutput("Chassis/steer/velocity", steerVelocity.getValue());
+        Logger.recordOutput("Chassis/steer/current", steerSupplyCurrent.getValue());
+        Logger.recordOutput("Chassis/steer/voltage", steerVoltage.getValue());
 
-        Logger.recordOutput("drive/position", drivePosition.getValue());
-        Logger.recordOutput("drive/rotorPosition", driveRotorPosition.getValue());
-        Logger.recordOutput("drive/velocity", driveVelocity.getValue());
-        Logger.recordOutput("drive/current", driveStatorCurrent.getValue());
-        Logger.recordOutput("drive/voltage", driveVoltage.getValue());
+        Logger.recordOutput("Chassis/drive/position", drivePosition.getValue());
+        Logger.recordOutput("Chassis/drive/rotorPosition", driveRotorPosition.getValue());
+        Logger.recordOutput("Chassis/drive/velocity", driveVelocity.getValue());
+        Logger.recordOutput("Chassis/drive/current", driveStatorCurrent.getValue());
+        Logger.recordOutput("Chassis/drive/voltage", driveVoltage.getValue());
 
-        Logger.recordOutput("encoder/position",  encoderPosition.getValue());
-        Logger.recordOutput("encoder/velocity", encoderVelocity.getValue());
+        Logger.recordOutput("Chassis/encoder/position",  encoderPosition.getValue());
+        Logger.recordOutput("Chassis/encoder/velocity", encoderVelocity.getValue());
 
 
 
