@@ -1,4 +1,4 @@
-package org.tahomarobotics.robot.EndEffector;
+package org.tahomarobotics.robot.endeffector;
 
 
 
@@ -14,7 +14,7 @@ public class EndEffector implements AutoCloseable{
 
     EndEffector(EndEffectorSubsystem endEffectorSubsystem) {
         this.endEffector = endEffectorSubsystem;
-        Logger.info("Elevator initialized");
+        Logger.info("EndEffector initialized");
     }
     @Override
     public void close() throws Exception {

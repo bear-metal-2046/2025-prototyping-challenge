@@ -7,9 +7,10 @@ import org.tinylog.Logger;
 
     public class EndEffectorSubsystem extends AbstractSubsystem {
 
-        private final TalonFX endEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);
+        private final TalonFX endEffectorMotor;
 
         public EndEffectorSubsystem() {
+            endEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);
         Logger.info("End Effector Motor has been created");
     }
 

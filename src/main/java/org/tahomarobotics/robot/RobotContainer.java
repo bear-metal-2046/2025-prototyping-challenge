@@ -24,7 +24,7 @@
 
 package org.tahomarobotics.robot;
 
-import org.tahomarobotics.robot.EndEffector.EndEffector;
+import org.tahomarobotics.robot.endeffector.EndEffector;
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.chassis.Chassis;
 import org.tahomarobotics.robot.elevator.Elevator;
