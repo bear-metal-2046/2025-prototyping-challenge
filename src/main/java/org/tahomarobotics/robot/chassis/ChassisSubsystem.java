@@ -2,6 +2,7 @@ package org.tahomarobotics.robot.chassis;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,8 @@ public class ChassisSubsystem extends SubsystemBase {
     private List<SwerveModule> modules;
     //Gyro
     private Pigeon2 pigeon = new Pigeon2(RobotMap.PIGEON, CANBUS_NAME);
+    private Rotation2d heading = new Rotation2d();
+
 
     private final StatusSignal<Angle> yaw = pigeon.getYaw();
     private final StatusSignal<AngularVelocity>yawRate = pigeon.getAngularVelocityZWorld();
@@ -55,11 +58,16 @@ public class ChassisSubsystem extends SubsystemBase {
 
     }
 
+    public Rotation2d getHeading() {
+        return heading;
+    }
+
     @Override
     public void periodic() {
 
          Logger.recordOutput("Chassis/Yaw", yaw.getValue());
          Logger.recordOutput("Chassis/Yaw Rate", yawRate.getValue());
+         Logger.recordOutput("Chassis/Heading", heading.getDegrees());
 
     }
 }
