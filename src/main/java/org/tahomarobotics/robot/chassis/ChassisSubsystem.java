@@ -7,7 +7,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
-import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.signals.LoggedStatusSignal;
 import org.littletonrobotics.junction.Logger;
 
@@ -22,12 +21,12 @@ public class ChassisSubsystem extends SubsystemBase {
     //swerve Modules
     private List<SwerveModule> modules;
     //Gyro
-    private Pigeon2 pigeon = new Pigeon2(RobotMap.PIGEON, CANBUS_NAME);
+    private Pigeon2 gyro = new Pigeon2(RobotMap.PIGEON, CANBUS_NAME);
     private Rotation2d heading = new Rotation2d();
 
 
-    private final StatusSignal<Angle> yaw = pigeon.getYaw();
-    private final StatusSignal<AngularVelocity>yawRate = pigeon.getAngularVelocityZWorld();
+    private final StatusSignal<Angle> yaw = gyro.getYaw();
+    private final StatusSignal<AngularVelocity>yawRate = gyro.getAngularVelocityZWorld();
 
 
     private final LoggedStatusSignal[] statusSignals = new LoggedStatusSignal[]{
@@ -40,7 +39,7 @@ public class ChassisSubsystem extends SubsystemBase {
 
      ChassisSubsystem(List modules, Pigeon2 pigeon) {
         this.modules = modules;
-        this.pigeon = pigeon;
+        this.gyro = pigeon;
     }
     //Constructor
      ChassisSubsystem() {
