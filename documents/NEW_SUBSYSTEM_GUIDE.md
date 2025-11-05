@@ -27,18 +27,18 @@ src/main/java/org/tahomarobotics/robot/{subsystemname}/
 Use this checklist to collect all necessary details:
 
 **📋 Mechanism Overview**
-- [End Effector] **Mechanism Name**: What is this subsystem called? (e.g., "Shooter", "Intake", "Elevator")
-- [Game Piece Manipulation] **Primary Function**: What does it do? (e.g., "Shoots game pieces", "Collects notes", "Lifts robot")
-- [Rotational] **Movement Type**: Linear or rotational movement?
-- [Degrees] **Range of Motion**: How far does it move? (degrees, inches, etc.)
+- [ ] **Mechanism Name**: What is this subsystem called? (e.g., "Shooter", "Intake", "Elevator")
+- [ ] **Primary Function**: What does it do? (e.g., "Shoots game pieces", "Collects notes", "Lifts robot")
+- [ ] **Movement Type**: Linear or rotational movement?
+- [ ] **Range of Motion**: How far does it move? (degrees, inches, etc.)
 
 **🔧 Motor Information**
-- [1] **Number of Motors**: How many motors control this mechanism?
-- [TalonFX] **Motor Type**: What type of motors? (TalonFX/Kraken X60, NEO, CIM, etc.)
-- [?] **Motor CAN IDs**: What are the CAN IDs for each motor? (e.g., 10, 11, 12)
-- [?] **Motor Pairing**: Are any motors paired/follower configuration?
-- [Counter-clockwise] **Motor Direction**: Which direction is "positive" for each motor?
-- [40A] **Current Limits**: What current limits are safe? (typically 40A for mechanisms)
+- [ ] **Number of Motors**: How many motors control this mechanism?
+- [ ] **Motor Type**: What type of motors? (TalonFX/Kraken X60, NEO, CIM, etc.)
+- [ ] **Motor CAN IDs**: What are the CAN IDs for each motor? (e.g., 10, 11, 12)
+- [ ] **Motor Pairing**: Are any motors paired/follower configuration?
+- [ ] **Motor Direction**: Which direction is "positive" for each motor?
+- [ ] **Current Limits**: What current limits are safe? (typically 40A for mechanisms)
 
 **⚙️ Gearing and Mechanical**
 - [ ] **Gear Ratio**: What is the total gear reduction? (e.g., 10:1, 50:1)
