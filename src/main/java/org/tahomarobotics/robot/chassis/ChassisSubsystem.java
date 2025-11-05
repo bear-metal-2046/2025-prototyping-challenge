@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.signals.LoggedStatusSignal;
 import org.littletonrobotics.junction.Logger;
-
 import java.util.List;
 
 import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
@@ -23,6 +22,8 @@ public class ChassisSubsystem extends SubsystemBase {
     //Gyro
     private Pigeon2 gyro = new Pigeon2(RobotMap.PIGEON, CANBUS_NAME);
     private Rotation2d heading = new Rotation2d();
+    private Rotation2d rotation2d = new Rotation2d();
+
 
 
     private final StatusSignal<Angle> yaw = gyro.getYaw();
@@ -58,7 +59,14 @@ public class ChassisSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getHeading() {
+        double yawDegrees = yaw.getValue().in(edu.wpi.first.units.Units.Degrees); // Convert Angle to degrees
+        heading = Rotation2d.fromDegrees(yawDegrees);
         return heading;
+    }
+
+    public Rotation2d getRotation2d() {
+         rotation2d = gyro.getRotation2d();
+        return rotation2d;
     }
 
     @Override
