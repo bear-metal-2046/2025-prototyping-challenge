@@ -34,9 +34,9 @@ class SwerveModule extends SubsystemBase {
         steerEncoder = new CANcoder(descriptor.cancoderId(), CANBUS_NAME);
 
 
-        RobustConfigurator.tryConfigureTalonFX(" Drive Motor", driveMotor, createDriveMotorConfig());
-        RobustConfigurator.tryConfigureTalonFX(" Steer Motor", steerMotor, createSteerMotorConfig(descriptor.cancoderId(), ChassisConstants.steerRatio));
-        RobustConfigurator.tryConfigureCANcoder(" Encoder ", steerEncoder, createEncoderConfig());
+        RobustConfigurator.tryConfigureTalonFX(name + " Drive Motor", driveMotor, createDriveMotorConfig());
+        RobustConfigurator.tryConfigureTalonFX(name + " Steer Motor", steerMotor, createSteerMotorConfig(descriptor.cancoderId(), ChassisConstants.STEER_RATIO));
+        RobustConfigurator.tryConfigureCANcoder(name + " Encoder ", steerEncoder, createEncoderConfig());
 
 
 

@@ -10,37 +10,25 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 public class ChassisConstants {
 
 
-    // Current Limits
 
-    private static final double DRIVE_SUPPLY_CURRENT_LIMIT = 80;
-    private static final double DRIVE_STATOR_CURRENT_LIMIT = 160;
-
-
-
-    public static final double steerRatio = (1 /(150.0 /7)); /*Gotten from the Swerve Drive Specialists MK4i swerve module */
+    public static final double STEER_RATIO = 50d / 14d * 60d / 10d;
+    public static final double DRIVE_RATIO = (16.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0);
 
 
 
-    public static final CurrentLimitsConfigs teleopConfiguration =
-
-            new CurrentLimitsConfigs()
-                    .withStatorCurrentLimitEnable(false)
-                    .withSupplyCurrentLimitEnable(true)
-                    .withStatorCurrentLimit(DRIVE_STATOR_CURRENT_LIMIT)
-                    .withSupplyCurrentLimit(DRIVE_SUPPLY_CURRENT_LIMIT);
 
 
     public static TalonFXConfiguration createDriveMotorConfig() {
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
         return new TalonFXConfiguration()
 
                 .withMotorOutput(
                         new MotorOutputConfigs()
                                 .withNeutralMode(NeutralModeValue.Brake)
                                 .withInverted(InvertedValue.Clockwise_Positive)
-                ).withCurrentLimits(
-                        teleopConfiguration
+                ).withFeedback(
+                        new FeedbackConfigs()
+                        .withRotorToSensorRatio(DRIVE_RATIO)
                 );
     }
 
