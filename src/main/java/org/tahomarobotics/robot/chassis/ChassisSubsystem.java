@@ -7,13 +7,14 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.tahomarobotics.robot.RobotMap;
+import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.signals.LoggedStatusSignal;
 import org.littletonrobotics.junction.Logger;
 import java.util.List;
 
 import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
 
-public class ChassisSubsystem extends SubsystemBase {
+public class ChassisSubsystem extends AbstractSubsystem {
 
 
 
@@ -70,7 +71,7 @@ public class ChassisSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
+    public void subsystemPeriodic() {
 
          Logger.recordOutput("Chassis/Yaw", yaw.getValue());
          Logger.recordOutput("Chassis/Yaw Rate", yawRate.getValue());
