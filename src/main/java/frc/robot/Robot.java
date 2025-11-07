@@ -24,7 +24,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    //Stop signal logging on disable
+    SignalLogger.stop();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -49,6 +52,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    //TODO: for actual use, start signal logging on autonomous init (?)
+    SignalLogger.start();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
