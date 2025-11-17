@@ -36,16 +36,13 @@ public final class RobotMap {
     // arm
     public static final int ARM_TOP_MOTOR = 0;
     public static final int ARM_BOTTOM_MOTOR = 1;
-    public static final int ELBOW_ENCODER = 2;
-    public static final int WRIST_ENCODER = 3;
+
     //Hardware IDs (find proper assigned numbers from Design Leads)
     //Source: Lines 287-289 NEW_SUBSYSTEM_GUIDE.md
     public static final int ENDEFFECTOR_MOTOR = 4;
     public static final int ELEVATOR_MOTOR_LEFT = 10;
     public static final int ELEVATOR_MOTOR_RIGHT = 11;
-    public static final int ARM_TOP_ENCODER = 20;
-    public static final int ARM_BOTTOM_ENCODER = 21;
-    public static final int ARM_WRIST_ENCODER = 22;
+
 
     // elevator
     public static final int ELEVATOR_ENCODER = 12;
