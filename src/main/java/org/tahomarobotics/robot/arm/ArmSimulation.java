@@ -35,9 +35,7 @@ public class ArmSimulation extends AbstractSimulation{
 
     private final TalonFXSimState topMotorSimState;
     private final TalonFXSimState bottomMotorSimState;
-    private final CANcoderSimState topEncoderSimState;
-    private final CANcoderSimState bottomEncoderSimState;
-    private final CANcoderSimState wristEncoderSimState;
+
 
     private final SingleJointedArmSim elbowSim;
     private final DCMotorSim wristSim;
@@ -48,25 +46,17 @@ public class ArmSimulation extends AbstractSimulation{
         RadiansPerSecond.of(0.0)
     );
 
-    public ArmSimulation(TalonFXSimState topMotorSimState, TalonFXSimState bottomMotorSimState, 
-    CANcoderSimState topEncoderSimState, CANcoderSimState bottomEncoderSimState, CANcoderSimState wristEncoderSimState) {
+    public ArmSimulation(TalonFXSimState topMotorSimState, TalonFXSimState bottomMotorSimState) {
         super("ArmSimulation");
         this.topMotorSimState = topMotorSimState;
         this.bottomMotorSimState = bottomMotorSimState;
-        this.topEncoderSimState = topEncoderSimState;
-        this.bottomEncoderSimState = bottomEncoderSimState;
-        this.wristEncoderSimState = wristEncoderSimState;
+
 
         // Set motor orientations to match real robot (positive voltage moves arm up)
         topMotorSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.CounterClockwise_Positive;
         bottomMotorSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.Clockwise_Positive;
 
-        // Set encoders to match real robot (inverted)
-        topEncoderSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.CounterClockwise_Positive;
-        bottomEncoderSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.Clockwise_Positive;
 
-        // top motor positive and bottom motor negative rotates wrist counter-clockwise looking from the front
-        wristEncoderSimState.Orientation = com.ctre.phoenix6.sim.ChassisReference.CounterClockwise_Positive;
 
         DCMotor elbowMotor = DCMotor.getKrakenX60Foc(2).withReduction(ELBOW_GEARBOX_RATIO);
 
@@ -135,10 +125,6 @@ public class ArmSimulation extends AbstractSimulation{
         topMotorSimState.setRawRotorPosition(diffMotorPositions.topMotorPosition());
         bottomMotorSimState.setRawRotorPosition(diffMotorPositions.bottomMotorPosition());
 
-        // Update encoder simulation states from accumulated shaft positions
-        topEncoderSimState.setRawPosition(diffMotorPositions.topMotorPosition().div(ELBOW_GEARBOX_RATIO));
-        bottomEncoderSimState.setRawPosition(diffMotorPositions.bottomMotorPosition().div(ELBOW_GEARBOX_RATIO) );
-        wristEncoderSimState.setRawPosition(Radians.of(wristSim.getAngularPositionRad()).times(WRIST_ENCODER_GEARBOX_RATIO));
 
         // update velocities
         // -------------------------------------------------------------------
@@ -156,10 +142,7 @@ public class ArmSimulation extends AbstractSimulation{
         topMotorSimState.setRotorVelocity(diffMotorVelocities.topMotorAngularVelocity());
         bottomMotorSimState.setRotorVelocity(diffMotorVelocities.bottomMotorAngularVelocity());
         
-        // Update encoder simulation states from accumulated shaft positions
-        topEncoderSimState.setVelocity(diffMotorVelocities.topMotorAngularVelocity().div(ELBOW_GEARBOX_RATIO));
-        bottomEncoderSimState.setVelocity(diffMotorVelocities.bottomMotorAngularVelocity().div(ELBOW_GEARBOX_RATIO));
-        wristEncoderSimState.setVelocity(RadiansPerSecond.of(wristSim.getAngularVelocityRadPerSec()).times(WRIST_ENCODER_GEARBOX_RATIO));
+
 
     }
 }
