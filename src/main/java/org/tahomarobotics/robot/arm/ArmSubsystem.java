@@ -16,9 +16,6 @@ public class ArmSubsystem extends AbstractSubsystem {
     private final TalonFX bottomMotor;
 
 
-    private final ArmSimulation armSimulataion;
-
-
     ArmSubsystem() {
         this(new TalonFX(RobotMap.ARM_TOP_MOTOR), new TalonFX(RobotMap.ARM_BOTTOM_MOTOR));
     }
@@ -29,20 +26,12 @@ public class ArmSubsystem extends AbstractSubsystem {
         this.bottomMotor = bottomMotor;
 
 
-        armSimulataion = new ArmSimulation(
-            topMotor.getSimState(), 
-            bottomMotor.getSimState()
 
-
-
-        );
     }
     @Override
     public void subsystemPeriodic() {
 
     }
 
-    public ArmSimulation getSimulation() {
-        return armSimulataion;
-    }
+
 }
