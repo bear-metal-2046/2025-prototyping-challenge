@@ -24,34 +24,52 @@
 
 package org.tahomarobotics.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.tahomarobotics.robot.endeffector.EndEffector;
+import org.tinylog.Supplier;
 
-import static edu.wpi.first.units.Units.Volt;
+import static edu.wpi.first.units.Units.Volts;
 
 public class OI extends SubsystemBase {
 
     private static final int DRIVER_CONTROLLER_INDEX = 0;
     public EndEffector endEffector = new EndEffector();
+    private static final double DEADBAND = 0.09;
+    private static final double TRIGGER_DEADBAND = 0.05;
+    private static final double DESENSITIZED_POWER =1.5;
 
     final CommandXboxController driverController = new CommandXboxController(DRIVER_CONTROLLER_INDEX);
 
 
 
-    @SuppressWarnings("SuspiciousNameCombination")
-    public void setDefaultCommands() {
-        endEffector.setDefaultCommand(endEffector.applyVoltage());
+
+    public void ConfigureBinding() {
+       endEffector.setDefaultCommand(endEffector.applyVoltage(()-> Volts.of(getLeftTrigger())));
+
 
     }
+    public double getLeftTrigger() {
+        return desensitizePowerBased(driverController.getLeftTriggerAxis(), DESENSITIZED_POWER);
+    }
+
 
 
     public OI(RobotContainer robotContainer) {
 
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
 
-        // controller binding
+        ConfigureBinding();
     }
+    public double desensitizePowerBased(double value, double power) {
+        value = MathUtil.applyDeadband(value, DEADBAND);
+        value *= Math.pow(Math.abs(value), power - 1);
+        return value;
+    }
+
+
+
 }
