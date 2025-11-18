@@ -1,13 +1,12 @@
 package org.tahomarobotics.robot.elevator;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.Velocity;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -15,6 +14,7 @@ import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.*;
 import static org.tahomarobotics.robot.elevator.ElevatorConstants.ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE;
+import static org.tahomarobotics.robot.elevator.ElevatorConstants.ELEVATOR_MIN_POSE;
 
 class ElevatorSubsystem extends AbstractSubsystem {
 
@@ -22,7 +22,7 @@ class ElevatorSubsystem extends AbstractSubsystem {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
 
-    //Varables
+    //Variables
      private Distance targetPos;
 
     //Status Signals
@@ -38,6 +38,9 @@ class ElevatorSubsystem extends AbstractSubsystem {
         RobustConfigurator.tryConfigureTalonFX("left motor", leftMotor, ElevatorConstants.elevatorMotorConfig);
         rightMotor.setControl(new Follower(RobotMap.ELEVATOR_MOTOR_LEFT, true));
 
+        //
+        targetPos = ELEVATOR_MIN_POSE;
+
         //Status Signals
         carriagePos = leftMotor.getPosition();
         carriageVelocity = leftMotor.getVelocity();
@@ -50,11 +53,11 @@ class ElevatorSubsystem extends AbstractSubsystem {
     public void subsystemPeriodic() {
         //Logging State and Position Data
         Logger.recordOutput("Elevator/Target Position", targetPos);
-        Logger.recordOutput("Elevator/Carriage position", carriagePos.getValue());
         Logger.recordOutput("Elevator/Position error", (targetPos.in(Meters)
                 -(carriagePos.getValue().in(Rotations)
                     *ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Meters))));
-        Logger.recordOutput("Elevator/Carriage velocity", carriageVelocity.getValue());
+        Logger.recordOutput("Elevator/Carriage/Carriage position", carriagePos.getValue());
+        Logger.recordOutput("Elevator/Carriage/Carriage velocity", carriageVelocity.getValue());
 
         //Logging Motor and Control Data
         Logger.recordOutput("Elevator/Voltages/Left Motor", leftMotor.getMotorVoltage().getValue());

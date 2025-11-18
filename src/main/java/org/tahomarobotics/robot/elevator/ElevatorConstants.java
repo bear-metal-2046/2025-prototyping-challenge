@@ -22,6 +22,9 @@ public class ElevatorConstants {
     public static final Distance ELEVATOR_MAIN_PULLEY_RADIUS = Inch.of(1.1056);
     public static final Distance ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE = ELEVATOR_MAIN_PULLEY_RADIUS.times(2*Math.PI);
 
+    //Pose locations
+    public static final Distance ELEVATOR_MIN_POSE = Meters.of (0.01);
+
     // TalonFX configuration for elevator
     static final TalonFXConfiguration elevatorMotorConfig = new TalonFXConfiguration()
             .withSlot0(
