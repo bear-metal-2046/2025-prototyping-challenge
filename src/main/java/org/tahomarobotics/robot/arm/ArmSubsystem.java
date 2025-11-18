@@ -21,7 +21,7 @@ public class ArmSubsystem extends AbstractSubsystem {
     }
 
     ArmSubsystem(TalonFX topMotor, TalonFX bottomMotor) {
-        Logger.info("Creating an instance of ArmSubsystem (test constructor)...");
+        Logger.info("Creating an instance of ArmSubsystem");
         this.topMotor = topMotor;
         this.bottomMotor = bottomMotor;
 
