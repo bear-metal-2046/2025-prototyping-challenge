@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import static edu.wpi.first.units.Units.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.tahomarobotics.robot.arm.ArmDifferentialTransform.*;
-
 class ArmDifferentialTransformTest {
 
     private static final double TOLERANCE = 1e-9;
