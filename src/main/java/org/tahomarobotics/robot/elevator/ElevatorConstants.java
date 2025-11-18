@@ -15,10 +15,10 @@ import static edu.wpi.first.units.Units.Meters;
 //these constants are from robot 2025 and may need to be adjusted
 public class ElevatorConstants {
 
-    // Gearing
+    // Gear reduction
     public static final double ELEVATOR_GEAR_REDUCTION = 52d / 12d;
 
-    // Pulley
+    //Pully radius and Circumference
     public static final Distance ELEVATOR_MAIN_PULLEY_RADIUS = Inch.of(1.1056);
     public static final Distance ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE = ELEVATOR_MAIN_PULLEY_RADIUS.times(2*Math.PI);
 

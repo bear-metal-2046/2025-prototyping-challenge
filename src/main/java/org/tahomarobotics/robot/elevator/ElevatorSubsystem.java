@@ -24,20 +24,26 @@ class ElevatorSubsystem extends AbstractSubsystem {
 
     //Varables
      private Distance targetPos;
+
+    //Status Signals
      private StatusSignal <Angle> carriagePos;
      private StatusSignal <AngularVelocity> carriageVelocity;
 
-    //Status Signals
+    //Constructor
     public ElevatorSubsystem() {
-        org.tinylog.Logger.info("Creating ElevatorSubsystem");
+
+        //Motors
         leftMotor = new TalonFX(RobotMap.ELEVATOR_MOTOR_LEFT);
         rightMotor = new TalonFX(RobotMap.ELEVATOR_MOTOR_RIGHT);
         RobustConfigurator.tryConfigureTalonFX("left motor", leftMotor, ElevatorConstants.elevatorMotorConfig);
         rightMotor.setControl(new Follower(RobotMap.ELEVATOR_MOTOR_LEFT, true));
 
+        //Status Signals
         carriagePos = leftMotor.getPosition();
         carriageVelocity = leftMotor.getVelocity();
 
+        //Logging Elevator Creation
+        org.tinylog.Logger.info("Creating ElevatorSubsystem");
     }
 
     @Override
@@ -65,10 +71,12 @@ class ElevatorSubsystem extends AbstractSubsystem {
         Logger.recordOutput("Elevator/Sensor Feedback/Right Motor", rightMotor.getPosition().getValue());
     }
 
+    //currently does not move anything, and only sets the target position
     public void moveToPosition(Distance position) {
         targetPos = position;
     }
 
+    //stops both left and right motors
     public void stop() {
         leftMotor.set(0.0);
         rightMotor.set(0.0);
