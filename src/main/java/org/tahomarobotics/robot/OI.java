@@ -37,7 +37,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class OI extends SubsystemBase {
 
     private static final int DRIVER_CONTROLLER_INDEX = 0;
-    public EndEffector endEffector = new EndEffector();
+   private final EndEffector endEffector;
     private static final double DEADBAND = 0.09;
     private static final double TRIGGER_DEADBAND = 0.05;
     private static final double DESENSITIZED_POWER =1.5;
@@ -61,6 +61,7 @@ public class OI extends SubsystemBase {
     public OI(RobotContainer robotContainer) {
 
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
+        this.endEffector=robotContainer.endEffector;
 
         ConfigureBinding();
     }
