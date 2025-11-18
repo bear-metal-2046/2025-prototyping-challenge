@@ -1,6 +1,7 @@
 package org.tahomarobotics.robot.elevator;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.tinylog.Logger;
 
@@ -17,7 +18,7 @@ public class Elevator implements AutoCloseable {
     }
 
     // Basic commands
-    public Command setPosition(double position) {
+    public Command setPosition(Distance position) {
         return elevator.runOnce(() -> elevator.moveToPosition(position))
                 .withName("Elevator move to Position");
     }
