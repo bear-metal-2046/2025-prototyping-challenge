@@ -18,7 +18,4 @@ public class Arm implements AutoCloseable {
     public void close() throws Exception {
     }
 
-    public ArmSimulation getSimulation() {
-        return arm.getSimulation();
-    }
 }

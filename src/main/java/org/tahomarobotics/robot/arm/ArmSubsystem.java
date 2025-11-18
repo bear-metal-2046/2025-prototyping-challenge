@@ -15,42 +15,23 @@ public class ArmSubsystem extends AbstractSubsystem {
     private final TalonFX topMotor;
     private final TalonFX bottomMotor;
 
-    //Absolute encoders
-    private final CANcoder topEncoder;
-    private final CANcoder bottomEncoder;
-    private final CANcoder wristEncoder;
-
-    private final ArmSimulation armSimulataion;
-
 
     ArmSubsystem() {
-        this(new TalonFX(RobotMap.ARM_TOP_MOTOR), new TalonFX(RobotMap.ARM_BOTTOM_MOTOR),
-            new CANcoder(RobotMap.ARM_TOP_ENCODER),   new CANcoder(RobotMap.ARM_BOTTOM_ENCODER),
-            new CANcoder(RobotMap.ARM_WRIST_ENCODER));
+        this(new TalonFX(RobotMap.ARM_TOP_MOTOR, RobotMap.CANBUS_NAME), new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME));
     }
 
-    ArmSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANcoder topEncoder, CANcoder bottomEncoder, CANcoder wristEncoder) {
-        Logger.info("Creating an instance of ArmSubsystem (test constructor)...");
+    ArmSubsystem(TalonFX topMotor, TalonFX bottomMotor) {
+        Logger.info("Creating an instance of ArmSubsystem");
         this.topMotor = topMotor;
         this.bottomMotor = bottomMotor;
-        this.topEncoder = topEncoder;
-        this.bottomEncoder = bottomEncoder;
-        this.wristEncoder = wristEncoder;
 
-        armSimulataion = new ArmSimulation(
-            topMotor.getSimState(), 
-            bottomMotor.getSimState(), 
-            topEncoder.getSimState(),
-            bottomEncoder.getSimState(),
-            wristEncoder.getSimState()
-        );
+
+
     }
     @Override
     public void subsystemPeriodic() {
 
     }
 
-    public ArmSimulation getSimulation() {
-        return armSimulataion;
-    }
+
 }

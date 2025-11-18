@@ -24,16 +24,12 @@
 
 package org.tahomarobotics.robot.sim;
 
-import org.tahomarobotics.robot.arm.ArmSimulation;
-import org.tinylog.Logger;
-
 public class Simulation extends AbstractSimulation {
     
-    private final ArmSimulation armSimulation;
 
-    public Simulation(ArmSimulation armSimulation) {
+    public Simulation( ) {
         super("Simulation");
-        this.armSimulation = armSimulation;
+
     }
 
     public void resetFieldForAuto() {
@@ -42,6 +38,6 @@ public class Simulation extends AbstractSimulation {
 
     @Override
     protected void simulationPeriodic() {
-        armSimulation.loggedPeriodic(); 
+
     }
 }
