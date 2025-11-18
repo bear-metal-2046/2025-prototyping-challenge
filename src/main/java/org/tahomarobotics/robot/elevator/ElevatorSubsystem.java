@@ -23,7 +23,7 @@ class ElevatorSubsystem extends AbstractSubsystem {
     private final TalonFX rightMotor;
 
     //Variables
-     private Distance targetPos;
+     private Distance targetPos = ELEVATOR_MIN_POSE;
 
     //Status Signals
      private StatusSignal <Angle> carriagePos;
@@ -37,9 +37,6 @@ class ElevatorSubsystem extends AbstractSubsystem {
         rightMotor = new TalonFX(RobotMap.ELEVATOR_MOTOR_RIGHT);
         RobustConfigurator.tryConfigureTalonFX("left motor", leftMotor, ElevatorConstants.elevatorMotorConfig);
         rightMotor.setControl(new Follower(RobotMap.ELEVATOR_MOTOR_LEFT, true));
-
-        //
-        targetPos = ELEVATOR_MIN_POSE;
 
         //Status Signals
         carriagePos = leftMotor.getPosition();

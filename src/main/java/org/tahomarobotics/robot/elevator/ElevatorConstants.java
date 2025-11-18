@@ -39,7 +39,7 @@ public class ElevatorConstants {
                     new ClosedLoopGeneralConfigs()
                             .withContinuousWrap(false)
             ).withFeedback(new FeedbackConfigs()
-                    .withSensorToMechanismRatio(1.0 / ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Inch))
+                    .withSensorToMechanismRatio(1.0 / ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Meters))
                     .withRotorToSensorRatio(1.0 / ELEVATOR_GEAR_REDUCTION)
                     .withFeedbackRemoteSensorID(RobotMap.ELEVATOR_ENCODER)
                     .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder)
