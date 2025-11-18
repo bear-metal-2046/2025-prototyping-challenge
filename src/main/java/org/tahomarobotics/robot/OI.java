@@ -24,16 +24,29 @@
 
 package org.tahomarobotics.robot;
 
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.tahomarobotics.robot.endeffector.EndEffector;
 
-public class OI {
+import static edu.wpi.first.units.Units.Volt;
+
+public class OI extends SubsystemBase {
 
     private static final int DRIVER_CONTROLLER_INDEX = 0;
+    public EndEffector endEffector = new EndEffector();
 
     final CommandXboxController driverController = new CommandXboxController(DRIVER_CONTROLLER_INDEX);
 
-  
+
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    public void setDefaultCommands() {
+        endEffector.setDefaultCommand(endEffector.applyVoltage());
+
+    }
+
 
     public OI(RobotContainer robotContainer) {
 
