@@ -1,48 +1,37 @@
 package org.tahomarobotics.robot.chassis;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import org.tahomarobotics.robot.RobotMap;
-import org.tahomarobotics.robot.util.AbstractSubsystem;
-import org.tinylog.Logger;
+import org.tahomarobotics.robot.RobotMap.*;
 
-import java.util.List;
+import static edu.wpi.first.units.Units.Degrees;
+import static org.tahomarobotics.robot.RobotMap.*;
 
-import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
-
-public class ChassisSubsystem extends AbstractSubsystem {
+public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder> implements AutoCloseable {
 
 
-
-    //swerve Modules
-    private List<SwerveModule> modules;
-    //Gyro
-    private Pigeon2 pigeon = new Pigeon2(RobotMap.PIGEON, CANBUS_NAME);
-
-
-    //Constructor
-
-     ChassisSubsystem(List modules, Pigeon2 pigeon) {
-        this.modules = modules;
-        this.pigeon = pigeon;
+    public ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
+                            DeviceConstructor<TalonFX> steerMotorConstructor,
+                            DeviceConstructor<CANcoder> encoderConstructor,
+                            SwerveDrivetrainConstants drivetrainConstants,
+                            SwerveModuleConstants<?, ?, ?>... modules) {
+        super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
     }
-    //Constructor
-     ChassisSubsystem() {
 
-        modules = List.of(
-
-                new SwerveModule(RobotMap.FRONT_LEFT_MODULE),
-                new SwerveModule(RobotMap.FRONT_RIGHT_MODULE),
-                new SwerveModule(RobotMap.BACK_LEFT_MODULE),
-                new SwerveModule(RobotMap.BACK_RIGHT_MODULE)
-
-
+    public ChassisSubsystem() {
+        this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
+                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(0.0)),
+                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(0.0)),
+                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(0.0)),
+                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(0.0))
         );
-        Logger.info("Creating an instance of ChassisSubsystem...");
-
     }
 
     @Override
-    public void subsystemPeriodic() {
+    public void close() {}
 
-    }
 }
