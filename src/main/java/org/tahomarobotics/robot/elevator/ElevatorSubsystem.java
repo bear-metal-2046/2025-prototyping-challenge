@@ -1,6 +1,7 @@
 package org.tahomarobotics.robot.elevator;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -46,6 +47,11 @@ class ElevatorSubsystem extends AbstractSubsystem {
         org.tinylog.Logger.info("Creating ElevatorSubsystem");
     }
 
+    //Set Control
+    public void setElevatorVoltage(double volts) {
+        leftMotor.setVoltage(volts);
+    }
+
     @Override
     public void subsystemPeriodic() {
         //Logging State and Position Data
@@ -70,7 +76,6 @@ class ElevatorSubsystem extends AbstractSubsystem {
         Logger.recordOutput("Elevator/Sensor Feedback/Left Motor", leftMotor.getPosition().getValue());
         Logger.recordOutput("Elevator/Sensor Feedback/Right Motor", rightMotor.getPosition().getValue());
     }
-
     //currently does not move anything, and only sets the target position
     public void moveToPosition(Distance position) {
         targetPos = position;

@@ -24,6 +24,17 @@ public class ElevatorConstants {
 
     //Pose locations
     public static final Distance ELEVATOR_MIN_POSE = Meters.of (0.01);
+    public static final Distance ELEVATOR_MAX_POSE = Meters.of (1.035 + Units.inchesToMeters(6));
+
+
+    //Elevator Max Motions
+    public static final double ELEVATOR_MAX_VELOCITY = 2.0; //Meters/Sec
+    public static final double ELEVATOR_MAX_ACCELERATION = 15.0; //Meters/Sec^2
+    public static final double ELEVATOR_MAX_JERK = 200.0; // Meters/Sec^3
+
+    //Elevator
+
+
 
     // TalonFX configuration for elevator
     static final TalonFXConfiguration elevatorMotorConfig = new TalonFXConfiguration()
@@ -35,6 +46,15 @@ public class ElevatorConstants {
                     new MotorOutputConfigs()
                             .withNeutralMode(NeutralModeValue.Brake)
                             .withInverted(InvertedValue.CounterClockwise_Positive)
+            ).withMotionMagic(
+                    new MotionMagicConfigs()
+                            .withMotionMagicCruiseVelocity(ELEVATOR_MAX_VELOCITY)
+                            .withMotionMagicAcceleration(ELEVATOR_MAX_ACCELERATION)
+                            .withMotionMagicJerk(ELEVATOR_MAX_JERK)
+            ).withSoftwareLimitSwitch(
+                    new SoftwareLimitSwitchConfigs()
+                            .withForwardSoftLimitThreshold(ELEVATOR_MAX_POSE.in(Meters))
+                            .withReverseSoftLimitThreshold(ELEVATOR_MIN_POSE.in(Meters))
             ).withClosedLoopGeneral(
                     new ClosedLoopGeneralConfigs()
                             .withContinuousWrap(false)
