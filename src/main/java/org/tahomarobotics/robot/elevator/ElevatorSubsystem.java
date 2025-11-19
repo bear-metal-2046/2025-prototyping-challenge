@@ -48,42 +48,52 @@ class ElevatorSubsystem extends AbstractSubsystem {
     }
 
     //Set Control
+
+    //Set the Voltage of the elevator left motor
     public void setElevatorVoltage(double volts) {
         leftMotor.setVoltage(volts);
     }
 
-    @Override
-    public void subsystemPeriodic() {
-        //Logging State and Position Data
-        Logger.recordOutput("Elevator/Target Position", targetPos);
-        Logger.recordOutput("Elevator/Position error", (targetPos.in(Meters)
-                -(carriagePos.getValue().in(Rotations)
-                    *ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Meters))));
-        Logger.recordOutput("Elevator/Carriage/Carriage position", carriagePos.getValue());
-        Logger.recordOutput("Elevator/Carriage/Carriage velocity", carriageVelocity.getValue());
-
-        //Logging Motor and Control Data
-        Logger.recordOutput("Elevator/Voltages/Left Motor", leftMotor.getMotorVoltage().getValue());
-        Logger.recordOutput("Elevator/Currents/Left Motor Stator Current", leftMotor.getStatorCurrent().getValue());
-        Logger.recordOutput("Elevator/Currents/Left Motor Supply Current", leftMotor.getSupplyCurrent().getValue());
-        Logger.recordOutput("Elevator/Temperature/Left Motor Supply Current", leftMotor.getDeviceTemp().getValue());
-        Logger.recordOutput("Elevator/Voltages/Right Motor", rightMotor.getMotorVoltage().getValue());
-        Logger.recordOutput("Elevator/Currents/Right Motor Stator Current", rightMotor.getStatorCurrent().getValue());
-        Logger.recordOutput("Elevator/Currents/Right Motor Supply Current", rightMotor.getSupplyCurrent().getValue());
-        Logger.recordOutput("Elevator/Temperature/Right Motor Supply Current", rightMotor.getDeviceTemp().getValue());
-
-        //Logging Raw Sensor Feedback
-        Logger.recordOutput("Elevator/Sensor Feedback/Left Motor", leftMotor.getPosition().getValue());
-        Logger.recordOutput("Elevator/Sensor Feedback/Right Motor", rightMotor.getPosition().getValue());
-    }
-    //currently does not move anything, and only sets the target position
+    //Currently does not move anything, and only sets the target position
     public void moveToPosition(Distance position) {
         targetPos = position;
     }
 
-    //stops both left and right motors
+    //Stops both left and right motors
     public void stop() {
         leftMotor.set(0.0);
         rightMotor.set(0.0);
     }
+
+    //Periodic
+    @Override
+    public void subsystemPeriodic() {
+        //Logging State and Position Data
+        Logger.recordOutput("Elevator/Carriage/Target Position", targetPos);
+        Logger.recordOutput("Elevator/Carriage/Carriage position", carriagePos.getValue());
+        Logger.recordOutput("Elevator/Carriage/Carriage velocity", carriageVelocity.getValue());
+        Logger.recordOutput("Elevator/Carriage/Position error", (targetPos.in(Meters)
+                -(carriagePos.getValue().in(Rotations)
+                *ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Meters))));
+
+        //Logging Motor and Control Data
+        Logger.recordOutput("Elevator/Voltages/Left Motor", leftMotor.getMotorVoltage().getValue());
+        Logger.recordOutput("Elevator/Voltages/Right Motor", rightMotor.getMotorVoltage().getValue());
+        Logger.recordOutput("Elevator/Currents/Left Motor Stator Current", leftMotor.getStatorCurrent().getValue());
+        Logger.recordOutput("Elevator/Currents/Left Motor Supply Current", leftMotor.getSupplyCurrent().getValue());
+        Logger.recordOutput("Elevator/Currents/Right Motor Stator Current", rightMotor.getStatorCurrent().getValue());
+        Logger.recordOutput("Elevator/Currents/Right Motor Supply Current", rightMotor.getSupplyCurrent().getValue());
+        Logger.recordOutput("Elevator/Temperature/Right Motor Supply Current", rightMotor.getDeviceTemp().getValue());
+        Logger.recordOutput("Elevator/Temperature/Left Motor Supply Current", leftMotor.getDeviceTemp().getValue());
+
+        //Logging Raw Sensor Feedback
+        Logger.recordOutput("Elevator/Sensor Feedback/Left Motor", leftMotor.getPosition().getValue());
+        Logger.recordOutput("Elevator/Sensor Feedback/Right Motor", rightMotor.getPosition().getValue());
+
+        //Logging limit switches
+        Logger.recordOutput("Elevator/Limit Switches/Max Limit", leftMotor.getFault_ForwardSoftLimit().getValue());
+        Logger.recordOutput("Elevator/Limit Switches/Max Limit", leftMotor.getFault_ReverseSoftLimit().getValue());
+    }
+
+
 }

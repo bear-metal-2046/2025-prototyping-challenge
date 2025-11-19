@@ -26,11 +26,6 @@ public class Elevator implements AutoCloseable {
         return elevator.runOnce(() -> elevator.stop())
                 .withName("Elevator Stop");
     }
-    public Command homingRoutine() {
-        return elevator.runOnce(() -> elevator.setElevatorVoltage(-0.2))
-                .withName("Elevator Homing Routine:");
-    }
-
 
     @Override
     public void close() throws Exception {}
