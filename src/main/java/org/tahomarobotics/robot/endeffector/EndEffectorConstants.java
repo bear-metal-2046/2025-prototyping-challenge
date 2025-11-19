@@ -13,7 +13,15 @@ import static edu.wpi.first.units.Units.Volts;
 public class EndEffectorConstants {
     public static final Voltage MAXIMUM_VOLTAGE = Volts.of(6);
 
-
+    // Logging configuration
+    /** Minimum time between periodic logging snapshots (seconds) */
+    public static final double PERIODIC_LOG_INTERVAL = 0.5;
+    
+    /** Minimum voltage change to trigger actuator delta logging (volts) */
+    public static final double VOLTAGE_DELTA_THRESHOLD = 0.5;
+    
+    /** Minimum time between rate-limited logs of the same type (seconds) */
+    public static final double RATE_LIMIT_INTERVAL = 1.0;
 
 
 
