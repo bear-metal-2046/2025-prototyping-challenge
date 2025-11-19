@@ -5,7 +5,7 @@ package org.tahomarobotics.robot.endeffector;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
-import org.littletonrobotics.junction.Logger;
+import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
 public class EndEffector implements AutoCloseable{
@@ -19,7 +19,7 @@ public class EndEffector implements AutoCloseable{
 
     EndEffector(EndEffectorSubsystem endEffectorSubsystem) {
         this.endEffector = endEffectorSubsystem;
-        Logger.recordOutput("Console","End Effector has been initalized");
+        Logger.info("End Effector has been intialized");
     }
     public Command applyVoltage (Supplier <Voltage> voltage) {
         return endEffector.run(() -> endEffector.setVoltage(voltage.get()));

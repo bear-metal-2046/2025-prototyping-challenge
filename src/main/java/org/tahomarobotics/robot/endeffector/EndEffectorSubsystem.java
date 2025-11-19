@@ -23,7 +23,7 @@ public class EndEffectorSubsystem extends AbstractSubsystem {
         public EndEffectorSubsystem() {
             endEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);
             RobustConfigurator.tryConfigureTalonFX("End Effector Motor",endEffectorMotor,EndEffectorConstants.endEffectorMotorConfig);
-            Logger.recordOutput("Console","End Effector Subsystem has been created");
+            org.tinylog.Logger.info("End Effector Subsystem has been created");
 
 
 
