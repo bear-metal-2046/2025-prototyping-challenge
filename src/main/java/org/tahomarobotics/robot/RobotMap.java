@@ -44,24 +44,19 @@ public final class RobotMap {
     public static final int ELEVATOR_MOTOR_RIGHT = 11;
 
 
-    // elevator
     public static final int ELEVATOR_ENCODER = 12;
-
     public static final String CANBUS_NAME = "Canivore";
-
     public static final int PIGEON = 0;
 
-    public final static moduleId FRONT_LEFT_MODULE = new moduleId(
+    // chassis
+    public final static ModuleId FRONT_LEFT_MODULE = new ModuleId(
             "Front Left Module", 1, 11, 21);
-    public final static moduleId FRONT_RIGHT_MODULE = new moduleId(
+    public final static ModuleId FRONT_RIGHT_MODULE = new ModuleId(
             "Front Right Module", 2, 12, 22);
-    public final static moduleId BACK_LEFT_MODULE = new moduleId(
+    public final static ModuleId BACK_LEFT_MODULE = new ModuleId(
             "Front Left Module", 3, 13, 23);
-    public final static moduleId BACK_RIGHT_MODULE = new moduleId(
+    public final static ModuleId BACK_RIGHT_MODULE = new ModuleId(
             "Front Right Module", 4, 14, 24);
 
-
-
-    public record moduleId(String moduleName, int driveId, int steerId, int cancoderId) {}
-
+    public record ModuleId(String moduleName, int driveId, int steerId, int cancoderId) {}
 }
