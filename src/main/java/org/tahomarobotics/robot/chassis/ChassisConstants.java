@@ -4,58 +4,74 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
+import org.tahomarobotics.robot.RobotMap.*;
 
+import java.util.Map;
 
+import static edu.wpi.first.units.Units.Meters;
+import static org.tahomarobotics.robot.RobotMap.*;
 
 public class ChassisConstants {
+    public static final SwerveDrivetrainConstants DRIVETRAIN_CONSTANTS =
+            new SwerveDrivetrainConstants()
+                    .withCANBusName(CANBUS_NAME)
+                    .withPigeon2Id(PIGEON);
 
+    private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> MODULE_CONSTANTS_FACTORY =
+            new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>();
+//                    .withDriveMotorGearRatio(kDriveGearRatio)
+//                    .withSteerMotorGearRatio(kSteerGearRatio)
+//                    .withCouplingGearRatio(kCoupleRatio)
+//                    .withWheelRadius(kWheelRadius)
+//                    .withSteerMotorGains(steerGains)
+//                    .withDriveMotorGains(driveGains)
+//                    .withSteerMotorClosedLoopOutput(kSteerClosedLoopOutput)
+//                    .withDriveMotorClosedLoopOutput(kDriveClosedLoopOutput)
+//                    .withSlipCurrent(kSlipCurrent)
+//                    .withSpeedAt12Volts(kSpeedAt12Volts)
+//                    .withDriveMotorType(kDriveMotorType)
+//                    .withSteerMotorType(kSteerMotorType)
+//                    .withFeedbackSource(kSteerFeedbackType)
+//                    .withDriveMotorInitialConfigs(driveInitialConfigs)
+//                    .withSteerMotorInitialConfigs(steerInitialConfigs)
+//                    .withEncoderInitialConfigs(encoderInitialConfigs)
+//                    .withSteerInertia(kSteerInertia)
+//                    .withDriveInertia(kDriveInertia)
+//                    .withSteerFrictionVoltage(kSteerFrictionVoltage)
+//                    .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
+    public static final Distance HALF_TRACK_WIDTH = Meters.of(20.75 / 2.0);
+    public static final Distance HALF_WHEELBASE = Meters.of(20.75 / 2.0);
 
-    public static final double STEER_RATIO = 50d / 14d * 60d / 10d;
-    public static final double DRIVE_RATIO = (16.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0);
+    private static final Map<ModuleId, Distance> DISTANCE_X = Map.of(
+            FRONT_LEFT_MODULE, HALF_WHEELBASE,
+            FRONT_RIGHT_MODULE, HALF_WHEELBASE,
+            BACK_LEFT_MODULE, HALF_WHEELBASE.unaryMinus(),
+            BACK_RIGHT_MODULE, HALF_WHEELBASE.unaryMinus()
+    );
 
+    private static final Map<ModuleId, Distance> DISTANCE_Y = Map.of(
+            FRONT_LEFT_MODULE, HALF_TRACK_WIDTH.unaryMinus(),
+            FRONT_RIGHT_MODULE, HALF_TRACK_WIDTH,
+            BACK_LEFT_MODULE, HALF_TRACK_WIDTH.unaryMinus(),
+            BACK_RIGHT_MODULE, HALF_TRACK_WIDTH
+    );
 
-
-
-
-    public static TalonFXConfiguration createDriveMotorConfig() {
-
-        return new TalonFXConfiguration()
-
-                .withMotorOutput(
-                        new MotorOutputConfigs()
-                                .withNeutralMode(NeutralModeValue.Brake)
-                                .withInverted(InvertedValue.Clockwise_Positive)
-                ).withFeedback(
-                        new FeedbackConfigs()
-                        .withRotorToSensorRatio(DRIVE_RATIO)
-                );
-    }
-
-
-    public static TalonFXConfiguration createSteerMotorConfig(int encoderId, double steerRatio) {
-        return new TalonFXConfiguration()
-                .withMotorOutput(
-                        new MotorOutputConfigs()
-                                .withNeutralMode(NeutralModeValue.Brake)
-                                .withInverted(InvertedValue.Clockwise_Positive)
-                ).withFeedback(new FeedbackConfigs()
-                        .withFeedbackRemoteSensorID(encoderId)
-                        .withRotorToSensorRatio(steerRatio)
-                );
-    }
-
-
-
-
-    public static CANcoderConfiguration createEncoderConfig() {
-        return new CANcoderConfiguration()
-                .withMagnetSensor(
-                        new MagnetSensorConfigs()
-                                .withAbsoluteSensorDiscontinuityPoint(1)
-                                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
-                );
-    }
+    public static SwerveModuleConstants <TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId, Angle steerOffset) {
+        return MODULE_CONSTANTS_FACTORY
+                .createModuleConstants(moduleId.steerId(),
+                        moduleId.driveId(),
+                        moduleId.cancoderId(),
+                        steerOffset,
+                        DISTANCE_X.get(moduleId),
+                        DISTANCE_Y.get(moduleId),
+                        false, false, false);
+        }
 }
 
 
