@@ -27,6 +27,9 @@ public class EndEffector implements AutoCloseable{
     public void setDefaultCommand (Command command){
         endEffector.setDefaultCommand(command);
     }
+    public void Logging (){
+
+    }
     @Override
     public void close() throws Exception {
 
