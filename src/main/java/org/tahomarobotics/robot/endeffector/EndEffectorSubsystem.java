@@ -23,8 +23,8 @@ public class EndEffectorSubsystem extends AbstractSubsystem {
         public EndEffectorSubsystem() {
             endEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);
             RobustConfigurator.tryConfigureTalonFX("End Effector Motor",endEffectorMotor,EndEffectorConstants.endEffectorMotorConfig);
-            Logger.recordOutput("EndEffector","End Effector Subsystem has been created");
-       
+            Logger.recordOutput("Console","End Effector Subsystem has been created");
+
 
 
         }
@@ -32,7 +32,7 @@ public class EndEffectorSubsystem extends AbstractSubsystem {
 
     public void setVoltage (Voltage voltage){
             endEffectorMotor.setVoltage(voltage.in(Volt));
-            Logger.recordOutput("EndEffector/Voltage", (BooleanSupplier) endEffectorMotor.getMotorVoltage());
+
         }
 
 
@@ -40,7 +40,7 @@ public class EndEffectorSubsystem extends AbstractSubsystem {
 
     @Override
     public void subsystemPeriodic() {
-        Logger.recordOutput("End Effector Current Voltage", (BooleanSupplier) endEffectorMotor.getMotorVoltage());
+        Logger.recordOutput("End Effector/Voltage", (BooleanSupplier) endEffectorMotor.getMotorVoltage());
 
     }
 }
