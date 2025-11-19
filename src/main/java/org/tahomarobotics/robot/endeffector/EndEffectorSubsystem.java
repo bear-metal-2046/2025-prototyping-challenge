@@ -16,9 +16,7 @@ public class EndEffectorSubsystem extends AbstractSubsystem {
 
         private final TalonFX endEffectorMotor;
 
-        public void Logging (){
 
-        }
 
         public EndEffectorSubsystem() {
             endEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);
