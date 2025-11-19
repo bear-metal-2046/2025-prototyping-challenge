@@ -8,6 +8,8 @@ import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
 
+import java.util.function.BooleanSupplier;
+
 import static edu.wpi.first.units.Units.Volt;
 
 public class EndEffectorSubsystem extends AbstractSubsystem {
@@ -30,12 +32,15 @@ public class EndEffectorSubsystem extends AbstractSubsystem {
 
     public void setVoltage (Voltage voltage){
             endEffectorMotor.setVoltage(voltage.in(Volt));
+            Logger.recordOutput("EndEffector/Voltage", (BooleanSupplier) endEffectorMotor.getMotorVoltage());
         }
+
 
 
 
     @Override
     public void subsystemPeriodic() {
+        Logger.recordOutput("End Effector Current Voltage", (BooleanSupplier) endEffectorMotor.getMotorVoltage());
 
     }
 }
