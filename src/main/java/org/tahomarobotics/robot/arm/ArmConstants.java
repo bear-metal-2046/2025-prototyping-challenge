@@ -15,6 +15,9 @@ import org.tahomarobotics.robot.util.RobustConfigurator;
 public class ArmConstants {
 
 
+    // gear reduction
+    public static final double GEAR_REDUCTION = 32;
+
 
     static final TalonFXConfiguration armMotorConfig() {
 
@@ -33,10 +36,13 @@ public class ArmConstants {
         .withMotorOutput(
                 new MotorOutputConfigs()
                         .withNeutralMode(NeutralModeValue.Brake)
-                        .withInverted(InvertedValue.CounterClockwise_Positive));
+                        .withInverted(InvertedValue.CounterClockwise_Positive))
 
+                .withFeedback(
+                        new FeedbackConfigs()
+                                .withSensorToMechanismRatio(GEAR_REDUCTION)
 
-
+                );
         }
 
 
