@@ -1,19 +1,47 @@
 package org.tahomarobotics.robot.elevator;
 
-public final class ElevatorConstants {
-    private ElevatorConstants() {}
+import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Distance;
+import org.tahomarobotics.robot.RobotMap;
 
-    // placeholder conversion factor
-    public static final double ROTATIONS_PER_METER = 10000.0;
-    public static double metersToRotations(double m) { return m * ROTATIONS_PER_METER; }
+import static edu.wpi.first.units.Units.Inch;
+import static edu.wpi.first.units.Units.Meters;
 
-    // placeholder preset heights (meters)
-    public static final double HEIGHT_LOW_M = 0.35;
-    public static final double HEIGHT_MID_M = 0.75;
-    public static final double HEIGHT_HIGH_M = 1.35;
+//these constants are from robot 2025 and may need to be adjusted
+public class ElevatorConstants {
 
-    // Native positions
-    public static final double POS_LOW = metersToRotations(HEIGHT_LOW_M);
-    public static final double POS_MID = metersToRotations(HEIGHT_MID_M);
-    public static final double POS_HIGH = metersToRotations(HEIGHT_HIGH_M);
+    // Gear reduction
+    public static final double ELEVATOR_GEAR_REDUCTION = 52d / 12d;
+
+    //Pully radius and Circumference
+    public static final Distance ELEVATOR_MAIN_PULLEY_RADIUS = Inch.of(1.1056);
+    public static final Distance ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE = ELEVATOR_MAIN_PULLEY_RADIUS.times(2*Math.PI);
+
+    //Pose locations
+    public static final Distance ELEVATOR_MIN_POSE = Meters.of (0.01);
+
+    // TalonFX configuration for elevator
+    static final TalonFXConfiguration elevatorMotorConfig = new TalonFXConfiguration()
+            .withSlot0(
+                    new Slot0Configs()
+                            .withGravityType(GravityTypeValue.Elevator_Static)
+            )
+            .withMotorOutput(
+                    new MotorOutputConfigs()
+                            .withNeutralMode(NeutralModeValue.Brake)
+                            .withInverted(InvertedValue.CounterClockwise_Positive)
+            ).withClosedLoopGeneral(
+                    new ClosedLoopGeneralConfigs()
+                            .withContinuousWrap(false)
+            ).withFeedback(new FeedbackConfigs()
+                    .withSensorToMechanismRatio(1.0 / ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Meters))
+                    .withRotorToSensorRatio(1.0 / ELEVATOR_GEAR_REDUCTION)
+                    .withFeedbackRemoteSensorID(RobotMap.ELEVATOR_ENCODER)
+                    .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder)
+            );
 }

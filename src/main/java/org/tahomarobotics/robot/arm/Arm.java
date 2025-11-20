@@ -1,5 +1,6 @@
 package org.tahomarobotics.robot.arm;
 
+import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
 public class Arm implements AutoCloseable {
@@ -18,7 +19,4 @@ public class Arm implements AutoCloseable {
     public void close() throws Exception {
     }
 
-    public ArmSimulation getSimulation() {
-        return arm.getSimulation();
-    }
 }
