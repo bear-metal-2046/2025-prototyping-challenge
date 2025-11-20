@@ -28,7 +28,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.tahomarobotics.robot.elevator.Elevator;
+import org.tahomarobotics.robot.elevator.Elevator;
 import org.tahomarobotics.robot.endeffector.EndEffector;
+import org.tinylog.Supplier;
+
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
 public class OI extends SubsystemBase {
@@ -38,10 +43,13 @@ public class OI extends SubsystemBase {
     private static final double DESENSITIZED_POWER = 1.5;
 
     final CommandXboxController driverController = new CommandXboxController(DRIVER_CONTROLLER_INDEX);
+    private Elevator elevator = new Elevator();
 
     public void configureBindings() {
-       endEffector.setDefaultCommand(endEffector.applyVoltage(()-> Volts.of(getLeftTrigger())));
+        endEffector.setDefaultCommand(endEffector.applyVoltage(() -> Volts.of(getLeftTrigger())));
+
     }
+
 
     public double getLeftTrigger() {
         return desensitizePowerBased(driverController.getLeftTriggerAxis(), DESENSITIZED_POWER);
