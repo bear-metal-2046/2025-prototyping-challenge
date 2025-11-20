@@ -1,6 +1,7 @@
 package org.tahomarobotics.robot.arm;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -71,6 +72,11 @@ public class Arm implements AutoCloseable {
 
     }
 
+    public Command setPercentOutput(double percent){
+
+
+        return arm.runOnce(() -> arm.getTopMotor().setControl(new DutyCycleOut(percent)));
+    }
 
 
     @Override
