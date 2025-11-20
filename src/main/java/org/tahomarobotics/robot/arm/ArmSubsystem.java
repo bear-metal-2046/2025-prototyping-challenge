@@ -21,9 +21,9 @@ public class ArmSubsystem extends AbstractSubsystem {
 
         topMotor = new  TalonFX(RobotMap.ARM_TOP_MOTOR, RobotMap.CANBUS_NAME);
 
-       bottomMotor =  new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME);
+        bottomMotor =  new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME);
 
-       RobustConfigurator.tryConfigureTalonFX("Arm Motor", topMotor, ArmConstants.armMotorConfig());
+        RobustConfigurator.tryConfigureTalonFX("Arm Motor", topMotor, ArmConstants.armMotorConfig());
 
         bottomMotor.setControl(new Follower(topMotor.getDeviceID(), false));
 
@@ -33,10 +33,19 @@ public class ArmSubsystem extends AbstractSubsystem {
         Logger.info("Creating an instance of ArmSubsystem");
         this.topMotor = topMotor;
         this.bottomMotor = bottomMotor;
-
-
-
     }
+
+
+    public TalonFX getTopMotor() {
+        return topMotor;
+    }
+
+    public TalonFX getBottomMotor(){
+
+        return bottomMotor;
+    }
+
+
     @Override
     public void subsystemPeriodic() {
 

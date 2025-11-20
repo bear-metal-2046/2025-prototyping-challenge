@@ -1,18 +1,21 @@
 package org.tahomarobotics.robot.arm;
 
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import org.tahomarobotics.robot.RobotMap;
-import org.tahomarobotics.robot.util.RobustConfigurator;
-
 
 
 public class ArmConstants {
+
+
+    public static final double LOW = 10;
+    public static final double MID = 10;
+    public static final double HIGH = 10;
+    public static final double STOW = 10;
+
+    public static final double MIN_POSITION = 10;
+    public static final double MAX_POSITION = 20;
 
 
     // gear reduction
@@ -37,6 +40,14 @@ public class ArmConstants {
                 new MotorOutputConfigs()
                         .withNeutralMode(NeutralModeValue.Brake)
                         .withInverted(InvertedValue.CounterClockwise_Positive))
+                .withSoftwareLimitSwitch(
+                        new SoftwareLimitSwitchConfigs()
+                                .withReverseSoftLimitEnable(true)
+                                .withReverseSoftLimitThreshold(MIN_POSITION)
+
+                                .withForwardSoftLimitEnable(true)
+                                .withForwardSoftLimitThreshold(MAX_POSITION)
+                )
 
                 .withFeedback(
                         new FeedbackConfigs()
