@@ -24,11 +24,16 @@
 
 package org.tahomarobotics.robot.sim;
 
-public class Simulation extends AbstractSimulation {
-    
+import org.tahomarobotics.robot.elevator.ElevatorSimulation;
 
-    public Simulation( ) {
+public class Simulation extends AbstractSimulation {
+
+        private final ElevatorSimulation elevatorSimulation;
+
+    public Simulation(ElevatorSimulation elevatorSimulation) {
         super("Simulation");
+        this.elevatorSimulation = elevatorSimulation;
+
 
     }
 
@@ -38,6 +43,6 @@ public class Simulation extends AbstractSimulation {
 
     @Override
     protected void simulationPeriodic() {
-
+        elevatorSimulation.loggedPeriodic();
     }
 }

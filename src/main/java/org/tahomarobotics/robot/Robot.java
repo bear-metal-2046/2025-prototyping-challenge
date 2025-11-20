@@ -99,11 +99,12 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void simulationInit() {
-        
+        robotContainer.simulation.resetFieldForAuto();
     }
 
     @Override
     public void simulationPeriodic() {
+        robotContainer.simulation.loggedPeriodic();
        
     }
 

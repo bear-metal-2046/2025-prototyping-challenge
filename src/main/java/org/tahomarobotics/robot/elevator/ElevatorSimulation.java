@@ -15,7 +15,6 @@ import static org.tahomarobotics.robot.elevator.ElevatorConstants.ELEVATOR_MAIN_
 
 public class ElevatorSimulation extends AbstractSimulation {
 
-
     public ElevatorSimulation(TalonFXSimState elevatorMotorSimState, CANcoderSimState elevatorEncoderSimState) {
         super("Elevator");
         motorSimState = elevatorMotorSimState;
@@ -37,6 +36,10 @@ public class ElevatorSimulation extends AbstractSimulation {
 
     public Distance getPosition() {
         return position;
+    }
+
+    public ElevatorSim getElevatorSim() {
+        return sim;
     }
 
     @Override
@@ -71,6 +74,5 @@ public class ElevatorSimulation extends AbstractSimulation {
     private final ElevatorSim sim;
 
     private Distance position = Meters.zero();
-
 
 }

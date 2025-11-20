@@ -3,6 +3,7 @@ package org.tahomarobotics.robot.elevator;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -21,6 +22,8 @@ class ElevatorSubsystem extends AbstractSubsystem {
     //hardware
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
+
+    private final ElevatorSimulation simulation;
 
     //Variables
      private Distance targetPos = ELEVATOR_MIN_POSE;
@@ -44,6 +47,12 @@ class ElevatorSubsystem extends AbstractSubsystem {
 
         //Logging Elevator Creation
         org.tinylog.Logger.info("Creating ElevatorSubsystem");
+
+        simulation = new ElevatorSimulation(leftMotor.getSimState(), new CANcoder(10).getSimState());
+    }
+
+    public ElevatorSimulation getSimulation() {
+        return simulation;
     }
 
     @Override
@@ -75,6 +84,8 @@ class ElevatorSubsystem extends AbstractSubsystem {
     public void moveToPosition(Distance position) {
         targetPos = position;
     }
+
+
 
     //stops both left and right motors
     public void stop() {

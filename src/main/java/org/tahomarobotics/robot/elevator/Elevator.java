@@ -2,6 +2,7 @@ package org.tahomarobotics.robot.elevator;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.tinylog.Logger;
 
@@ -26,6 +27,11 @@ public class Elevator implements AutoCloseable {
         return elevator.runOnce(() -> elevator.stop())
                 .withName("Elevator Stop");
     }
+
+    public ElevatorSimulation getSimulation() {
+        return elevator.getSimulation();
+    }
+
 
     @Override
     public void close() throws Exception {}
