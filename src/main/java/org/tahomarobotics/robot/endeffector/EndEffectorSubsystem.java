@@ -38,7 +38,7 @@ public class EndEffectorSubsystem extends AbstractSubsystem {
 
     @Override
     public void subsystemPeriodic() {
-        Logger.recordOutput("End Effector/Voltage", (BooleanSupplier) endEffectorMotor.getMotorVoltage());
+        Logger.recordOutput("End Effector/Voltage", endEffectorMotor.getMotorVoltage().getValue());
 
     }
 }
