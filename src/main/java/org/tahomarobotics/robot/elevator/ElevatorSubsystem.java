@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
@@ -31,6 +32,10 @@ class ElevatorSubsystem extends AbstractSubsystem {
      private StatusSignal <Angle> carriagePos;
      private StatusSignal <AngularVelocity> carriageVelocity;
 
+     //Control request
+
+    private final PositionVoltage elevatorControlRequest = new PositionVoltage(0);
+
     //Constructor
     public ElevatorSubsystem() {
 
@@ -55,8 +60,8 @@ class ElevatorSubsystem extends AbstractSubsystem {
         leftMotor.setVoltage(volts);
     }
 
-    //Currently does not move anything, and only sets the target position
-    public void moveToPosition(Distance position, ControlRequest elevatorControlRequest) {
+    //Moves the target Position, with set limits
+    public void moveToPosition(Distance position) {
         org.tinylog.Logger.info(position);
         targetPos = Meters.of(MathUtil.clamp(position.in(Meters), ELEVATOR_MIN_POSE.in(Meters), ELEVATOR_MAX_POSE.in(Meters)));
         leftMotor.setControl(elevatorControlRequest);

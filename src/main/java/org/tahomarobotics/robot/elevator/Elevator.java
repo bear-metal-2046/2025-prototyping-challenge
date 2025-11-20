@@ -9,7 +9,7 @@ import org.tinylog.Logger;
 public class Elevator implements AutoCloseable {
     private final ElevatorSubsystem elevator;
 
-    private final PositionVoltage positionVoltageControl = new PositionVoltage(0);
+
 
     public Elevator() {
         this(new ElevatorSubsystem());
@@ -22,7 +22,7 @@ public class Elevator implements AutoCloseable {
 
     // Basic commands
     public Command setPosition(Distance position) {
-        return elevator.runOnce(() -> elevator.moveToPosition(position, positionVoltageControl))
+        return elevator.runOnce(() -> elevator.moveToPosition(position))
                 .withName("Elevator move to Position");
     }
     public Command stop() {

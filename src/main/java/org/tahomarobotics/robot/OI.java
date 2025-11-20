@@ -47,10 +47,7 @@ public class OI extends SubsystemBase {
 
     public void configureBindings() {
         endEffector.setDefaultCommand(endEffector.applyVoltage(() -> Volts.of(getLeftTrigger())));
-        driverController.a().onTrue(elevator.setPosition(Meters.of(0.0001)));
-        driverController.b().onTrue(elevator.setPosition(Meters.of(0.4)));
-        driverController.x().onTrue(elevator.setPosition(Meters.of(0.8)));
-        driverController.y().onTrue(elevator.setPosition(Meters.of(1.0)));
+
     }
 
 
