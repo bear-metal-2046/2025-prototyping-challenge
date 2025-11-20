@@ -29,10 +29,14 @@ public class Arm implements AutoCloseable {
 
 
 
-    public Command setPosition(double position) {
-        return arm.runOnce(() -> arm.getTopMotor().setControl(new MotionMagicVoltage(position))
-        );
+    public Command setPosition(double angleDegrees) {
+        return arm.runOnce(() -> {
+
+            double motorRotations = (angleDegrees / 360.0);
+            arm.getTopMotor().setControl(new MotionMagicVoltage(motorRotations));
+        });
     }
+
 
     public Command lowCommand(){
     armState = ClimberState.LOW;
@@ -77,9 +81,16 @@ public class Arm implements AutoCloseable {
         return arm.runOnce(() -> arm.getTopMotor().setControl(new DutyCycleOut(percent)));
     }
 
+    public Command getPosition(){
+
+        return arm.runOnce(() ->  arm.getTopMotor().getPosition().getValue());
+    }
+
+
 
     @Override
     public void close() throws Exception {
+
     }
 
 }

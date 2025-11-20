@@ -8,12 +8,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ArmConstants {
 
-
+    // add real positions later. These are all in degrees
     public static final double LOW = 10;
     public static final double MID = 10;
     public static final double HIGH = 10;
     public static final double STOW = 10;
 
+    // add real soft limits later. These are all in degrees
     public static final double MIN_POSITION = 10;
     public static final double MAX_POSITION = 20;
 
