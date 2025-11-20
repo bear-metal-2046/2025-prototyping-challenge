@@ -1,13 +1,14 @@
 package org.tahomarobotics.robot.arm;
 
-import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.sim.CANcoderSimState;
 
-import edu.wpi.first.wpilibj.CAN;
+
 
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
+import org.tahomarobotics.robot.util.RobustConfigurator;
+
 import org.tinylog.Logger;
 
 public class ArmSubsystem extends AbstractSubsystem {
@@ -16,8 +17,16 @@ public class ArmSubsystem extends AbstractSubsystem {
     private final TalonFX bottomMotor;
 
 
-    ArmSubsystem() {
-        this(new TalonFX(RobotMap.ARM_TOP_MOTOR, RobotMap.CANBUS_NAME), new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME));
+    public ArmSubsystem() {
+
+        topMotor = new  TalonFX(RobotMap.ARM_TOP_MOTOR, RobotMap.CANBUS_NAME);
+
+       bottomMotor =  new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME);
+
+       RobustConfigurator.tryConfigureTalonFX("Arm Motor", topMotor, ArmConstants.armMotorConfig());
+
+        bottomMotor.setControl(new Follower(topMotor.getDeviceID(), false));
+
     }
 
     ArmSubsystem(TalonFX topMotor, TalonFX bottomMotor) {

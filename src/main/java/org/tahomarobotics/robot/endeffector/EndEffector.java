@@ -19,16 +19,19 @@ public class EndEffector implements AutoCloseable{
 
     EndEffector(EndEffectorSubsystem endEffectorSubsystem) {
         this.endEffector = endEffectorSubsystem;
-        Logger.info("EndEffector initialized");
+        Logger.info("End Effector has been intialized");
     }
     public Command applyVoltage (Supplier <Voltage> voltage) {
         return endEffector.run(() -> endEffector.setVoltage(voltage.get()));
     }
     public void setDefaultCommand (Command command){
         endEffector.setDefaultCommand(command);
+
     }
+
     @Override
     public void close() throws Exception {
+
 
     }
 }
