@@ -8,8 +8,6 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import org.tahomarobotics.robot.RobotMap;
-import org.tahomarobotics.robot.RobotMap.*;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static org.tahomarobotics.robot.RobotMap.*;
@@ -35,7 +33,9 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
     }
 
     public void setSpeeds(ChassisSpeeds speeds) {
-        setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds).withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
+        setControl(new SwerveRequest.ApplyFieldSpeeds()
+                .withSpeeds(speeds)
+                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
     }
 
     @Override
