@@ -1,10 +1,13 @@
 package org.tahomarobotics.robot.arm;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 
-
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -40,10 +43,26 @@ public class ArmSubsystem extends AbstractSubsystem {
         return topMotor;
     }
 
-    public TalonFX getBottomMotor(){
 
-        return bottomMotor;
+    public void setArmPosition(double angle) {
+
+
+            double motorRotations = (angle / 360.0);
+            topMotor.setControl(new MotionMagicVoltage(motorRotations));
+
+
     }
+
+    public void setArmPercentOutput(double percent){
+
+        topMotor.setControl(new DutyCycleOut(percent));
+    }
+
+    public Angle getArmPosition(){
+
+     return topMotor.getPosition().getValue();
+    }
+
 
 
     @Override

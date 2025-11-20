@@ -28,20 +28,10 @@ public class Arm implements AutoCloseable {
     }
 
 
-
-    public Command setPosition(double angleDegrees) {
-        return arm.runOnce(() -> {
-
-            double motorRotations = (angleDegrees / 360.0);
-            arm.getTopMotor().setControl(new MotionMagicVoltage(motorRotations));
-        });
-    }
-
-
     public Command lowCommand(){
     armState = ClimberState.LOW;
 
-    return arm.runOnce(() -> arm.getTopMotor().setPosition(ArmConstants.LOW));
+    return arm.runOnce(() -> arm.setArmPosition(ArmConstants.LOW));
 
 
     }
@@ -50,7 +40,7 @@ public class Arm implements AutoCloseable {
 
         armState = ClimberState.MID;
 
-        return arm.runOnce(() -> arm.getTopMotor().setPosition(ArmConstants.MID));
+        return arm.runOnce(() -> arm.setArmPosition(ArmConstants.MID));
 
     }
 
@@ -58,7 +48,7 @@ public class Arm implements AutoCloseable {
 
         armState = ClimberState.HIGH;
 
-        return arm.runOnce(() -> arm.getTopMotor().setPosition(ArmConstants.HIGH));
+        return arm.runOnce(() -> arm.setArmPosition(ArmConstants.HIGH));
 
     }
 
@@ -66,7 +56,7 @@ public class Arm implements AutoCloseable {
 
         armState = ClimberState.STOW;
 
-        return arm.runOnce(() -> arm.getTopMotor().setPosition(ArmConstants.STOW));
+        return arm.runOnce(() -> arm.setArmPosition(ArmConstants.STOW));
 
     }
 
@@ -76,15 +66,6 @@ public class Arm implements AutoCloseable {
 
     }
 
-    public Command setPercentOutput(double percent){
-
-        return arm.runOnce(() -> arm.getTopMotor().setControl(new DutyCycleOut(percent)));
-    }
-
-    public Command getPosition(){
-
-        return arm.runOnce(() ->  arm.getTopMotor().getPosition().getValue());
-    }
 
 
 
