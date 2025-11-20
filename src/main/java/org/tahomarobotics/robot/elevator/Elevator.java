@@ -1,5 +1,6 @@
 package org.tahomarobotics.robot.elevator;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -7,6 +8,8 @@ import org.tinylog.Logger;
 
 public class Elevator implements AutoCloseable {
     private final ElevatorSubsystem elevator;
+
+    private final PositionVoltage positionVoltageControl = new PositionVoltage(0);
 
     public Elevator() {
         this(new ElevatorSubsystem());
@@ -19,7 +22,7 @@ public class Elevator implements AutoCloseable {
 
     // Basic commands
     public Command setPosition(Distance position) {
-        return elevator.runOnce(() -> elevator.moveToPosition(position))
+        return elevator.runOnce(() -> elevator.moveToPosition(position, positionVoltageControl))
                 .withName("Elevator move to Position");
     }
     public Command stop() {

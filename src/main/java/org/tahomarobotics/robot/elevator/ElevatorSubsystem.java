@@ -2,9 +2,11 @@ package org.tahomarobotics.robot.elevator;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -14,8 +16,7 @@ import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.*;
-import static org.tahomarobotics.robot.elevator.ElevatorConstants.ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE;
-import static org.tahomarobotics.robot.elevator.ElevatorConstants.ELEVATOR_MIN_POSE;
+import static org.tahomarobotics.robot.elevator.ElevatorConstants.*;
 
 class ElevatorSubsystem extends AbstractSubsystem {
 
@@ -55,8 +56,11 @@ class ElevatorSubsystem extends AbstractSubsystem {
     }
 
     //Currently does not move anything, and only sets the target position
-    public void moveToPosition(Distance position) {
-        targetPos = position;
+    public void moveToPosition(Distance position, ControlRequest elevatorControlRequest) {
+        org.tinylog.Logger.info(position);
+        targetPos = Meters.of(MathUtil.clamp(position.in(Meters), ELEVATOR_MIN_POSE.in(Meters), ELEVATOR_MAX_POSE.in(Meters)));
+        leftMotor.setControl(elevatorControlRequest);
+        rightMotor.setControl(new Follower(RobotMap.ELEVATOR_MOTOR_LEFT, true));
     }
 
     //Stops both left and right motors
@@ -92,7 +96,7 @@ class ElevatorSubsystem extends AbstractSubsystem {
 
         //Logging limit switches
         Logger.recordOutput("Elevator/Limit Switches/Max Limit", leftMotor.getFault_ForwardSoftLimit().getValue());
-        Logger.recordOutput("Elevator/Limit Switches/Max Limit", leftMotor.getFault_ReverseSoftLimit().getValue());
+        Logger.recordOutput("Elevator/Limit Switches/Min Limit", leftMotor.getFault_ReverseSoftLimit().getValue());
     }
 
 
