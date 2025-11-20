@@ -74,7 +74,6 @@ public class Arm implements AutoCloseable {
 
     public Command setPercentOutput(double percent){
 
-
         return arm.runOnce(() -> arm.getTopMotor().setControl(new DutyCycleOut(percent)));
     }
 
