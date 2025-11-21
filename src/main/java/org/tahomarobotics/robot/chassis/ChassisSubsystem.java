@@ -9,11 +9,15 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static org.tahomarobotics.robot.RobotMap.*;
 
 public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder> implements AutoCloseable, Subsystem {
+   @AutoLogOutput (key = "ChassisSpeeds")
+    private ChassisSpeeds speeds = new ChassisSpeeds();
 
 
     public ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
@@ -34,6 +38,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
     }
 
     public void setSpeeds(ChassisSpeeds speeds) {
+        this.speeds = speeds;
         setControl(new SwerveRequest.ApplyFieldSpeeds()
                 .withSpeeds(speeds)
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
@@ -42,4 +47,10 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
     @Override
     public void close() {}
 
+    @Override
+    public void periodic() {
+        for (int i = 0; i < 4; i++) {
+            Logger.recordOutput("SwerveModuleStates/" + i, this.getModule(i).getCurrentState());
+        }
+    }
 }

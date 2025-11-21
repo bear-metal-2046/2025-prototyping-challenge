@@ -40,11 +40,11 @@ public class Robot extends LoggedRobot {
 
     private final RobotContainer robotContainer;
 
-    private Robot() {
+    public Robot() {
         this(new RobotContainer());
     }
 
-    Robot(RobotContainer robotContainer) {
+    private Robot(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
 
         if (Robot.isSimulation()) {
