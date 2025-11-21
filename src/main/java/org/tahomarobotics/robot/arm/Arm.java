@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tinylog.Logger;
 
@@ -25,6 +26,22 @@ public class Arm implements AutoCloseable {
     Arm(ArmSubsystem arm) {
         this.arm = arm;
 
+    }
+
+    public Command sysIdQuasistaticForward() {
+        return ArmSubsystem.getSysIdRoutine().quasistatic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command sysIdQuasistaticReverse() {
+        return ArmSubsystem.getSysIdRoutine().quasistatic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public Command sysIdDynamicForward() {
+        return ArmSubsystem.getSysIdRoutine().dynamic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command sysIdDynamicReverse() {
+        return ArmSubsystem.getSysIdRoutine().dynamic(SysIdRoutine.Direction.kReverse);
     }
 
 
