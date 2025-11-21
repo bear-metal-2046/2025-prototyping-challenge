@@ -8,7 +8,6 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-
 import static edu.wpi.first.units.Units.Degrees;
 import static org.tahomarobotics.robot.RobotMap.*;
 
@@ -25,10 +24,10 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
 
     public ChassisSubsystem() {
         this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
-                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(0.0)),
-                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(0.0)),
-                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(0.0)),
-                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(0.0))
+                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(-18.2d)),
+                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(-28.2d)),
+                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(-71.9d)),
+                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(-132.7d))
         );
     }
 
