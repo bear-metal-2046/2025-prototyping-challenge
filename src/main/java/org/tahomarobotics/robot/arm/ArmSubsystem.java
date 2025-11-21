@@ -58,7 +58,6 @@ public class ArmSubsystem extends AbstractSubsystem {
 
     public Angle getArmPosition(){
         return topMotor.getPosition().getValue();
-
     }
 
 

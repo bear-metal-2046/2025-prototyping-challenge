@@ -61,7 +61,6 @@ public class Arm implements AutoCloseable {
     }
 
     public Command stopCommand(){
-
         return arm.runOnce(() -> arm.getTopMotor().stopMotor());
 
     }
