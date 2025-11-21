@@ -1,6 +1,5 @@
 package org.tahomarobotics.robot.elevator;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -8,7 +7,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.simulation.PWMSim;
+import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -23,15 +23,16 @@ class ElevatorSubsystem extends AbstractSubsystem {
     //hardware
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
+    private final CANcoder encoder;
 
-    private final ElevatorSimulation simulation;
+    private final ElevatorSimulation simulation; // may be null when not in simulation
 
     //Variables
      private Distance targetPos = ELEVATOR_MIN_POSE;
 
     //Status Signals
-     private StatusSignal <Angle> carriagePos;
-     private StatusSignal <AngularVelocity> carriageVelocity;
+     private final StatusSignal<Angle> carriagePos;
+     private final StatusSignal<AngularVelocity> carriageVelocity;
 
     //Constructor
     public ElevatorSubsystem() {
@@ -49,7 +50,15 @@ class ElevatorSubsystem extends AbstractSubsystem {
         //Logging Elevator Creation
         org.tinylog.Logger.info("Creating ElevatorSubsystem");
 
-        simulation = new ElevatorSimulation(leftMotor.getSimState(), new CANcoder(10).getSimState());
+        // Create a persistent CANcoder instance (avoid creating a temporary just for sim state)
+        encoder = new CANcoder(RobotMap.ELEVATOR_ENCODER);
+
+        // Only construct the simulation helper when running in simulation
+        if (Robot.isSimulation()) {
+            simulation = new ElevatorSimulation(leftMotor.getSimState(), encoder.getSimState());
+        } else {
+            simulation = null;
+        }
     }
 
     public ElevatorSimulation getSimulation() {
@@ -87,9 +96,18 @@ class ElevatorSubsystem extends AbstractSubsystem {
     }
 
     public void updateTelemetry() {
-        simulation.updateTelemetry();
+        if (simulation != null) {
+            simulation.updateTelemetry();
+        }
     }
 
+    public boolean isAtLowerLimit() {
+        return simulation != null && simulation.isAtLowerLimit();
+    }
+
+    public boolean isAtUpperLimit() {
+        return simulation != null && simulation.isAtUpperLimit();
+    }
 
 
     //stops both left and right motors

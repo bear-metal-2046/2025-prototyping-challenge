@@ -28,7 +28,7 @@ import org.tahomarobotics.robot.elevator.ElevatorSimulation;
 
 public class Simulation extends AbstractSimulation {
 
-    private final ElevatorSimulation elevatorSimulation;
+    public final ElevatorSimulation elevatorSimulation;
 
     public Simulation(ElevatorSimulation elevatorSimulation) {
         super("Simulation");
