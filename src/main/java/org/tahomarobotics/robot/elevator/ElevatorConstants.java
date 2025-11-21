@@ -25,6 +25,7 @@ public class ElevatorConstants {
     //Pose locations
     public static final Distance ELEVATOR_MIN_POSE = Meters.of (0.01);
     public static final Distance ELEVATOR_MAX_POSE = Meters.of (1.035);
+    public static final Distance ELEVATOR_TEST_POSE = Meters.of(1.0);
 
 
     //Elevator Max Motions

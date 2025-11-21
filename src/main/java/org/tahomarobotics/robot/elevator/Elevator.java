@@ -44,7 +44,8 @@ public class Elevator implements AutoCloseable {
     }
 
     public Command manualJog(Supplier<Voltage> voltage) {
-        return Commands.run(() ->elevator.setElevatorVoltage(voltage.get().in(Volt)));
+        return Commands.run(() ->elevator.setElevatorVoltage(voltage.get().in(Volt)))
+                .andThen(Commands.runOnce(() -> Logger.info("Elevator is Jogging")));
     }
 
     @Override
