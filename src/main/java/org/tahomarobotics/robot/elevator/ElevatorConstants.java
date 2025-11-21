@@ -7,10 +7,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Voltage;
 import org.tahomarobotics.robot.RobotMap;
 
-import static edu.wpi.first.units.Units.Inch;
-import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.*;
 
 //these constants are from robot 2025 and may need to be adjusted
 public class ElevatorConstants {
@@ -31,6 +31,9 @@ public class ElevatorConstants {
     public static final double ELEVATOR_MAX_VELOCITY = 2.0; //Meters/Sec
     public static final double ELEVATOR_MAX_ACCELERATION = 15.0; //Meters/Sec^2
     public static final double ELEVATOR_MAX_JERK = 200.0; // Meters/Sec^3
+
+    //Elevator Voltages
+    public static final Voltage ELEVATOR_ZERO_VOLTAGE = Volt.of(-1.0);
 
     //Elevator
 

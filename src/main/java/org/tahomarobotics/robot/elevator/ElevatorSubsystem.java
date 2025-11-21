@@ -74,6 +74,11 @@ class ElevatorSubsystem extends AbstractSubsystem {
         rightMotor.set(0.0);
     }
 
+    //Get Values
+    public AngularVelocity getCarriageVelocity() {
+        return carriageVelocity.
+    }
+
     //Periodic
     @Override
     public void subsystemPeriodic() {
