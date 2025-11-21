@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Voltage;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -75,8 +76,12 @@ class ElevatorSubsystem extends AbstractSubsystem {
     }
 
     //Get Values
-    public AngularVelocity getCarriageVelocity() {
-        return carriageVelocity.
+    public AngularVelocity getCarriageVelocity () {
+        return carriageVelocity.getValue();
+    }
+
+    public void setCarriagePos (double pos) {
+        leftMotor.setPosition(pos);
     }
 
     //Periodic
