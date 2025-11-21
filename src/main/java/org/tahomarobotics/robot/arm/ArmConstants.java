@@ -4,19 +4,22 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.measure.Angle;
+
+import static edu.wpi.first.units.Units.Degrees;
 
 
 public class ArmConstants {
 
     // add real positions later. These are all in degrees
-    public static final double LOW = 10;
-    public static final double MID = 10;
-    public static final double HIGH = 10;
-    public static final double STOW = 10;
+    public static final Angle LOW = Degrees.of(10);
+    public static final Angle MID =  Degrees.of(10);;
+    public static final Angle HIGH =  Degrees.of(10);;
+    public static final Angle STOW =  Degrees.of(10);;
 
     // add real soft limits later. These are all in degrees
-    public static final double MIN_POSITION = 10;
-    public static final double MAX_POSITION = 20;
+    public static final Angle MIN_POSITION =  Degrees.of(10);;
+    public static final Angle MAX_POSITION =  Degrees.of(20);;
 
 
     // gear reduction

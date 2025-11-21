@@ -19,6 +19,8 @@ public class ArmSubsystem extends AbstractSubsystem {
     private final TalonFX topMotor;
     private final TalonFX bottomMotor;
 
+    private final MotionMagicVoltage positonControl = new MotionMagicVoltage(0);
+
 
     public ArmSubsystem() {
 
@@ -44,23 +46,19 @@ public class ArmSubsystem extends AbstractSubsystem {
     }
 
 
-    public void setArmPosition(double angle) {
-
-
-            double motorRotations = (angle / 360.0);
-            topMotor.setControl(new MotionMagicVoltage(motorRotations));
-
+    public void setArmPosition(Angle angle) {
+        topMotor.setControl(positonControl.withPosition(angle));
 
     }
 
     public void setArmPercentOutput(double percent){
-
         topMotor.setControl(new DutyCycleOut(percent));
+
     }
 
     public Angle getArmPosition(){
+        return topMotor.getPosition().getValue();
 
-     return topMotor.getPosition().getValue();
     }
 
 
