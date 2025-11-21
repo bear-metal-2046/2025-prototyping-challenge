@@ -33,7 +33,7 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private static final CommandXboxController joystick = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -75,6 +75,25 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+        joystick.leftTrigger().onTrue(drivetrain.applyRequest(() ->
+                        drive.withVelocityX(1)
+                                .withVelocityY(0)
+                                .withRotationalRate(0)))
+                        .onFalse(drivetrain.applyRequest(() ->
+                                drive.withVelocityX(0)
+                                        .withVelocityY(0)
+                                        .withRotationalRate(0)));
+
+        joystick.rightTrigger().onTrue(drivetrain.applyRequest(() ->
+                        drive.withVelocityX(-1)
+                                .withVelocityY(0)
+                                .withRotationalRate(0)))
+                .onFalse(drivetrain.applyRequest(() ->
+                        drive.withVelocityX(0)
+                                .withVelocityY(0)
+                                .withRotationalRate(0)));
+
+        joystick.y().onTrue(drivetrain.runOnce(drivetrain::setAllSteersToZero).ignoringDisable(true));
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
