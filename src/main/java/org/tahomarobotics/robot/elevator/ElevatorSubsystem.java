@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -83,6 +84,10 @@ class ElevatorSubsystem extends AbstractSubsystem {
     //currently does not move anything, and only sets the target position
     public void moveToPosition(Distance position) {
         targetPos = position;
+    }
+
+    public void updateTelemetry() {
+        simulation.updateTelemetry();
     }
 
 

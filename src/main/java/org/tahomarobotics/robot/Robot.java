@@ -26,6 +26,7 @@ package org.tahomarobotics.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -33,6 +34,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.tahomarobotics.robot.util.CommandLogger;
 import org.tahomarobotics.robot.util.WatchDog;
+
+import static edu.wpi.first.units.Units.Inches;
 
 public class Robot extends LoggedRobot {
 
@@ -70,6 +73,7 @@ public class Robot extends LoggedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        robotContainer.elevator.updateTelemetry();
     }
 
     @Override
@@ -89,6 +93,8 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopPeriodic() {
+
+
         // no need for this other than removing console printouts
     }
 
@@ -105,6 +111,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationPeriodic() {
         robotContainer.simulation.loggedPeriodic();
+
        
     }
 

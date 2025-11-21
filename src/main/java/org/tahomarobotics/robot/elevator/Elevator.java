@@ -32,6 +32,10 @@ public class Elevator implements AutoCloseable {
         return elevator.getSimulation();
     }
 
+    public void updateTelemetry() {
+        elevator.updateTelemetry();
+    }
+
 
     @Override
     public void close() throws Exception {}

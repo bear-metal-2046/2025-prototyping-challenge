@@ -3,9 +3,14 @@ package org.tahomarobotics.robot.elevator;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.sim.AbstractSimulation;
@@ -19,28 +24,20 @@ public class ElevatorSimulation extends AbstractSimulation {
         super("Elevator");
         motorSimState = elevatorMotorSimState;
         encoderSimState = elevatorEncoderSimState;
-        sim = new ElevatorSim(
-                ELEV_MOTOR,
-                52d/12d, // Gear Ratio
-                ELEV_ARM_MASS.in(Kilograms),
-                ELEVATOR_MAIN_PULLEY_RADIUS.in(Meters),
-                MIN_HEIGHT.in(Meters),
-                MAX_HEIGHT.in(Meters),
-                true,
-                START_HEIGHT.in(Meters)
-        );
+
+        SmartDashboard.putData("ElevatorSim", mech2d);
     }
 
+    private final ElevatorSim sim = new ElevatorSim(
+            ELEV_MOTOR,
+            52d/12d, // Gear Ratio
+            ELEV_ARM_MASS.in(Kilograms),
+            ELEVATOR_MAIN_PULLEY_RADIUS.in(Meters),
+            MIN_HEIGHT.in(Meters),
+            MAX_HEIGHT.in(Meters),
+            true,
+            START_HEIGHT.in(Meters));
 
-
-
-    public Distance getPosition() {
-        return position;
-    }
-
-    public ElevatorSim getElevatorSim() {
-        return sim;
-    }
 
     @Override
     public void simulationPeriodic() {
@@ -71,8 +68,21 @@ public class ElevatorSimulation extends AbstractSimulation {
 
     private final TalonFXSimState motorSimState;
     private final CANcoderSimState encoderSimState;
-    private final ElevatorSim sim;
 
     private Distance position = Meters.zero();
+
+    private final Mechanism2d mech2d =
+            new Mechanism2d(Units.inchesToMeters(10), Units.inchesToMeters(51));
+    private final MechanismRoot2d mech2dRoot =
+            mech2d.getRoot("Elevator Root", Units.inchesToMeters(5), Units.inchesToMeters(0.5));
+    private final MechanismLigament2d elevatorMech2d =
+            mech2dRoot.append(
+                    new MechanismLigament2d("Elevator", sim.getPositionMeters(), 90));
+
+    public void updateTelemetry() {
+        elevatorMech2d.setLength(sim.getPositionMeters());
+        SmartDashboard.putNumber("Elevator Position", sim.getPositionMeters());
+
+    }
 
 }

@@ -28,13 +28,11 @@ import org.tahomarobotics.robot.elevator.ElevatorSimulation;
 
 public class Simulation extends AbstractSimulation {
 
-        private final ElevatorSimulation elevatorSimulation;
+    private final ElevatorSimulation elevatorSimulation;
 
     public Simulation(ElevatorSimulation elevatorSimulation) {
         super("Simulation");
         this.elevatorSimulation = elevatorSimulation;
-
-
     }
 
     public void resetFieldForAuto() {
