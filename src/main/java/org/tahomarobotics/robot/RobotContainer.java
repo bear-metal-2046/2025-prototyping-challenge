@@ -57,9 +57,10 @@ public class RobotContainer implements AutoCloseable {
         vision = new Vision();
 
 
+
+        OI oi = new OI(this);
     }
 
     @Override
-    public void close() {;
-    }
+    public void close() {}
 }
