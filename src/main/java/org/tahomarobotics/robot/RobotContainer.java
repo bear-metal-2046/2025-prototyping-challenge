@@ -66,9 +66,10 @@ public class RobotContainer implements AutoCloseable {
         endEffector = new EndEffector();
 
         simulation = new Simulation(arm.getSimulation());
+
+        OI oi = new OI(this);
     }
 
     @Override
-    public void close() {;
-    }
+    public void close() {}
 }

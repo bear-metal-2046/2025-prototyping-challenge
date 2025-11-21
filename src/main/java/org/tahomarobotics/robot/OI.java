@@ -23,22 +23,17 @@
  */
 
 package org.tahomarobotics.robot;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.tahomarobotics.robot.chassis.Chassis;
 
 public class OI {
-
     private static final int DRIVER_CONTROLLER_INDEX = 0;
-
     final CommandXboxController driverController = new CommandXboxController(DRIVER_CONTROLLER_INDEX);
 
-  
-
     public OI(RobotContainer robotContainer) {
-
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
-
-        // controller binding
+        Chassis chassis = robotContainer.chassis;
+        chassis.setDefaultCommand(chassis.teleopDrive(driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
     }
 }

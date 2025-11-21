@@ -8,10 +8,12 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import static edu.wpi.first.units.Units.Degrees;
 import static org.tahomarobotics.robot.RobotMap.*;
 
-public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder> implements AutoCloseable {
+public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder> implements AutoCloseable, Subsystem {
 
 
     public ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
