@@ -70,7 +70,7 @@ class ElevatorSubsystem extends AbstractSubsystem {
     }
 
     //Stops both left and right motors
-    public void stop() {
+    public void stop(){
         leftMotor.set(0.0);
         rightMotor.set(0.0);
     }
