@@ -24,6 +24,7 @@
 
 package org.tahomarobotics.robot;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.tahomarobotics.robot.chassis.Chassis;
 
@@ -35,5 +36,8 @@ public class OI {
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
         Chassis chassis = robotContainer.chassis;
         chassis.setDefaultCommand(chassis.teleopDrive(driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
+        driverController.y().onTrue(Commands.runOnce(() -> {chassis.teleopDrive(0, 1, 0);})
+                .andThen(Commands.waitSeconds(1))
+                .andThen(Commands.runOnce(() -> {chassis.teleopDrive(0, 0, 0);})));
     }
 }
