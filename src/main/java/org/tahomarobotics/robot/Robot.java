@@ -41,11 +41,11 @@ public class Robot extends LoggedRobot {
     private final RobotContainer robotContainer;
     private final OI oi;
 
-    private Robot() {
+    public Robot() {
         this(new RobotContainer());
     }
 
-    Robot(RobotContainer robotContainer) {
+    private Robot(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
         oi = new OI(robotContainer);
 

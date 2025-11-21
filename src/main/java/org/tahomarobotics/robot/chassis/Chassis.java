@@ -1,10 +1,12 @@
 package org.tahomarobotics.robot.chassis;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import java.util.function.DoubleSupplier;
 
@@ -17,7 +19,8 @@ public class Chassis implements AutoCloseable {
 
     private final double MaxSpeed = ChassisConstants.MAX_LINEAR_VELOCITY.in(MetersPerSecond);
     private final double MaxAngularRate = ChassisConstants.MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
-
+    @AutoLogOutput(key = "Pose")
+    private Pose2d pose = new Pose2d();
     public Chassis() {
         this(new ChassisSubsystem());
     }
@@ -42,6 +45,11 @@ public class Chassis implements AutoCloseable {
             return Commands.run(() -> chassis.setSpeeds(new ChassisSpeeds(vx, vy, rotRate)));
     }
 
+    public Command teleopDrive(double x, double y, double omega) {
+        chassis.setSpeeds(new ChassisSpeeds(x, y, omega));;
+        return Commands.run(() -> chassis.setSpeeds(new ChassisSpeeds(x, y, omega)));
+    }
+
     public double applyDesensitization (double value, double power) {
         value = MathUtil.applyDeadband(value, ChassisConstants.CONTROLLER_DEADBAND);
         value = value * Math.pow(value, Math.abs(power - 1));
@@ -49,7 +57,12 @@ public class Chassis implements AutoCloseable {
     }
 
     public void setDefaultCommand(Command command) {
+        command.addRequirements(chassis);
         chassis.setDefaultCommand(command);
+    }
+
+    public void updatePose() {
+        //pose = new SwerveDriveKinematics()
     }
 
     public void close() {}
