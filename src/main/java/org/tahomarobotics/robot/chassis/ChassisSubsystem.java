@@ -39,6 +39,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
 
     public void setSpeeds(ChassisSpeeds speeds) {
         this.speeds = speeds;
+        //org.tinylog.Logger.error("Setting vx to " + speeds.vxMetersPerSecond);
         setControl(new SwerveRequest.ApplyFieldSpeeds()
                 .withSpeeds(speeds)
                 .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
