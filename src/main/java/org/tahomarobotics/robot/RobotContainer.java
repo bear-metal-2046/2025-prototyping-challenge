@@ -53,7 +53,7 @@ public class RobotContainer implements AutoCloseable {
     public Windmill windmill;
 
 
-    public RobotContainer(Windmill windmill) {
+    public RobotContainer() {
 
         // Arena must be created first to override the default instance provided by
         // org.ironmaple.simulation.SimulatedArena.getInstance() which is used by MapleSim

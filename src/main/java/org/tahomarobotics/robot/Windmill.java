@@ -13,12 +13,13 @@ import org.tahomarobotics.robot.elevator.ElevatorConstants;
 
 public class Windmill {
 
-    public Windmill() {
-    }
+    public final Elevator elevator = new Elevator();
+    public final Arm arm = new Arm();
 
-    private static WindmillPosition.TeamPositions currentPositions = WindmillPosition.TeamPositions.TEAM_POSITIONS;
 
-    public static void setTeamPositions(WindmillPosition.TeamPositions positions) {
+    private  WindmillPosition.TeamPositions currentPositions = WindmillPosition.TeamPositions.TEAM_POSITIONS;
+
+    public void setTeamPositions(WindmillPosition.TeamPositions positions) {
         currentPositions = positions;
     }
 
@@ -34,7 +35,7 @@ public class Windmill {
     }
 
     // Low position command
-    public static Command moveWindmill(Arm arm, Elevator elevator, WindmillPosition height) {
+    public Command moveWindmill(Arm arm, Elevator elevator, WindmillPosition height) {
 
         if (!validatePosition(height)) return Commands.none();
         return (
