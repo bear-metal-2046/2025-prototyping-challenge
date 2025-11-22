@@ -27,6 +27,8 @@ import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static org.tahomarobotics.robot.RobotMap.*;
 
 public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder> implements AutoCloseable, Subsystem {
@@ -61,7 +63,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
 
     public void zeroSteers() {
         for (int i = 0; i < 4; i++) {
-            Angle offset = Degrees.of(getModule(i).getCurrentState().angle.getDegrees());
+            Angle offset = Degrees.of(-getModule(i).getCurrentState().angle.getDegrees());
 
             // Find the correct name and config for the module so we send it to preferences correctly
             String name;
@@ -69,30 +71,32 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
             switch (i) {
                 case 0 -> {
                     name = FRONT_LEFT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor.withMagnetOffset(offset);
+                    config = ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor;
                 }
                 case 1 -> {
                     name = FRONT_RIGHT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE).EncoderInitialConfigs.MagnetSensor.withMagnetOffset(offset);
+                    config = ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE).EncoderInitialConfigs.MagnetSensor;
                 }
                 case 2 -> {
                     name = BACK_LEFT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(BACK_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor.withMagnetOffset(offset);
+                    config = ChassisConstants.getModuleConfig(BACK_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor;
                 }
                 case 3 -> {
                     name = BACK_RIGHT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE).EncoderInitialConfigs.MagnetSensor.withMagnetOffset(offset);
+                    config = ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE).EncoderInitialConfigs.MagnetSensor;
                 }
                 default -> {
                     name = "oops, something went wrong.";
-                    config = ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor.withMagnetOffset(offset);
+                    config = ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor;
 
                 }
             }
 
+            config = config.withMagnetOffset(offset.plus(Rotations.of(config.MagnetOffset)));
+
+            org.tinylog.Logger.info(name + " " + offset.in(Degrees) + " degrees");
             // Write to the offsets file and apply new config to encoder.
             Preferences.setDouble(name, offset.in(Degrees));
-            getModule(i).getEncoder().getConfigurator().apply(config);
         }
     }
 
