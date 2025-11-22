@@ -190,13 +190,22 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
     }
 
     @Override
-    public void close() {}
-
-    @Override
     public void periodic() {
         this.getState();
         for (int i = 0; i < 4; i++) {
             Logger.recordOutput("SwerveModuleStates/" + i, this.getModule(i).getCurrentState());
+
+            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS DRIVE PROPORTIONAL"+ i, getModule(i).getDriveMotor().getClosedLoopProportionalOutput().getValue());
+            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS STEER PROPORTIONAL"+ i, getModule(i).getSteerMotor().getClosedLoopProportionalOutput().getValue());
+
+            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS DRIVE INTEGRATED"+ i, getModule(i).getDriveMotor().getClosedLoopIntegratedOutput().getValue());
+            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS STEER INTEGRATED"+ i, getModule(i).getSteerMotor().getClosedLoopIntegratedOutput().getValue());
+
+            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS DRIVE DERIVATIVE"+ i, getModule(i).getDriveMotor().getClosedLoopDerivativeOutput().getValue());
+            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS STEER DERIVATIVE"+ i, getModule(i).getSteerMotor().getClosedLoopDerivativeOutput().getValue());
         }
     }
+
+    @Override
+    public void close() {}
 }
