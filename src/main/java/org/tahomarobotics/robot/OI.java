@@ -33,14 +33,21 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.tahomarobotics.robot.elevator.Elevator;
+import org.tahomarobotics.robot.arm.Arm;
+import org.tahomarobotics.robot.elevator.Elevator;
 import org.tahomarobotics.robot.endeffector.EndEffector;
 
 import static edu.wpi.first.units.Units.Inches;
+
+
 import static edu.wpi.first.units.Units.Volts;
 
 public class OI extends SubsystemBase {
     private static final int DRIVER_CONTROLLER_INDEX = 0;
     private final EndEffector endEffector;
+    private final Elevator elevator;
+    private final Arm arm;
+    private final Windmill windmill;
     private static final double DEADBAND = 0.09;
     private static final double DESENSITIZED_POWER = 1.5;
 
@@ -49,7 +56,22 @@ public class OI extends SubsystemBase {
 
     public void configureBindings() {
         endEffector.setDefaultCommand(endEffector.applyVoltage(() -> Volts.of(getLeftTrigger())));
+        endEffector.setDefaultCommand(endEffector.applyVoltage(() -> Volts.of(getLeftTrigger())));
+
+        // windmill low position
+        driverController.a().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getLow()));
+
+        // windmill mid position
+        driverController.b().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getMid()));
+
+        // windmill high position
+        driverController.y().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh()));
+
+        // windmill stow position
+        driverController.x().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh()));
+
     }
+
 
     public double getLeftTrigger() {
         return desensitizePowerBased(driverController.getLeftTriggerAxis(), DESENSITIZED_POWER);
@@ -59,6 +81,9 @@ public class OI extends SubsystemBase {
 
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
         this.endEffector = robotContainer.endEffector;
+        this.elevator = robotContainer.elevator;
+        this.arm = robotContainer.arm;
+        this.windmill = robotContainer.windmill;
 
         configureBindings();
     }

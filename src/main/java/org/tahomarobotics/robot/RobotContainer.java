@@ -50,6 +50,8 @@ public class RobotContainer implements AutoCloseable {
     public final Arm arm;
     public final EndEffector endEffector;
     public final Simulation simulation;
+    public Windmill windmill;
+
 
     public RobotContainer() {
 
@@ -63,6 +65,7 @@ public class RobotContainer implements AutoCloseable {
         elevator = new Elevator();
         arm = new Arm();
         endEffector = new EndEffector();
+        windmill = new Windmill(arm, elevator);
 
         simulation = new Simulation(elevator.getSimulation());
 
@@ -70,6 +73,6 @@ public class RobotContainer implements AutoCloseable {
 
     @Override
     public void close() {
-        ;
+
     }
 }
