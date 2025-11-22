@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.littletonrobotics.junction.AutoLogOutput;
-import org.tinylog.Logger;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
 
@@ -39,29 +39,32 @@ public class Chassis implements AutoCloseable {
                 double rot = applyDesensitization(omega.getAsDouble(), ChassisConstants.CONTROLLER_ROTATIONAL_SENSITIVITY);
                 double dir = DriverStation.getAlliance().map(a -> a == DriverStation.Alliance.Red ? -1.0 : 1.0).orElse(1.0);
 
-                double vx = forward * MaxSpeed * dir;
-                double vy = strafe * MaxSpeed * dir;
+                double vx = forward * MaxSpeed; //* dir;
+                double vy = strafe * MaxSpeed; //* dir;
                 double rotRate = rot * MaxAngularRate;
-                chassis.setSpeeds(new ChassisSpeeds(vx, vy, rotRate));
-
-                chassis.setSpeeds(new ChassisSpeeds(vx, vy, rotRate));
+                ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, rotRate);
+                Logger.recordOutput("ChassisSpeeds", speeds);
+                chassis.setSpeeds(speeds);
             }, chassis);
-            return command2.withName("POOP AHH TELEOP DRIVE COMMAND 🏴‍☠️🏴‍☠️🏴‍☠️🏴‍☠️🏴‍☠️");
+            return command2.withName("POOP AHH TELEOP DRIVE COMMAND");
     }
 
-    /*public Command teleopDrive(double x, double y, double omega) {
+    public void constantDrive(double x, double y, double omega) {
         chassis.setSpeeds(new ChassisSpeeds(x, y, omega));;
-        return Commands.run(() -> chassis.setSpeeds(new ChassisSpeeds(x, y, omega)));
-    }*/
+    }
 
     public double applyDesensitization (double value, double power) {
         value = MathUtil.applyDeadband(value, ChassisConstants.CONTROLLER_DEADBAND);
-        value = value * Math.pow(value, Math.abs(power - 1));
+        //value = value * Math.pow(value, Math.abs(power - 1));
         return value;
     }
 
     public void setDefaultCommand(Command command) {
         chassis.setDefaultCommand(command);
+    }
+
+    public void zeroSteers() {
+        System.out.println(chassis.getModule(0).getSteerMotor().getDeviceID());
     }
 
     public void close() {}
