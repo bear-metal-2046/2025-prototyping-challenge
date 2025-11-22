@@ -50,6 +50,8 @@ public class RobotContainer implements AutoCloseable {
     public final Elevator elevator;
     public final Arm arm;
     public final EndEffector endEffector;
+    public Windmill windmill;
+
 
     public RobotContainer() {
 
@@ -63,6 +65,7 @@ public class RobotContainer implements AutoCloseable {
         elevator = new Elevator();
         arm = new Arm();
         endEffector = new EndEffector();
+        windmill = new Windmill(arm, elevator);
 
 
     }
