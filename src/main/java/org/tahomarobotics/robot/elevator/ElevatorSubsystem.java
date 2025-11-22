@@ -80,8 +80,8 @@ class ElevatorSubsystem extends AbstractSubsystem {
         return carriageVelocity.getValue();
     }
 
-    public void setCarriagePos (double pos) {
-        leftMotor.setPosition(pos);
+    public void setCarriagePos(Distance pos) {
+        leftMotor.setPosition(pos.in(Meters));
     }
 
     //Periodic

@@ -10,6 +10,7 @@ import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
 import static edu.wpi.first.units.Units.*;
+import static org.tahomarobotics.robot.elevator.ElevatorConstants.ELEVATOR_MIN_POSE;
 import static org.tahomarobotics.robot.elevator.ElevatorConstants.ELEVATOR_ZERO_VOLTAGE;
 
 public class Elevator implements AutoCloseable {
@@ -26,19 +27,20 @@ public class Elevator implements AutoCloseable {
     }
 
     public Command setPosition(Distance position) {
-        return
-                elevator.runOnce(() -> elevator.moveToPosition(position)).withName("Elevator move to Position");
+        return elevator.runOnce(() -> elevator.moveToPosition(position)).withName("Elevator move to Position");
     }
 
     public Command stop() {
-        return elevator. runOnce(() -> elevator.stop()).withName("Elevator Stop");
+        return elevator.runOnce(() -> elevator.stop()).withName("Elevator Stop");
     }
 
     public Command homing() {
         return elevator.runOnce(() -> elevator.setElevatorVoltage(ELEVATOR_ZERO_VOLTAGE))
-                .andThen(Commands.waitUntil(() -> elevator.getCarriageVelocity().isNear(Rotations.per(Second)
-                .of(0.0), Rotations.per(Second).of(0.01)))).andThen(Commands.runOnce(() -> elevator
-                .setCarriagePos(0.0))).andThen(Commands.runOnce(() -> Logger.info("Elevator has Homed")));
+                .andThen(Commands.waitUntil(
+                    () -> elevator.getCarriageVelocity().isNear(Rotations.per(Second).of(0.0), 
+                    Rotations.per(Second).of(0.01))))
+                .andThen(Commands.runOnce(() -> elevator.setCarriagePos(ELEVATOR_MIN_POSE)))
+                .andThen(Commands.runOnce(() -> Logger.info("Elevator has Homed")));
     }
 
     public Command manualJog(Supplier<Voltage> voltage) {

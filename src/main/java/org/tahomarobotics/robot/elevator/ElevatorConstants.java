@@ -36,10 +36,6 @@ public class ElevatorConstants {
     //Elevator Voltages
     public static final Voltage ELEVATOR_ZERO_VOLTAGE = Volt.of(-1.0);
 
-    //Elevator
-
-
-
     // TalonFX configuration for elevator
     static final TalonFXConfiguration elevatorMotorConfig = new TalonFXConfiguration()
             .withSlot0(
