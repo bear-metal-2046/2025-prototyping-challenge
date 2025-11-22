@@ -65,7 +65,7 @@ public class Chassis implements AutoCloseable {
     }
 
     public Command zeroSteers() {
-        return Commands.runOnce(chassis::zeroSteers);
+        return chassis.runOnce(chassis::zeroSteers).ignoringDisable(true);
     }
 
     public void postZeroSteersCommand() {

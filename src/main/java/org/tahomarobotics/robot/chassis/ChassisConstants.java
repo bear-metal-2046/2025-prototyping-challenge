@@ -5,6 +5,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -88,7 +89,14 @@ public class ChassisConstants {
     );
 
     public static SwerveModuleConstants <TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId) {
-        Angle steerOffset = Degrees.of(Preferences.getDouble(moduleId.moduleName() + "Offset", 0));
+        Angle steerOffset;
+        if (Preferences.containsKey(moduleId.moduleName() + "Offset")) {
+            steerOffset = Degrees.of(Preferences.getDouble(moduleId.moduleName() + "Offset", 0));
+        } else {
+            steerOffset = Degrees.zero();
+        }
+
+        org.tinylog.Logger.info(moduleId.moduleName() + "Offset: " + steerOffset.in(Degrees) + " degrees");
         return MODULE_CONSTANTS_FACTORY
                 .createModuleConstants(moduleId.steerId(),
                         moduleId.driveId(),
