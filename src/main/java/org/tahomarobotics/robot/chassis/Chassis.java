@@ -3,10 +3,13 @@ package org.tahomarobotics.robot.chassis;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
 
@@ -19,8 +22,6 @@ public class Chassis implements AutoCloseable {
 
     private final double MaxSpeed = ChassisConstants.MAX_LINEAR_VELOCITY.in(MetersPerSecond);
     private final double MaxAngularRate = ChassisConstants.MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
-    @AutoLogOutput(key = "Pose")
-    private Pose2d pose = new Pose2d();
     public Chassis() {
         this(new ChassisSubsystem());
     }
@@ -32,37 +33,38 @@ public class Chassis implements AutoCloseable {
 
     // Teleop drive command
     public Command teleopDrive(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega) {
+            Command command2 = new InstantCommand(() -> {
+                double forward = applyDesensitization(-x.getAsDouble(), ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
+                double strafe = applyDesensitization(y.getAsDouble(), ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
+                double rot = applyDesensitization(omega.getAsDouble(), ChassisConstants.CONTROLLER_ROTATIONAL_SENSITIVITY);
+                double dir = DriverStation.getAlliance().map(a -> a == DriverStation.Alliance.Red ? -1.0 : 1.0).orElse(1.0);
 
-            double forward = applyDesensitization(-x.getAsDouble(), ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
-            double strafe = applyDesensitization(y.getAsDouble(), ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
-            double rot = applyDesensitization(omega.getAsDouble(), ChassisConstants.CONTROLLER_ROTATIONAL_SENSITIVITY);
-            double dir = DriverStation.getAlliance().map(a -> a == DriverStation.Alliance.Red ? -1.0 : 1.0).orElse(1.0);
-
-            double vx = forward * MaxSpeed * dir;
-            double vy = strafe * MaxSpeed * dir;
-            double rotRate = rot * MaxAngularRate;
-            chassis.setSpeeds(new ChassisSpeeds(vx, vy, rotRate));;
-            return Commands.run(() -> chassis.setSpeeds(new ChassisSpeeds(vx, vy, rotRate)));
+                double vx = forward * MaxSpeed; //* dir;
+                double vy = strafe * MaxSpeed; //* dir;
+                double rotRate = rot * MaxAngularRate;
+                ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, rotRate);
+                Logger.recordOutput("ChassisSpeeds", speeds);
+                chassis.setSpeeds(speeds);
+            }, chassis);
+            return command2.withName("POOP AHH TELEOP DRIVE COMMAND");
     }
 
-    public Command teleopDrive(double x, double y, double omega) {
+    public void constantDrive(double x, double y, double omega) {
         chassis.setSpeeds(new ChassisSpeeds(x, y, omega));;
-        return Commands.run(() -> chassis.setSpeeds(new ChassisSpeeds(x, y, omega)));
     }
 
     public double applyDesensitization (double value, double power) {
         value = MathUtil.applyDeadband(value, ChassisConstants.CONTROLLER_DEADBAND);
-        value = value * Math.pow(value, Math.abs(power - 1));
+        //value = value * Math.pow(value, Math.abs(power - 1));
         return value;
     }
 
     public void setDefaultCommand(Command command) {
-        command.addRequirements(chassis);
         chassis.setDefaultCommand(command);
     }
 
-    public void updatePose() {
-        //pose = new SwerveDriveKinematics()
+    public void zeroSteers() {
+        System.out.println(chassis.getModule(0).getSteerMotor().getDeviceID());
     }
 
     public void close() {}

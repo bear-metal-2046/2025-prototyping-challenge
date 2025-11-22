@@ -33,7 +33,7 @@ public class ChassisConstants {
 
     public static final Distance ROBOT_RADIUS = Meters.of(Math.hypot(HALF_TRACK_WIDTH.in(Meters), HALF_WHEELBASE.in(Meters)));
 
-    public static final LinearVelocity MAX_LINEAR_VELOCITY = MetersPerSecond.of(DCMotor.getKrakenX60(1).withReduction(DRIVE_GEAR_RATIO).getSpeed(0, 12.0));
+    public static final LinearVelocity MAX_LINEAR_VELOCITY = MetersPerSecond.of(6.0);//MetersPerSecond.of(DCMotor.getKrakenX60(1).withReduction(DRIVE_GEAR_RATIO).getSpeed(0, 12.0));
     public static final AngularVelocity MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(MAX_LINEAR_VELOCITY.in(MetersPerSecond) / ROBOT_RADIUS.in(Meters));
 
     private static final SwerveModuleConstants.DriveMotorArrangement DRIVE_MOTOR_TYPE = SwerveModuleConstants.DriveMotorArrangement.TalonFX_Integrated;
@@ -97,5 +97,3 @@ public class ChassisConstants {
                         false, false, false);
         }
 }
-
-
