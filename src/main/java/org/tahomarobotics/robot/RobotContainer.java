@@ -50,8 +50,10 @@ public class RobotContainer implements AutoCloseable {
     public final Elevator elevator;
     public final Arm arm;
     public final EndEffector endEffector;
+    public Windmill windmill;
 
-    public RobotContainer() {
+
+    public RobotContainer(Windmill windmill) {
 
         // Arena must be created first to override the default instance provided by
         // org.ironmaple.simulation.SimulatedArena.getInstance() which is used by MapleSim
@@ -63,6 +65,7 @@ public class RobotContainer implements AutoCloseable {
         elevator = new Elevator();
         arm = new Arm();
         endEffector = new EndEffector();
+        windmill = new Windmill();
 
 
     }

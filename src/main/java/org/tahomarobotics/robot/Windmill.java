@@ -2,19 +2,22 @@
 
 package org.tahomarobotics.robot;
 
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.arm.ArmConstants;
 import org.tahomarobotics.robot.arm.ArmSubsystem;
+import org.tahomarobotics.robot.elevator.Elevator;
 import org.tahomarobotics.robot.elevator.ElevatorConstants;
 import org.tahomarobotics.robot.elevator.ElevatorSubsystem;
 
 
 
 public class Windmill {
+
+    public Windmill() {
+    }
 
     private static WindmillPosition.TeamPositions currentPositions = WindmillPosition.TeamPositions.TEAM_POSITIONS;
 
@@ -34,42 +37,15 @@ public class Windmill {
     }
 
     // Low position command
-    public static Command low(ArmSubsystem arm, ElevatorSubsystem elevator) {
-        WindmillPosition target = currentPositions.getLow();
-        if (!validatePosition(target)) return Commands.none();
-        return arm.runOnce(() -> {
-            arm.setArmPosition(target.armAngle());
-            elevator.moveToPosition(target.elevatorHeight());
-        });
+    public static Command windmill(Arm arm, Elevator elevator, WindmillPosition height) {
+
+        if (!validatePosition(height)) return Commands.none();
+        return (
+            arm.setArmPosition(height.armAngle())
+                    .alongWith(elevator.setPosition(height.elevatorHeight()))
+
+        );
     }
 
-    // Mid position command
-    public static Command mid(ArmSubsystem arm, ElevatorSubsystem elevator) {
-        WindmillPosition target = currentPositions.getMid();
-        if (!validatePosition(target)) return Commands.none();
-        return arm.runOnce(() -> {
-            arm.setArmPosition(target.armAngle());
-            elevator.moveToPosition(target.elevatorHeight());
-        });
-    }
 
-    // High position command
-    public static Command high(ArmSubsystem arm, ElevatorSubsystem elevator) {
-        WindmillPosition target = currentPositions.getHigh();
-        if (!validatePosition(target)) return Commands.none();
-        return arm.runOnce(() -> {
-            arm.setArmPosition(target.armAngle());
-            elevator.moveToPosition(target.elevatorHeight());
-        });
-    }
-
-    // Stow position command
-    public static Command stow(ArmSubsystem arm, ElevatorSubsystem elevator) {
-        WindmillPosition target = currentPositions.getStow();
-        if (!validatePosition(target)) return Commands.none();
-        return arm.runOnce(() -> {
-            arm.setArmPosition(target.armAngle());
-            elevator.moveToPosition(target.elevatorHeight());
-        });
-    }
 }
