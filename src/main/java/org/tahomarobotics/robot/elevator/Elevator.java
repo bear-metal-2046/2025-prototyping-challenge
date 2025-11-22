@@ -31,17 +31,17 @@ public class Elevator implements AutoCloseable {
     }
 
     public Command stop() {
-        return elevator. /* */runOnce(() -> elevator.stop()).withName("Elevator Stop");
+        return elevator. runOnce(() -> elevator.stop()).withName("Elevator Stop");
     }
 
     public Command homing() {
-        return elevator./*    */runOnce(() -> elevator.setElevatorVoltage(ELEVATOR_ZERO_VOLTAGE.
-                in(Volt))).andThen(Commands.waitUntil(()/*  || */ -> elevator.getCarriageVelocity().isNear(Rotations.per(Second)
-                .of(0.0), Rotations.per(Second)/* ||  */.of(0.01)))).andThen(Commands.runOnce(() -> elevator
-                .setCarriagePos(0.0))).andThen(Commands./*    */runOnce(() -> Logger.info("Elevator has Homed")));
+        return elevator.runOnce(() -> elevator.setElevatorVoltage(ELEVATOR_ZERO_VOLTAGE.
+                in(Volt))).andThen(Commands.waitUntil(() -> elevator.getCarriageVelocity().isNear(Rotations.per(Second)
+                .of(0.0), Rotations.per(Second).of(0.01)))).andThen(Commands.runOnce(() -> elevator
+                .setCarriagePos(0.0))).andThen(Commands.runOnce(() -> Logger.info("Elevator has Homed")));
     }
 
-    public Command manualJog(Supplier<Voltage> voltage)/* */ {
+    public Command manualJog(Supplier<Voltage> voltage) {
         return Commands.run(() -> elevator.setElevatorVoltage
                 (voltage.get().in(Volt))).andThen(Commands.runOnce(() -> Logger.info("Elevator is Jogging")));
     }
