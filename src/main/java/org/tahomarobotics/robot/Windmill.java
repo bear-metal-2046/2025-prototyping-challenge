@@ -7,11 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.arm.ArmConstants;
-import org.tahomarobotics.robot.arm.ArmSubsystem;
 import org.tahomarobotics.robot.elevator.Elevator;
 import org.tahomarobotics.robot.elevator.ElevatorConstants;
-import org.tahomarobotics.robot.elevator.ElevatorSubsystem;
-
 
 
 public class Windmill {
@@ -37,7 +34,7 @@ public class Windmill {
     }
 
     // Low position command
-    public static Command windmill(Arm arm, Elevator elevator, WindmillPosition height) {
+    public static Command moveWindmill(Arm arm, Elevator elevator, WindmillPosition height) {
 
         if (!validatePosition(height)) return Commands.none();
         return (

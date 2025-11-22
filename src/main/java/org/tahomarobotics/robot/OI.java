@@ -29,16 +29,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.tahomarobotics.robot.arm.Arm;
-import org.tahomarobotics.robot.arm.ArmSubsystem;
 import org.tahomarobotics.robot.elevator.Elevator;
-import org.tahomarobotics.robot.elevator.Elevator;
-import org.tahomarobotics.robot.elevator.ElevatorSubsystem;
 import org.tahomarobotics.robot.endeffector.EndEffector;
-import org.tinylog.Supplier;
-import org.tahomarobotics.robot.Windmill.*;
 
 
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
 public class OI extends SubsystemBase {
@@ -56,16 +50,16 @@ public class OI extends SubsystemBase {
         endEffector.setDefaultCommand(endEffector.applyVoltage(() -> Volts.of(getLeftTrigger())));
 
         // windmill low position
-        driverController.a().onTrue(windmill.windmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getLow())));
+        driverController.a().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getLow())));
 
         // windmill mid position
-        driverController.b().onTrue(windmill.windmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getMid())));
+        driverController.b().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getMid())));
 
         // windmill high position
-        driverController.y().onTrue(windmill.windmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh())));
+        driverController.y().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh())));
 
         // windmill stow position
-        driverController.x().onTrue(windmill.windmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh())));
+        driverController.x().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh())));
 
     }
 
