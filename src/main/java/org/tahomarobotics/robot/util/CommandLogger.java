@@ -52,19 +52,21 @@ public class CommandLogger  {
 
     private void onCommandInitialize(Command cmd) {
         CommandInfo info = commands.get(cmd);
-        if (info != null) {
-            Logger.warn("Already had command <" + info.cmd.getName() + "> in CommandLogger");
-        }
-        commands.put(cmd, new CommandInfo(cmd, Timer.getTimestamp()));
+            if (info != null) {
+                Logger.warn("Already had command <" + info.cmd.getName() + "> in CommandLogger");
+            }
+            commands.put(cmd, new CommandInfo(cmd, Timer.getTimestamp()));
     }
 
     private void onCommandFinished(Command cmd) {
         CommandInfo info = commands.remove(cmd);
-        if (info == null) {
-            Logger.error("Command <" + cmd.getName() + "> not found in CommandLogger");
-            return;
+        if (!cmd.getName().equals("\"POOP AHH TELEOP DRIVE COMMAND \uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\"")) {
+            if (info == null) {
+                Logger.error("Command <" + cmd.getName() + "> not found in CommandLogger");
+                return;
+            }
+            Logger.info(String.format("Command <%s> completed in %6.3f seconds", cmd.getName(), (Timer.getTimestamp() - info.initialized)));
         }
-        Logger.info(String.format("Command <%s> completed in %6.3f seconds", cmd.getName(), (Timer.getTimestamp() - info.initialized)));
     }
 
     private void onCommandInterrupt(Command cmd, Optional<Command> interruptedBy) {
