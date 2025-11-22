@@ -65,7 +65,7 @@ public class RobotContainer implements AutoCloseable {
         elevator = new Elevator();
         arm = new Arm();
         endEffector = new EndEffector();
-        windmill = new Windmill();
+        windmill = new Windmill(arm, elevator);
 
 
     }
