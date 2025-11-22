@@ -25,10 +25,17 @@
 package org.tahomarobotics.robot;
 
 import org.tahomarobotics.robot.endeffector.EndEffector;
+
+import java.io.IOError;
+import java.io.IOException;
+
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.chassis.Chassis;
 import org.tahomarobotics.robot.elevator.Elevator;
 import org.tahomarobotics.robot.sim.Simulation;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTablesJNI;
 
 
 
@@ -53,6 +60,10 @@ public class RobotContainer implements AutoCloseable {
     public final Simulation simulation;
 
     public RobotContainer() {
+        // NetworkTables must be loaded for Preferences to work correctly.
+        // By default, it doesn't load until after this constructor is called, 
+        // so we want to force it to load here.
+
 
         // Arena must be created first to override the default instance provided by
         // org.ironmaple.simulation.SimulatedArena.getInstance() which is used by MapleSim

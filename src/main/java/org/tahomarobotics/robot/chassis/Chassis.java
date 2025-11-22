@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -63,8 +64,12 @@ public class Chassis implements AutoCloseable {
         chassis.setDefaultCommand(command);
     }
 
-    public void zeroSteers() {
-        System.out.println(chassis.getModule(0).getSteerMotor().getDeviceID());
+    public Command zeroSteers() {
+        return chassis.runOnce(chassis::zeroSteers).ignoringDisable(true);
+    }
+
+    public void postZeroSteersCommand() {
+        SmartDashboard.putData("Zero Chassis Steers", zeroSteers());
     }
 
     public void close() {}
