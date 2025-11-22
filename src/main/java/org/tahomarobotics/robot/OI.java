@@ -36,6 +36,7 @@ public class OI {
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
         Chassis chassis = robotContainer.chassis;
         chassis.setDefaultCommand(chassis.teleopDrive(driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
+        chassis.postZeroSteersCommand();
         driverController.y().onTrue(Commands.run(() -> {chassis.constantDrive(0.0, 1.0, 0.0);}));
         driverController.x().onTrue(Commands.run(() -> {chassis.constantDrive(0.0, -1.0, 0.0);}));
         driverController.b().onTrue(Commands.runOnce(chassis::zeroSteers));
