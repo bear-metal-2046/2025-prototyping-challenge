@@ -57,8 +57,8 @@ class ElevatorSubsystem extends AbstractSubsystem {
     //Set Control
 
     //Set the Voltage of the elevator left motor
-    public void setElevatorVoltage(double volts) {
-        leftMotor.setVoltage(volts);
+    public void setElevatorVoltage(Voltage volts) {
+        leftMotor.setVoltage(volts.in(Volt));
     }
 
     //Moves the target Position, with set limits
