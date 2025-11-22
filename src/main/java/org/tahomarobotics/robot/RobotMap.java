@@ -57,9 +57,9 @@ public final class RobotMap {
     public final static ModuleId FRONT_RIGHT_MODULE = new ModuleId(
             "Front Right Module", 2, 12, 22);
     public final static ModuleId BACK_LEFT_MODULE = new ModuleId(
-            "Front Left Module", 3, 13, 23);
+            "Back Left Module", 3, 13, 23);
     public final static ModuleId BACK_RIGHT_MODULE = new ModuleId(
-            "Front Right Module", 4, 14, 24);
+            "Back Right Module", 4, 14, 24);
 
     public record ModuleId(String moduleName, int driveId, int steerId, int cancoderId) {}
 }

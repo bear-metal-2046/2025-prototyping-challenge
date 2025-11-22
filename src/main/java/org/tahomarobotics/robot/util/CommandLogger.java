@@ -60,7 +60,7 @@ public class CommandLogger  {
 
     private void onCommandFinished(Command cmd) {
         CommandInfo info = commands.remove(cmd);
-        if (!cmd.getName().equals("\"POOP AHH TELEOP DRIVE COMMAND \uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\uD83C\uDFF4\u200D☠\uFE0F\"")) {
+        if (!cmd.getName().equals("POOP AHH TELEOP DRIVE COMMAND")) {
             if (info == null) {
                 Logger.error("Command <" + cmd.getName() + "> not found in CommandLogger");
                 return;
