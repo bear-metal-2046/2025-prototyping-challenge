@@ -1,8 +1,10 @@
 package org.tahomarobotics.robot.elevator;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -12,6 +14,10 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -28,6 +34,7 @@ class ElevatorSubsystem extends AbstractSubsystem {
 
     //Variables
      private Distance targetPos = ELEVATOR_MIN_POSE;
+     private static SysIdRoutine sysIdRoutine;
 
     //Status Signals
      private StatusSignal <Angle> carriagePos;
@@ -43,12 +50,27 @@ class ElevatorSubsystem extends AbstractSubsystem {
         //Motors
         leftMotor = new TalonFX(RobotMap.ELEVATOR_MOTOR_LEFT);
         rightMotor = new TalonFX(RobotMap.ELEVATOR_MOTOR_RIGHT);
-        RobustConfigurator.tryConfigureTalonFX("left motor", leftMotor, ElevatorConstants.elevatorMotorConfig);
+        RobustConfigurator.tryConfigureTalonFX("left motor", leftMotor, elevatorMotorConfig);
         rightMotor.setControl(new Follower(RobotMap.ELEVATOR_MOTOR_LEFT, true));
 
         //Status Signals
         carriagePos = leftMotor.getPosition();
         carriageVelocity = leftMotor.getVelocity();
+
+        // SysID
+        sysIdRoutine = new SysIdRoutine(
+                new SysIdRoutine.Config(),
+                new SysIdRoutine.Mechanism(
+
+                        (Voltage volts) -> {
+                            double battery = RobotController.getBatteryVoltage();
+                            double percent = battery > 0.0 ? volts.in(Volt) / battery : 0.0;
+                            leftMotor.setControl(new DutyCycleOut(percent));
+                        },
+                        (state) -> SignalLogger.writeString("motorState", state.toString()),
+                        this
+                )
+        );
 
         //Logging Elevator Creation
         org.tinylog.Logger.info("Creating ElevatorSubsystem");
@@ -69,6 +91,10 @@ class ElevatorSubsystem extends AbstractSubsystem {
         rightMotor.setControl(new Follower(RobotMap.ELEVATOR_MOTOR_LEFT, true));
     }
 
+    public void setCarriagePos(Distance pos) {
+        leftMotor.setPosition(pos.in(Meters));
+    }
+
     //Stops both left and right motors
     public void stop(){
         leftMotor.set(0.0);
@@ -80,9 +106,15 @@ class ElevatorSubsystem extends AbstractSubsystem {
         return carriageVelocity.getValue();
     }
 
-    public void setCarriagePos(Distance pos) {
-        leftMotor.setPosition(pos.in(Meters));
+    //SysID
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.quasistatic(direction);
     }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.dynamic(direction);
+    }
+
 
     //Periodic
     @Override
