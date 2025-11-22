@@ -42,8 +42,13 @@ public class ChassisConstants {
     private static final SwerveModuleConstants.SteerMotorArrangement STEER_MOTOR_TYPE = SwerveModuleConstants.SteerMotorArrangement.TalonFX_Integrated;
     private static final SwerveModuleConstants.SteerFeedbackType STEER_FEEDBACK_TYPE = SwerveModuleConstants.SteerFeedbackType.FusedCANcoder;
 
-    private static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration();
-    private static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration();
+    private static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration()
+            .withSlot0(new Slot0Configs()
+                    .withKP(0d)
+            );
+    private static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration().withSlot0(new Slot0Configs()
+            .withKP(0d)
+    );;
     private static final CANcoderConfiguration CANCODER_CONFIG = new CANcoderConfiguration();
 
     public static final SwerveDrivetrainConstants DRIVETRAIN_CONSTANTS =
