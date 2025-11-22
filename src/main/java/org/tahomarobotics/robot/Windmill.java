@@ -13,8 +13,8 @@ import org.tahomarobotics.robot.elevator.ElevatorConstants;
 
 public class Windmill {
 
-    public final Elevator elevator = new Elevator();
-    public final Arm arm = new Arm();
+    public Windmill(Arm arm , Elevator elevator) {
+    }
 
 
     private  WindmillPosition.TeamPositions currentPositions = WindmillPosition.TeamPositions.TEAM_POSITIONS;
