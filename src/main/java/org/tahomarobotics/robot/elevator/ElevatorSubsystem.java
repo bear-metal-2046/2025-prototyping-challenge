@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Voltage;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -56,8 +57,8 @@ class ElevatorSubsystem extends AbstractSubsystem {
     //Set Control
 
     //Set the Voltage of the elevator left motor
-    public void setElevatorVoltage(double volts) {
-        leftMotor.setVoltage(volts);
+    public void setElevatorVoltage(Voltage volts) {
+        leftMotor.setVoltage(volts.in(Volt));
     }
 
     //Moves the target Position, with set limits
@@ -69,9 +70,18 @@ class ElevatorSubsystem extends AbstractSubsystem {
     }
 
     //Stops both left and right motors
-    public void stop() {
+    public void stop(){
         leftMotor.set(0.0);
         rightMotor.set(0.0);
+    }
+
+    //Get Values
+    public AngularVelocity getCarriageVelocity () {
+        return carriageVelocity.getValue();
+    }
+
+    public void setCarriagePos(Distance pos) {
+        leftMotor.setPosition(pos.in(Meters));
     }
 
     //Periodic
