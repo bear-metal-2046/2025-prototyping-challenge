@@ -50,16 +50,16 @@ public class OI extends SubsystemBase {
         endEffector.setDefaultCommand(endEffector.applyVoltage(() -> Volts.of(getLeftTrigger())));
 
         // windmill low position
-        driverController.a().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getLow())));
+        driverController.a().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getLow()));
 
         // windmill mid position
-        driverController.b().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getMid())));
+        driverController.b().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getMid()));
 
         // windmill high position
-        driverController.y().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh())));
+        driverController.y().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh()));
 
         // windmill stow position
-        driverController.x().onTrue(windmill.moveWindmill(arm, elevator, (WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh())));
+        driverController.x().onTrue(windmill.moveWindmill(WindmillPosition.TeamPositions.TEAM_POSITIONS.getHigh()));
 
     }
 
