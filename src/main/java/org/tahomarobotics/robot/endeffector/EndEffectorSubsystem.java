@@ -14,26 +14,22 @@ import static edu.wpi.first.units.Units.Volt;
 
 public class EndEffectorSubsystem extends AbstractSubsystem {
 
-        private final TalonFX endEffectorMotor;
+    private final TalonFX endEffectorMotor;
 
 
-
-        public EndEffectorSubsystem() {
-            endEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);
-            RobustConfigurator.tryConfigureTalonFX("End Effector Motor",endEffectorMotor,EndEffectorConstants.endEffectorMotorConfig);
-            org.tinylog.Logger.info("End Effector Subsystem has been created");
-
+    public EndEffectorSubsystem() {
+        endEffectorMotor = new TalonFX(RobotMap.ENDEFFECTOR_MOTOR);
+        RobustConfigurator.tryConfigureTalonFX("End Effector Motor", endEffectorMotor, EndEffectorConstants.endEffectorMotorConfig);
+        org.tinylog.Logger.info("End Effector Subsystem has been created");
 
 
-        }
+    }
 
 
-    public void setVoltage (Voltage voltage){
-            endEffectorMotor.setVoltage(voltage.in(Volt));
+    public void setVoltage(Voltage voltage) {
+        endEffectorMotor.setVoltage(voltage.in(Volt));
 
-        }
-
-
+    }
 
 
     @Override

@@ -52,7 +52,6 @@ public class RobustConfigurator {
      *
      * @param specifier Specifier for the device(s)
      * @param config    Configuration function
-     *
      * @return Resulting status code
      */
     @SuppressWarnings("SameParameterValue")
@@ -67,13 +66,13 @@ public class RobustConfigurator {
                 break;
             } else if (statusCode.isWarning()) {
                 Logger.warn(
-                    "[{}/{}] Configuring {} returned warning status code: {}, retrying...", i + 1, RETRIES, specifier,
-                    statusCode
+                        "[{}/{}] Configuring {} returned warning status code: {}, retrying...", i + 1, RETRIES, specifier,
+                        statusCode
                 );
             } else {
                 Logger.error(
-                    "[{}/{}] Configuring {} returned error status code: {}, retrying...", i + 1, RETRIES, specifier,
-                    statusCode
+                        "[{}/{}] Configuring {} returned error status code: {}, retrying...", i + 1, RETRIES, specifier,
+                        statusCode
                 );
             }
         }
@@ -88,7 +87,6 @@ public class RobustConfigurator {
      * @param deviceName    Name of the device
      * @param motor         The motor
      * @param configuration Configuration to apply
-     *
      * @return The resulting status code
      */
     public static StatusCode tryConfigureTalonFX(String deviceName, TalonFX motor, TalonFXConfiguration configuration) {
@@ -101,11 +99,10 @@ public class RobustConfigurator {
      * @param deviceName   Name of the device
      * @param motor        The motor
      * @param modification Modification to apply
-     *
      * @return The resulting status code
      */
     public static StatusCode tryModifyTalonFX(
-        String deviceName, TalonFX motor, Consumer<TalonFXConfiguration> modification) {
+            String deviceName, TalonFX motor, Consumer<TalonFXConfiguration> modification) {
         var config = new TalonFXConfiguration();
         motor.getConfigurator().refresh(config);
         modification.accept(config);
@@ -119,11 +116,10 @@ public class RobustConfigurator {
      * @param deviceName    Name of the device
      * @param encoder       The encoder
      * @param configuration Configuration to apply
-     *
      * @return The resulting status code
      */
     public static StatusCode tryConfigureCANcoder(
-        String deviceName, CANcoder encoder, CANcoderConfiguration configuration) {
+            String deviceName, CANcoder encoder, CANcoderConfiguration configuration) {
         return tryConfigure("CANcoder '" + deviceName + "'", () -> encoder.getConfigurator().apply(configuration));
     }
 
@@ -133,11 +129,10 @@ public class RobustConfigurator {
      * @param deviceName   Name of the device
      * @param encoder      The encoder
      * @param modification Modification to apply
-     *
      * @return The resulting status code
      */
     public static StatusCode tryModifyCANcoder(
-        String deviceName, CANcoder encoder, Consumer<CANcoderConfiguration> modification) {
+            String deviceName, CANcoder encoder, Consumer<CANcoderConfiguration> modification) {
         var config = new CANcoderConfiguration();
         encoder.getConfigurator().refresh(config);
         modification.accept(config);
@@ -147,25 +142,27 @@ public class RobustConfigurator {
 
     /**
      * Attempts to configure a CANrange
+     *
      * @param deviceName    Name of the device
      * @param canRange      The range sensor
      * @param configuration Configuration to apply
      * @return the resulting status code
      */
     public static StatusCode tryConfigureCANrange(
-        String deviceName, CANrange canRange, CANrangeConfiguration configuration) {
+            String deviceName, CANrange canRange, CANrangeConfiguration configuration) {
         return tryConfigure("CANrange '" + deviceName + "'", () -> canRange.getConfigurator().apply(configuration));
     }
 
     /**
      * Attempts to modify the configuration of a CANrange
+     *
      * @param deviceName   Name of the device
      * @param canRange     The range sensor
      * @param modification Modification to apply
      * @return the resulting status code
      */
     public static StatusCode tryModifyCANrange(
-        String deviceName, CANrange canRange, Consumer<CANrangeConfiguration> modification) {
+            String deviceName, CANrange canRange, Consumer<CANrangeConfiguration> modification) {
         var config = new CANrangeConfiguration();
         canRange.getConfigurator().refresh(config);
         modification.accept(config);
@@ -182,7 +179,6 @@ public class RobustConfigurator {
      * @param deviceName Name of the device
      * @param encoder    The encoder
      * @param offset     The new offset of the CANcoder in <strong>rotations</strong>
-     *
      * @return The resulting status code
      */
     public static StatusCode trySetCANcoderAngularOffset(String deviceName, CANcoder encoder, double offset) {
@@ -195,7 +191,6 @@ public class RobustConfigurator {
      * @param deviceName Name of the device
      * @param motor      The motor
      * @param mode       The new neutral mode
-     *
      * @return The resulting status code
      */
     public static StatusCode trySetMotorNeutralMode(String deviceName, TalonFX motor, NeutralModeValue mode) {

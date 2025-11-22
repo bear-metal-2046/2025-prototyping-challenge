@@ -37,25 +37,27 @@ import java.util.List;
  * All times are recorded in milliseconds under the "ExecTimes/" namespace.
  */
 public class ExecutionTimeLogger {
-    /** Conversion factor from FPGA microseconds to milliseconds for human-readable logging */
+    /**
+     * Conversion factor from FPGA microseconds to milliseconds for human-readable logging
+     */
     private static final double MICROSECONDS_TO_MILLISECONDS = 0.001;
-    
+
     /** GC beans for potential future GC time compensation (currently unused) */
     //private static final List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
     //private static final long[] lastGCTimes = new long[gcBeans.size()];
 
     /**
      * Measures and logs the execution time of a void operation.
-     * 
+     *
      * @param logName The name to use in the log entry (will be prefixed with "ExecTimes/")
-     * @param task The operation to time and execute
+     * @param task    The operation to time and execute
      * @throws IllegalArgumentException if task is null
      */
     public static void logExecutionTime(String logName, Runnable task) {
         if (task == null) {
             throw new IllegalArgumentException("Task cannot be null");
         }
-        
+
         long startTime = RobotController.getFPGATime();
         try {
             task.run();
@@ -68,9 +70,9 @@ public class ExecutionTimeLogger {
 
     /**
      * Measures and logs the execution time of an operation that returns a value.
-     * 
-     * @param <T> The return type of the supplier
-     * @param logName The name to use in the log entry (will be prefixed with "ExecTimes/")
+     *
+     * @param <T>      The return type of the supplier
+     * @param logName  The name to use in the log entry (will be prefixed with "ExecTimes/")
      * @param supplier The operation to time and execute
      * @return The result from the supplier
      * @throws IllegalArgumentException if supplier is null
@@ -79,7 +81,7 @@ public class ExecutionTimeLogger {
         if (supplier == null) {
             throw new IllegalArgumentException("Supplier cannot be null");
         }
-        
+
         long startTime = RobotController.getFPGATime();
         try {
             return supplier.get();

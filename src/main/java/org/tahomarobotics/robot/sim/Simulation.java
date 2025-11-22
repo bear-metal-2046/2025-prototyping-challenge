@@ -36,7 +36,7 @@ public class Simulation extends AbstractSimulation {
     }
 
     public void resetFieldForAuto() {
-        
+
     }
 
     @Override

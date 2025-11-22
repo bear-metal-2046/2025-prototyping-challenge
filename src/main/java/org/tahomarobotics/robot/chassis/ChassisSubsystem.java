@@ -12,7 +12,6 @@ import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
 public class ChassisSubsystem extends AbstractSubsystem {
 
 
-
     //swerve Modules
     private List<SwerveModule> modules;
     //Gyro
@@ -21,12 +20,13 @@ public class ChassisSubsystem extends AbstractSubsystem {
 
     //Constructor
 
-     ChassisSubsystem(List modules, Pigeon2 pigeon) {
+    ChassisSubsystem(List modules, Pigeon2 pigeon) {
         this.modules = modules;
         this.pigeon = pigeon;
     }
+
     //Constructor
-     ChassisSubsystem() {
+    ChassisSubsystem() {
 
         modules = List.of(
 

@@ -28,11 +28,11 @@ class ElevatorSubsystem extends AbstractSubsystem {
     private final ElevatorSimulation simulation; // may be null when not in simulation
 
     //Variables
-     private Distance targetPos = ELEVATOR_MIN_POSE;
+    private Distance targetPos = ELEVATOR_MIN_POSE;
 
     //Status Signals
-     private final StatusSignal<Angle> carriagePos;
-     private final StatusSignal<AngularVelocity> carriageVelocity;
+    private final StatusSignal<Angle> carriagePos;
+    private final StatusSignal<AngularVelocity> carriageVelocity;
 
     //Constructor
     public ElevatorSubsystem() {
@@ -70,8 +70,8 @@ class ElevatorSubsystem extends AbstractSubsystem {
         //Logging State and Position Data
         Logger.recordOutput("Elevator/Target Position", targetPos);
         Logger.recordOutput("Elevator/Position error", (targetPos.in(Meters)
-                -(carriagePos.getValue().in(Rotations)
-                    *ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Meters))));
+                - (carriagePos.getValue().in(Rotations)
+                * ELEVATOR_MAIN_PULLEY_CIRCUMFERENCE.in(Meters))));
         Logger.recordOutput("Elevator/Carriage/Carriage position", carriagePos.getValue());
         Logger.recordOutput("Elevator/Carriage/Carriage velocity", carriageVelocity.getValue());
 

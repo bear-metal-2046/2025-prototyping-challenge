@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CommandLogger  {
+public class CommandLogger {
 
     private static final CommandLogger INSTANCE = new CommandLogger(CommandScheduler.getInstance());
 
@@ -41,7 +41,9 @@ public class CommandLogger  {
         Logger.info("CommandLogger installed");
     }
 
-    private record CommandInfo(Command cmd, double initialized) {}
+    private record CommandInfo(Command cmd, double initialized) {
+    }
+
     private final Map<Command, CommandInfo> commands = new HashMap<>();
 
     private CommandLogger(CommandScheduler scheduler) {
@@ -88,7 +90,7 @@ public class CommandLogger  {
 
     public static Command log(Command command, boolean indent) {
         final Timer timer = new Timer();
-        return new WrapperCommand(command){
+        return new WrapperCommand(command) {
             @Override
             public void initialize() {
                 if (indent) indentLevel.incrementAndGet();
@@ -115,11 +117,11 @@ public class CommandLogger  {
         };
     }
 
-    public static Command sequence(Command ...commands) {
+    public static Command sequence(Command... commands) {
         return CommandLogger.log(Commands.sequence(commands), true);
     }
 
-    public static Command parallel(Command ...commands) {
+    public static Command parallel(Command... commands) {
         return CommandLogger.log(Commands.parallel(commands), true);
     }
 

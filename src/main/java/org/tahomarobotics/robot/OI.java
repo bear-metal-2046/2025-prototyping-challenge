@@ -47,9 +47,8 @@ public class OI extends SubsystemBase {
     final CommandXboxController driverController = new CommandXboxController(DRIVER_CONTROLLER_INDEX);
 
 
-
     public void configureBindings() {
-       endEffector.setDefaultCommand(endEffector.applyVoltage(()-> Volts.of(getLeftTrigger())));
+        endEffector.setDefaultCommand(endEffector.applyVoltage(() -> Volts.of(getLeftTrigger())));
     }
 
     public double getLeftTrigger() {

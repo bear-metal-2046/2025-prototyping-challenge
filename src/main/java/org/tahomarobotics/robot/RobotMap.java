@@ -61,7 +61,7 @@ public final class RobotMap {
             "Front Right Module", 4, 14, 24);
 
 
-
-    public record moduleId(String moduleName, int driveId, int steerId, int cancoderId) {}
+    public record moduleId(String moduleName, int driveId, int steerId, int cancoderId) {
+    }
 
 }

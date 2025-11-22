@@ -34,14 +34,13 @@ public final class ElevatorSimulation extends AbstractSimulation {
     private Field2d field = new Field2d();
     final ElevatorSim sim = new ElevatorSim(
             ELEV_MOTOR,
-            52d/12d, // Gear Ratio
+            52d / 12d, // Gear Ratio
             ELEV_ARM_MASS.in(Kilograms),
             ELEVATOR_MAIN_PULLEY_RADIUS.in(Meters),
             MIN_HEIGHT.in(Meters),
             MAX_HEIGHT.in(Meters),
             true,
             START_HEIGHT.in(Meters));
-
 
 
     @Override
@@ -101,6 +100,7 @@ public final class ElevatorSimulation extends AbstractSimulation {
         Logger.recordOutput("Elevator/Sim/Limit/Lower", atLowerLimit);
         Logger.recordOutput("Elevator/Sim/Limit/Upper", atUpperLimit);
     }
+
     private static final DCMotor ELEV_MOTOR = DCMotor.getKrakenX60(2);
     private static final Distance MIN_HEIGHT = Meters.of(0.0);
     private static final Distance MAX_HEIGHT = Meters.of(1.2);

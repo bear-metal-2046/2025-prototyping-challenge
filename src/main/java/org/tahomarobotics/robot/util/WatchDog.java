@@ -34,15 +34,18 @@ public class WatchDog {
     public static void disableWatchdog(IterativeRobotBase robot) {
         disableWatchdog(robot, IterativeRobotBase.class);
     }
+
     public static void disableWatchdog(CommandScheduler scheduler) {
         disableWatchdog(scheduler, CommandScheduler.class);
     }
+
     private static void disableWatchdog(Object inst, Class clazz) {
 
         try {
             var field = clazz.getDeclaredField("m_watchdog");
             field.setAccessible(true);
-            field.set(inst, new NullWatchDog(0, () -> {}));
+            field.set(inst, new NullWatchDog(0, () -> {
+            }));
             Logger.warn("Disabled " + inst.getClass() + "'s watchdog!");
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
@@ -60,15 +63,19 @@ public class WatchDog {
         }
 
         @Override
-        public void addEpoch(String epochName) {}
+        public void addEpoch(String epochName) {
+        }
 
         @Override
-        public void printEpochs() {}
+        public void printEpochs() {
+        }
 
         @Override
-        public void enable() {}
+        public void enable() {
+        }
 
         @Override
-        public void disable() {}
+        public void disable() {
+        }
     }
 }

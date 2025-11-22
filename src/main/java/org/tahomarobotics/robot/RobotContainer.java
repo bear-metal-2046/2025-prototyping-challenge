@@ -31,7 +31,6 @@ import org.tahomarobotics.robot.elevator.Elevator;
 import org.tahomarobotics.robot.sim.Simulation;
 
 
-
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
  * All the robot's components and their relationships are declared here rather than scattered
@@ -70,6 +69,7 @@ public class RobotContainer implements AutoCloseable {
     }
 
     @Override
-    public void close() {;
+    public void close() {
+        ;
     }
 }

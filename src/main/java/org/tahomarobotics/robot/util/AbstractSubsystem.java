@@ -38,7 +38,8 @@ public abstract class AbstractSubsystem extends SubsystemBase {
         ExecutionTimeLogger.logExecutionTime("Subsystem/" + name, this::subsystemPeriodic);
     }
 
-    public final void simulationPeriodic() {}
+    public final void simulationPeriodic() {
+    }
 
     public abstract void subsystemPeriodic();
 }

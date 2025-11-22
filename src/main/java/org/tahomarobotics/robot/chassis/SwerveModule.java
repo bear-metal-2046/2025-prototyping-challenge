@@ -39,7 +39,6 @@ class SwerveModule extends SubsystemBase {
         RobustConfigurator.tryConfigureCANcoder(name + " Encoder ", steerEncoder, createEncoderConfig());
 
 
-
         Logger.info("Creating an instance of SwerveModule: Drive Motor, Steer Motor, and Encoder ");
 
     }

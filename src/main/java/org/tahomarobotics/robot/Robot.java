@@ -39,7 +39,7 @@ import static edu.wpi.first.units.Units.Inches;
 
 public class Robot extends LoggedRobot {
 
-    public static final Pose2d STARTING_ROBOT_POSE = new Pose2d(3,3, new Rotation2d());
+    public static final Pose2d STARTING_ROBOT_POSE = new Pose2d(3, 3, new Rotation2d());
 
     private final RobotContainer robotContainer;
     private final OI oi;
@@ -88,7 +88,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void disabledInit() {
-        
+
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {
         robotContainer.simulation.loggedPeriodic();
 
-       
+
     }
 
     @Override

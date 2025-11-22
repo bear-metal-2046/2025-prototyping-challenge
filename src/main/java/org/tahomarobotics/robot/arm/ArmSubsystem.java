@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 
-
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.RobustConfigurator;
@@ -19,11 +18,11 @@ public class ArmSubsystem extends AbstractSubsystem {
 
     public ArmSubsystem() {
 
-        topMotor = new  TalonFX(RobotMap.ARM_TOP_MOTOR, RobotMap.CANBUS_NAME);
+        topMotor = new TalonFX(RobotMap.ARM_TOP_MOTOR, RobotMap.CANBUS_NAME);
 
-       bottomMotor =  new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME);
+        bottomMotor = new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME);
 
-       RobustConfigurator.tryConfigureTalonFX("Arm Motor", topMotor, ArmConstants.armMotorConfig());
+        RobustConfigurator.tryConfigureTalonFX("Arm Motor", topMotor, ArmConstants.armMotorConfig());
 
         bottomMotor.setControl(new Follower(topMotor.getDeviceID(), false));
 
@@ -35,8 +34,8 @@ public class ArmSubsystem extends AbstractSubsystem {
         this.bottomMotor = bottomMotor;
 
 
-
     }
+
     @Override
     public void subsystemPeriodic() {
 

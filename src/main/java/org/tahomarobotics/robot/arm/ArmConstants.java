@@ -11,7 +11,6 @@ import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.RobustConfigurator;
 
 
-
 public class ArmConstants {
 
 
@@ -22,29 +21,28 @@ public class ArmConstants {
     static final TalonFXConfiguration armMotorConfig() {
 
         return new TalonFXConfiguration()
-        .withSlot0(
-                new Slot0Configs()
-                        .withGravityType(GravityTypeValue.Arm_Cosine)
-                        // add real PID constants later
-                        .withKP(0)
-                        .withKD(0)
-                        .withKS(0)
-                        .withKV(0)
-                        .withKA(0)
-                        .withKG(0))
+                .withSlot0(
+                        new Slot0Configs()
+                                .withGravityType(GravityTypeValue.Arm_Cosine)
+                                // add real PID constants later
+                                .withKP(0)
+                                .withKD(0)
+                                .withKS(0)
+                                .withKV(0)
+                                .withKA(0)
+                                .withKG(0))
 
-        .withMotorOutput(
-                new MotorOutputConfigs()
-                        .withNeutralMode(NeutralModeValue.Brake)
-                        .withInverted(InvertedValue.CounterClockwise_Positive))
+                .withMotorOutput(
+                        new MotorOutputConfigs()
+                                .withNeutralMode(NeutralModeValue.Brake)
+                                .withInverted(InvertedValue.CounterClockwise_Positive))
 
                 .withFeedback(
                         new FeedbackConfigs()
                                 .withSensorToMechanismRatio(GEAR_REDUCTION)
 
                 );
-        }
-
+    }
 
 
 }

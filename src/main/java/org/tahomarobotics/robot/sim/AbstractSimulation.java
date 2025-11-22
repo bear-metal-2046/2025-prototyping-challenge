@@ -30,7 +30,7 @@ public abstract class AbstractSimulation {
 
     private final String name;
 
-    public AbstractSimulation (String name) {
+    public AbstractSimulation(String name) {
         this.name = name;
     }
 
@@ -38,5 +38,7 @@ public abstract class AbstractSimulation {
 
     public void loggedPeriodic() {
         ExecutionTimeLogger.logExecutionTime("Simulation/" + name, this::simulationPeriodic);
-    };
+    }
+
+
 }

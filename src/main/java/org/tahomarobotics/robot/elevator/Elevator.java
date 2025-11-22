@@ -23,6 +23,7 @@ public class Elevator implements AutoCloseable {
         return elevator.runOnce(() -> elevator.moveToPosition(position))
                 .withName("Elevator move to Position");
     }
+
     public Command stop() {
         return elevator.runOnce(() -> elevator.stop())
                 .withName("Elevator Stop");
@@ -38,5 +39,6 @@ public class Elevator implements AutoCloseable {
 
 
     @Override
-    public void close() throws Exception {}
+    public void close() throws Exception {
+    }
 }

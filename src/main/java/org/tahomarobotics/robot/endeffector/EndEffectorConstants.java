@@ -14,9 +14,6 @@ public class EndEffectorConstants {
     public static final Voltage MAXIMUM_VOLTAGE = Volts.of(6);
 
 
-
-
-
     static final TalonFXConfiguration endEffectorMotorConfig = new TalonFXConfiguration()
             .withSlot0(
                     new Slot0Configs()
@@ -26,10 +23,9 @@ public class EndEffectorConstants {
                     .withNeutralMode(NeutralModeValue.Brake)
                     .withInverted(InvertedValue.CounterClockwise_Positive))
             .withMotionMagic(new MotionMagicConfigs()
-)
+            )
 
             .withAudio(new AudioConfigs().withBeepOnBoot(true).withBeepOnConfig(true));
-
 
 
 }

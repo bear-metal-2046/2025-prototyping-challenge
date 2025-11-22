@@ -6,11 +6,12 @@ public class Chassis {
     private final ChassisSubsystem chassis;
 
 
-        public Chassis() {
-            this(new ChassisSubsystem());
-        }
-        Chassis(ChassisSubsystem Chassis){
+    public Chassis() {
+        this(new ChassisSubsystem());
+    }
+
+    Chassis(ChassisSubsystem Chassis) {
         this.chassis = Chassis;
-        }
+    }
 
 }
