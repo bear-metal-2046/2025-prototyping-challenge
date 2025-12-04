@@ -47,7 +47,7 @@ public class ChassisConstants {
                     .withKP(0d)
             );
     private static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration().withSlot0(new Slot0Configs()
-            .withKP(0d)
+            .withKP(100d)
     );;
     private static final CANcoderConfiguration CANCODER_CONFIG = new CANcoderConfiguration();
 
@@ -62,8 +62,8 @@ public class ChassisConstants {
                   .withSteerMotorGearRatio(STEER_GEAR_RATIO)
                   .withCouplingGearRatio(COUPLING_GEAR_RATIO)
                   .withWheelRadius(WHEEL_RADIUS)
-//                    .withSteerMotorGains(steerGains)
-//                    .withDriveMotorGains(driveGains)
+                    .withSteerMotorGains(new Slot0Configs().withKP(100d))
+                    .withDriveMotorGains(new Slot0Configs().withKP(0.5d))
                   .withSteerMotorClosedLoopOutput(STEER_CLOSED_LOOP_OUTPUT)
                   .withDriveMotorClosedLoopOutput(DRIVE_CLOSED_LOOP_OUTPUT)
 //                    .withSlipCurrent(kSlipCurrent)

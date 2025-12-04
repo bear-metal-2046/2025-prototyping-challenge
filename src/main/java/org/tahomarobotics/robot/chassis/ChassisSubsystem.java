@@ -58,7 +58,8 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
         this.speeds = speeds;
         setControl(new SwerveRequest.ApplyFieldSpeeds()
                 .withSpeeds(speeds)
-                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
+                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                .withSteerRequestType(SwerveModule.SteerRequestType.Position));
     }
 
     public void zeroSteers() {
