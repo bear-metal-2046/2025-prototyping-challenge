@@ -4,11 +4,11 @@ public class VisionSubsystem {
 
     private final Limelight limelight;
 
-    public VisionSubsystem() {
+    VisionSubsystem() {
         this(new Limelight());
     }
 
-    public VisionSubsystem(Limelight limelight){
+    private VisionSubsystem(Limelight limelight){
         this.limelight = limelight;
     }
 }
