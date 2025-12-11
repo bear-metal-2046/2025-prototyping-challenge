@@ -1,4 +1,4 @@
-package org.tahomarobotics.robot.Vision;
+package org.tahomarobotics.robot.vision;
 
 public class Vision {
     private final VisionSubsystem visionSubsystem;
