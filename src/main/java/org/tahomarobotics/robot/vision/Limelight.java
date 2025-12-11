@@ -1,8 +1,5 @@
 package org.tahomarobotics.robot.vision;
 
-
-import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.numbers.N3;
 import org.tahomarobotics.robot.util.LimelightHelpers;
 
 public class Limelight {
@@ -11,9 +8,6 @@ public class Limelight {
     private final String name;
     // --- Constructor ---
 
-    public Limelight() {
-        name = "Limelight Camera for testing";
-    }
 
     public Limelight(String name) {
         this.name = name;

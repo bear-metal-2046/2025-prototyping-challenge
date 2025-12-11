@@ -5,7 +5,7 @@ public class VisionSubsystem {
     private final Limelight limelight;
 
     VisionSubsystem() {
-        this(new Limelight());
+        this(new Limelight("Limelight Camera"));
     }
 
     private VisionSubsystem(Limelight limelight){
