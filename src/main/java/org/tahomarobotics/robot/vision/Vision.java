@@ -1,13 +1,13 @@
-package org.tahomarobotics.robot.Vision;
+package org.tahomarobotics.robot.vision;
 
-public class vision {
+public class Vision {
     private final VisionSubsystem visionSubsystem;
 
-    public vision() {
+    public Vision() {
         this(new VisionSubsystem());
     }
 
-    private vision(VisionSubsystem visionSubsystem) {
+    private Vision(VisionSubsystem visionSubsystem) {
         this.visionSubsystem = visionSubsystem;
     }
 }
