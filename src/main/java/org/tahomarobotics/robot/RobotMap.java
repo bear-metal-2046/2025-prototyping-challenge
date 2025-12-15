@@ -33,30 +33,22 @@ package org.tahomarobotics.robot;
  */
 public final class RobotMap {
 
-    // arm
-    public static final int ARM_TOP_MOTOR = 0;
-    public static final int ARM_BOTTOM_MOTOR = 1;
-
-    //Hardware IDs (find proper assigned numbers from Design Leads)
-    //Source: Lines 287-289 NEW_SUBSYSTEM_GUIDE.md
-    public static final int ENDEFFECTOR_MOTOR = 4;
-    public static final int ELEVATOR_MOTOR_LEFT = 10;
-    public static final int ELEVATOR_MOTOR_RIGHT = 11;
-
-
-    public static final int ELEVATOR_ENCODER = 12;
     public static final String CANBUS_NAME = "CANivore";
+
     public static final int PIGEON = 0;
 
-    // chassis
     public final static ModuleId FRONT_LEFT_MODULE = new ModuleId(
             "Front Left Module", 1, 11, 21);
+    public final static ModuleId FRONT_RIGHT_MODULE = new ModuleId(
     public final static ModuleId FRONT_RIGHT_MODULE = new ModuleId(
             "Front Right Module", 2, 12, 22);
     public final static ModuleId BACK_LEFT_MODULE = new ModuleId(
             "Back Left Module", 3, 13, 23);
     public final static ModuleId BACK_RIGHT_MODULE = new ModuleId(
-            "Back Right Module", 4, 14, 24);
+            "Front Right Module", 4, 14, 24);
+
+
 
     public record ModuleId(String moduleName, int driveId, int steerId, int cancoderId) {}
+
 }

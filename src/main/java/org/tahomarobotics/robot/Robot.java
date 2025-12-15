@@ -40,13 +40,14 @@ public class Robot extends LoggedRobot {
 
     private final RobotContainer robotContainer;
 
+
     private Robot() {
         this(new RobotContainer());
     }
 
     Robot(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
-
+       
         if (Robot.isSimulation()) {
             WatchDog.disableWatchdog(this);
             WatchDog.disableWatchdog(CommandScheduler.getInstance());
@@ -105,7 +106,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void simulationPeriodic() {
-
+       robotContainer.simulation.simulationPeriodic();
     }
 
     @Override

@@ -24,8 +24,6 @@
 
 package org.tahomarobotics.robot.sim;
 
-import org.tahomarobotics.robot.util.ExecutionTimeLogger;
-
 public abstract class AbstractSimulation {
 
     private final String name;
@@ -34,9 +32,6 @@ public abstract class AbstractSimulation {
         this.name = name;
     }
 
-    protected abstract void simulationPeriodic();
+    public abstract void simulationPeriodic();
 
-    public void loggedPeriodic() {
-        ExecutionTimeLogger.logExecutionTime("Simulation/" + name, this::simulationPeriodic);
-    };
 }

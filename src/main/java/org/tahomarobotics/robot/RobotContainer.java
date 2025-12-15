@@ -26,6 +26,8 @@ package org.tahomarobotics.robot;
 
 import org.tahomarobotics.robot.vision.Vision;
 import org.tahomarobotics.robot.chassis.Chassis;
+import org.tahomarobotics.robot.sim.Arena2025Reefscape;
+import org.tahomarobotics.robot.sim.Simulation;
 
 
 /**
@@ -35,22 +37,31 @@ import org.tahomarobotics.robot.chassis.Chassis;
  */
 public class RobotContainer implements AutoCloseable {
 
+    // must be created first here this needs to override the instance provided
+    // by since org.ironmaple.simulation.SimulatedArena.getInstance() is used
+    // some of MapleSim
+    private final Arena2025Reefscape arena = org.tahomarobotics.robot.sim.Arena2025Reefscape.getInstance();
+
     public final Chassis chassis;
     public final Vision vision;
-    
+    public final OI oi;
+    public final Simulation simulation;
+
 
     public RobotContainer() {
-
-        // Arena must be created first to override the default instance provided by
-        // org.ironmaple.simulation.SimulatedArena.getInstance() which is used by MapleSim
-        //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
-
         chassis = new Chassis();
         vision = new Vision();
+        oi = new OI(this);
 
-        new OI(this);
+        simulation = Robot.isSimulation() ? 
+        new Simulation(
+                arena,
+                chassis.getSimulation()
+        ) : null;
+        
     }
 
     @Override
-    public void close() {}
+    public void close() {
+    }
 }
