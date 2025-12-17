@@ -57,7 +57,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
 
-        simulation = Robot.isSimulated() ?  new ChassisSimulation(getPigeon2(), getModules()) : null;
+        simulation = Robot.isSimulation() ?  new ChassisSimulation(getPigeon2(), getModules()) : null;
     }
 
     public ChassisSubsystem() {

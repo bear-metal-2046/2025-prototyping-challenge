@@ -143,10 +143,10 @@ public class ChassisConstants {
                         BACK_RIGHT_MODULE, HALF_WHEELBASE.unaryMinus());
 
         private static final Map<ModuleId, Distance> DISTANCE_Y = Map.of(
-                        FRONT_LEFT_MODULE, HALF_TRACK_WIDTH.unaryMinus(),
-                        FRONT_RIGHT_MODULE, HALF_TRACK_WIDTH,
-                        BACK_LEFT_MODULE, HALF_TRACK_WIDTH.unaryMinus(),
-                        BACK_RIGHT_MODULE, HALF_TRACK_WIDTH);
+                        FRONT_LEFT_MODULE, HALF_TRACK_WIDTH,
+                        FRONT_RIGHT_MODULE, HALF_TRACK_WIDTH.unaryMinus(),
+                        BACK_LEFT_MODULE, HALF_TRACK_WIDTH,
+                        BACK_RIGHT_MODULE, HALF_TRACK_WIDTH.unaryMinus());
 
         public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(
                         ModuleId moduleId, Angle steerOffset) {
