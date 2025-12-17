@@ -26,17 +26,10 @@ package org.tahomarobotics.robot;
 
 import org.tahomarobotics.robot.endeffector.EndEffector;
 
-import java.io.IOError;
-import java.io.IOException;
-
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.chassis.Chassis;
 import org.tahomarobotics.robot.elevator.Elevator;
 import org.tahomarobotics.robot.sim.Simulation;
-
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTablesJNI;
-
 
 
 /**
