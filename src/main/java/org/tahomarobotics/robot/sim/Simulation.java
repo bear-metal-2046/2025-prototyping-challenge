@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj.Notifier;
 public class Simulation {
 
     private static final Time SIM_LOOP_PERIOD = Seconds.of(0.002);
-    //private final Notifier simNotifier;
+    private final Notifier simNotifier;
 
     private final Arena2025Reefscape arena;
     private final ChassisSimulation chassisSimulation;
@@ -48,12 +48,16 @@ public class Simulation {
 
         SimulatedArena.overrideSimulationTimings(SIM_LOOP_PERIOD, 1);
 
-        //simNotifier = new Notifier(this::simulationPeriodic);
-        //simNotifier.startPeriodic(SIM_LOOP_PERIOD.in(Seconds));
+        simNotifier = new Notifier(this::simulationPeriodic);
+        
+    }
+
+    public void init() {
+        simNotifier.startPeriodic(SIM_LOOP_PERIOD.in(Seconds));
     }
 
     public void resetFieldForAuto() {
-
+        arena.resetFieldForAuto();
     }
 
     public void simulationPeriodic() {

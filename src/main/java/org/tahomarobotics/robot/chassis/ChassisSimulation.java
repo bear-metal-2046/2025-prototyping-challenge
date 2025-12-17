@@ -48,8 +48,8 @@ import static edu.wpi.first.units.Units.*;
 
 public class ChassisSimulation extends AbstractSimulation{
 
-    private final ChassisReference DRIVE_MOTOR_ORIENTATION = ChassisReference.Clockwise_Positive;
-    private final ChassisReference STEER_MOTOR_ORIENTATION = ChassisReference.Clockwise_Positive;
+    private final ChassisReference DRIVE_MOTOR_ORIENTATION = ChassisReference.CounterClockwise_Positive;
+    private final ChassisReference STEER_MOTOR_ORIENTATION = ChassisReference.CounterClockwise_Positive;
     private final ChassisReference STEER_ENCODER_ORIENTATION = ChassisReference.CounterClockwise_Positive;
     private final Angle MAGNETIC_OFFSET = Degrees.zero();
 
@@ -64,6 +64,7 @@ public class ChassisSimulation extends AbstractSimulation{
         Arena2025Reefscape.getInstance().setSwerveDriveSimulation(driveSimulation);
 
         SwerveModuleSimulation[] moduleSimulations = driveSimulation.getModules();
+        System.out.println("Modules: " + moduleSimulations.length);
         for (int i = 0; i < moduleSimulations.length; i++) {
             moduleSimulations[i].useDriveMotorController(getDriveSimMotorController(
                 modules[i].getDriveMotor().getSimState())
@@ -82,7 +83,7 @@ public class ChassisSimulation extends AbstractSimulation{
      * return the MapleSim controller for drive motors
      */
     private SimulatedMotorController getDriveSimMotorController(TalonFXSimState driveMotorSimState) {
-        driveMotorSimState.Orientation = DRIVE_MOTOR_ORIENTATION;
+        //driveMotorSimState.Orientation = DRIVE_MOTOR_ORIENTATION;
         return (mechanismAngle, mechanismVelocity, encoderAngle, encoderVelocity) -> {
             driveMotorSimState.setRawRotorPosition(encoderAngle);
             driveMotorSimState.setRotorVelocity(encoderVelocity);
@@ -95,11 +96,12 @@ public class ChassisSimulation extends AbstractSimulation{
      * return the MapleSim controller for steer motors and encoders
      */
     private SimulatedMotorController getSteerSimMotorController(TalonFXSimState steerMotorSimState, CANcoderSimState steerEncoderSimState) {
-        steerMotorSimState.Orientation = STEER_MOTOR_ORIENTATION;
-        steerEncoderSimState.Orientation = STEER_ENCODER_ORIENTATION;
+        //steerMotorSimState.Orientation = STEER_MOTOR_ORIENTATION;
+        //steerEncoderSimState.Orientation = STEER_ENCODER_ORIENTATION;
         return (mechanismAngle, mechanismVelocity, encoderAngle, encoderVelocity) -> {
-            steerEncoderSimState.setRawPosition(mechanismAngle.minus(MAGNETIC_OFFSET));
+            steerEncoderSimState.setRawPosition(mechanismAngle);
             steerEncoderSimState.setVelocity(mechanismVelocity);
+            steerEncoderSimState.setSupplyVoltage(SimulatedBattery.getBatteryVoltage());
             steerMotorSimState.setRawRotorPosition(encoderAngle);
             steerMotorSimState.setRotorVelocity(encoderVelocity);
             steerMotorSimState.setSupplyVoltage(SimulatedBattery.getBatteryVoltage());
@@ -110,10 +112,20 @@ public class ChassisSimulation extends AbstractSimulation{
     public void simulationPeriodic() {
         
         // update gyro angle
-        gyroSimState.setRawYaw(gyroSimulation.getGyroReading().getDegrees());
-        gyroSimState.setAngularVelocityZ(gyroSimulation.getMeasuredAngularVelocity());
+        //gyroSimState.setRawYaw(gyroSimulation.getGyroReading().getDegrees());
+        //gyroSimState.setAngularVelocityZ(gyroSimulation.getMeasuredAngularVelocity());
+        gyroSimState.setRawYaw(driveSimulation.getSimulatedDriveTrainPose().getRotation().getMeasure());
+        gyroSimState.setAngularVelocityZ(RadiansPerSecond.of(
+            driveSimulation.getDriveTrainSimulatedChassisSpeedsRobotRelative().omegaRadiansPerSecond));
 
         Logger.recordOutput("Sim/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
     }
 
+    /**
+     * Resets the robot pose
+     */
+    public void setPose(Pose2d pose) {
+        driveSimulation.setSimulationWorldPose(pose);
+    }
+    
 }

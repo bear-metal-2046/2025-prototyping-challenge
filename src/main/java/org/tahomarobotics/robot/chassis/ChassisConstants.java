@@ -46,6 +46,7 @@ import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
+import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.RobotMap.ModuleId;
 
 import static edu.wpi.first.units.Units.*;
@@ -66,8 +67,8 @@ public class ChassisConstants {
         private static final SwerveModuleConstants.ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT = SwerveModuleConstants.ClosedLoopOutputType.Voltage;
         private static final SwerveModuleConstants.ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT = SwerveModuleConstants.ClosedLoopOutputType.Voltage;
 
-        private static final Distance TRACK_WIDTH = Meters.of(20.75);
-        private static final Distance WHEELBASE = Meters.of(20.75);
+        private static final Distance TRACK_WIDTH = Inches.of(20.75);
+        private static final Distance WHEELBASE = Inches.of(20.75);
 
         private static final Distance HALF_TRACK_WIDTH = TRACK_WIDTH.div(2d);
         private static final Distance HALF_WHEELBASE = WHEELBASE.div(2d);
@@ -150,7 +151,7 @@ public class ChassisConstants {
         public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(
                         ModuleId moduleId, Angle steerOffset) {
 
-                return MODULE_CONSTANTS_FACTORY.createModuleConstants(moduleId.steerId(),
+                var k = MODULE_CONSTANTS_FACTORY.createModuleConstants(moduleId.steerId(),
                                 moduleId.driveId(),
                                 moduleId.cancoderId(),
                                 steerOffset,
@@ -159,6 +160,34 @@ public class ChassisConstants {
                                 false,
                                 false,
                                 false);
+
+                if (Robot.isReal()) return k;
+
+                return k
+                // Disable encoder offsets
+                .withEncoderOffset(0)
+                // Disable motor inversions for drive and steer motors
+                .withDriveMotorInverted(false)
+                .withSteerMotorInverted(false)
+                // Disable CanCoder inversion
+                .withEncoderInverted(false)
+                // Adjust steer motor PID gains for simulation
+                .withSteerMotorGains(new Slot0Configs()
+                        .withKP(70)
+                        .withKI(0)
+                        .withKD(4.5)
+                        .withKS(0)
+                        .withKV(1.91)
+                        .withKA(0)
+                        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign))
+                .withSteerMotorGearRatio(16.0)
+                // Adjust friction voltages
+                .withDriveFrictionVoltage(Volts.of(0.1))
+                .withSteerFrictionVoltage(Volts.of(0.05))
+                // Adjust steer inertia
+                .withSteerInertia(KilogramSquareMeters.of(0.05));
+
+
         }
 
         // ---------------------------------------------------------------------------------------
