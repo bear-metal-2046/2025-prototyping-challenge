@@ -47,63 +47,18 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
 
     public ChassisSubsystem() {
         this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
-                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE),
-                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE),
-                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE),
-                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE)
+                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(-18.2)),
+                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(-28.2)),
+                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(-71.9)),
+                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(-137.7) )
         );
     }
 
     public void setSpeeds(ChassisSpeeds speeds) {
-        this.speeds = speeds;
         setControl(new SwerveRequest.ApplyFieldSpeeds()
                 .withSpeeds(speeds)
-                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-                .withSteerRequestType(SwerveModule.SteerRequestType.Position));
+                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
     }
-
-    public void zeroSteers() {
-        for (int i = 0; i < 4; i++) {
-            Angle offset = Degrees.of(-getModule(i).getCurrentState().angle.getDegrees());
-
-            // Find the correct name and config for the module so we send it to preferences correctly
-            String name;
-            MagnetSensorConfigs config;
-            switch (i) {
-                case 0 -> {
-                    name = FRONT_LEFT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor;
-                }
-                case 1 -> {
-                    name = FRONT_RIGHT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE).EncoderInitialConfigs.MagnetSensor;
-                }
-                case 2 -> {
-                    name = BACK_LEFT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(BACK_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor;
-                }
-                case 3 -> {
-                    name = BACK_RIGHT_MODULE.moduleName() + "Offset";
-                    config = ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE).EncoderInitialConfigs.MagnetSensor;
-                }
-                default -> {
-                    name = "oops, something went wrong.";
-                    config = ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE).EncoderInitialConfigs.MagnetSensor;
-
-                }
-            }
-
-            config = config.withMagnetOffset(offset.plus(Rotations.of(config.MagnetOffset)));
-
-            org.tinylog.Logger.info(name + " " + offset.in(Degrees) + " degrees");
-            // Write to the offsets file and apply new config to encoder.
-            Preferences.setDouble(name, offset.in(Degrees));
-        }
-    }
-
-    /*TEMPORARY FOR TUNING, UNREFACTORED FROM CTRE*/
-
-
 
     /* What to publish over networktables for telemetry */
     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -195,15 +150,6 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
         this.getState();
         for (int i = 0; i < 4; i++) {
             Logger.recordOutput("SwerveModuleStates/" + i, this.getModule(i).getCurrentState());
-
-            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS DRIVE PROPORTIONAL"+ i, getModule(i).getDriveMotor().getClosedLoopProportionalOutput().getValue());
-            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS STEER PROPORTIONAL"+ i, getModule(i).getSteerMotor().getClosedLoopProportionalOutput().getValue());
-
-            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS DRIVE INTEGRATED"+ i, getModule(i).getDriveMotor().getClosedLoopIntegratedOutput().getValue());
-            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS STEER INTEGRATED"+ i, getModule(i).getSteerMotor().getClosedLoopIntegratedOutput().getValue());
-
-            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS DRIVE DERIVATIVE"+ i, getModule(i).getDriveMotor().getClosedLoopDerivativeOutput().getValue());
-            Logger.recordOutput("POOP AHH CLOSED LOOP OUTPUTS STEER DERIVATIVE"+ i, getModule(i).getSteerMotor().getClosedLoopDerivativeOutput().getValue());
         }
     }
 

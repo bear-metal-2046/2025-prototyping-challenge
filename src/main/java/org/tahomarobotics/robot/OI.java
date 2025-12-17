@@ -23,12 +23,9 @@
  */
 
 package org.tahomarobotics.robot;
-import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.tahomarobotics.robot.chassis.Chassis;
-import edu.wpi.first.wpilibj.Preferences;
 
 public class OI {
     private static final int DRIVER_CONTROLLER_INDEX = 0;
@@ -37,10 +34,10 @@ public class OI {
     public OI(RobotContainer robotContainer) {
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
         Chassis chassis = robotContainer.chassis;
-        chassis.setDefaultCommand(chassis.teleopDrive(driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
-        chassis.postZeroSteersCommand();
-        driverController.y().onTrue(Commands.run(() -> {chassis.constantDrive(0.0, 1.0, 0.0);}));
-        driverController.x().onTrue(Commands.run(() -> {chassis.constantDrive(0.0, -1.0, 0.0);}));
-        driverController.b().onTrue(Commands.runOnce(chassis::zeroSteers));
+        chassis.setDefaultCommand(chassis.bindTeleopDrive(driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
+        //chassis.postZeroSteersCommand();
+        //driverController.y().onTrue(Commands.run(() -> {chassis.constantDrive(0.0, 1.0, 0.0);}));
+        //driverController.x().onTrue(Commands.run(() -> {chassis.constantDrive(0.0, -1.0, 0.0);}));
+        //driverController.b().onTrue(Commands.runOnce(chassis::zeroSteers));
     }
 }

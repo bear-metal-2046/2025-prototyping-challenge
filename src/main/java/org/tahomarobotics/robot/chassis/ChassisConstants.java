@@ -1,16 +1,12 @@
 package org.tahomarobotics.robot.chassis;
 
 import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.units.measure.*;
 
 import java.util.Map;
 
@@ -27,29 +23,52 @@ public class ChassisConstants {
     public static final double COUPLING_GEAR_RATIO = 54d / 14d;
     public static final Distance WHEEL_RADIUS = Inches.of(2d);
 
+    public static final DCMotor DRIVE_MOTOR = DCMotor.getKrakenX60(1);
+
     private static final SwerveModuleConstants.ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT = SwerveModuleConstants.ClosedLoopOutputType.Voltage;
     private static final SwerveModuleConstants.ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT = SwerveModuleConstants.ClosedLoopOutputType.Voltage;
 
-    public static final Distance HALF_TRACK_WIDTH = Meters.of(20.75d / 2d);
-    public static final Distance HALF_WHEELBASE = Meters.of(20.75d / 2d);
+    public static final Distance HALF_TRACK_WIDTH = Inches.of(20.75d / 2d);
+    public static final Distance HALF_WHEELBASE = Inches.of(20.75d / 2d);
 
     public static final Distance ROBOT_RADIUS = Meters.of(Math.hypot(HALF_TRACK_WIDTH.in(Meters), HALF_WHEELBASE.in(Meters)));
 
-    public static final LinearVelocity MAX_LINEAR_VELOCITY = MetersPerSecond.of(6.0);//MetersPerSecond.of(DCMotor.getKrakenX60(1).withReduction(DRIVE_GEAR_RATIO).getSpeed(0, 12.0));
+    public static final LinearVelocity MAX_LINEAR_VELOCITY = MetersPerSecond.of(DRIVE_MOTOR.withReduction(DRIVE_GEAR_RATIO).getSpeed(0, 12.0) * WHEEL_RADIUS.in(Meters));
     public static final AngularVelocity MAX_ANGULAR_VELOCITY = RadiansPerSecond.of(MAX_LINEAR_VELOCITY.in(MetersPerSecond) / ROBOT_RADIUS.in(Meters));
+
+    public static final double MAX_SPEED = ChassisConstants.MAX_LINEAR_VELOCITY.in(MetersPerSecond);
+    public static final double MAX_ANGULAR_RATE = ChassisConstants.MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
 
     private static final SwerveModuleConstants.DriveMotorArrangement DRIVE_MOTOR_TYPE = SwerveModuleConstants.DriveMotorArrangement.TalonFX_Integrated;
     private static final SwerveModuleConstants.SteerMotorArrangement STEER_MOTOR_TYPE = SwerveModuleConstants.SteerMotorArrangement.TalonFX_Integrated;
     private static final SwerveModuleConstants.SteerFeedbackType STEER_FEEDBACK_TYPE = SwerveModuleConstants.SteerFeedbackType.FusedCANcoder;
+    private static final Current DRIVE_SLIP_CURRENT = Amps.of(120.0);
 
-    private static final TalonFXConfiguration DRIVE_MOTOR_CONFIG = new TalonFXConfiguration()
-            .withSlot0(new Slot0Configs()
-                    .withKP(0d)
-            );
-    private static final TalonFXConfiguration STEER_MOTOR_CONFIG = new TalonFXConfiguration().withSlot0(new Slot0Configs()
-            .withKP(100d)
-    );;
-    private static final CANcoderConfiguration CANCODER_CONFIG = new CANcoderConfiguration();
+    private static final double DRIVE_INERTIA = 0.001;
+    private static final double STEER_INERTIA = 0.00001;
+    private static final double DRIVE_FRICTION_VOLTAGE = 0.25;
+    private static final double STEER_FRICTION_VOLTAGE = 0.25;
+
+    private static final Slot0Configs STEER_GAINS = new Slot0Configs()
+            .withKP(100)
+            .withKI(0)
+            .withKD(0.5)
+            .withKS(0.1)
+            .withKV(1.59)
+            .withKA(0)
+            .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+    private static final Slot0Configs DRIVE_GAINS = new Slot0Configs()
+            .withKP(10)
+            .withKI(0)
+            .withKD(0)
+            .withKS(0)
+            .withKV(0.124);
+    private static final TalonFXConfiguration DRIVE_INITIAL_CONFIG = new TalonFXConfiguration();
+    private static final TalonFXConfiguration STEER_INITIAL_CONFIG = new TalonFXConfiguration()
+            .withCurrentLimits(new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(60)
+                    .withStatorCurrentLimitEnable(true));
+    private static final CANcoderConfiguration CANCODER_INITIAL_CONFIG = new CANcoderConfiguration();
 
     public static final SwerveDrivetrainConstants DRIVETRAIN_CONSTANTS =
             new SwerveDrivetrainConstants()
@@ -62,22 +81,22 @@ public class ChassisConstants {
                   .withSteerMotorGearRatio(STEER_GEAR_RATIO)
                   .withCouplingGearRatio(COUPLING_GEAR_RATIO)
                   .withWheelRadius(WHEEL_RADIUS)
-                    .withSteerMotorGains(new Slot0Configs().withKP(100d))
-                    .withDriveMotorGains(new Slot0Configs().withKP(0.5d))
+                  .withSteerMotorGains(STEER_GAINS)
+                  .withDriveMotorGains(DRIVE_GAINS)
                   .withSteerMotorClosedLoopOutput(STEER_CLOSED_LOOP_OUTPUT)
                   .withDriveMotorClosedLoopOutput(DRIVE_CLOSED_LOOP_OUTPUT)
-//                    .withSlipCurrent(kSlipCurrent)
+                  .withSlipCurrent(DRIVE_SLIP_CURRENT)
                   .withSpeedAt12Volts(MAX_LINEAR_VELOCITY)
-                    .withSteerMotorType(STEER_MOTOR_TYPE)
-                    .withDriveMotorType(DRIVE_MOTOR_TYPE)
-                    .withFeedbackSource(STEER_FEEDBACK_TYPE)
-                  .withDriveMotorInitialConfigs(DRIVE_MOTOR_CONFIG)
-                  .withSteerMotorInitialConfigs(STEER_MOTOR_CONFIG)
-                  .withEncoderInitialConfigs(CANCODER_CONFIG);
-//                    .withSteerInertia(kSteerInertia)
-//                    .withDriveInertia(kDriveInertia)
-//                    .withSteerFrictionVoltage(kSteerFrictionVoltage)
-//                    .withDriveFrictionVoltage(kDriveFrictionVoltage);
+                  .withSteerMotorType(STEER_MOTOR_TYPE)
+                  .withDriveMotorType(DRIVE_MOTOR_TYPE)
+                  .withFeedbackSource(STEER_FEEDBACK_TYPE)
+                  .withDriveMotorInitialConfigs(DRIVE_INITIAL_CONFIG)
+                  .withSteerMotorInitialConfigs(STEER_INITIAL_CONFIG)
+                  .withEncoderInitialConfigs(CANCODER_INITIAL_CONFIG)
+                  .withSteerInertia(STEER_INERTIA)
+                  .withDriveInertia(DRIVE_INERTIA)
+                  .withSteerFrictionVoltage(STEER_FRICTION_VOLTAGE)
+                  .withDriveFrictionVoltage(DRIVE_FRICTION_VOLTAGE);
 
     private static final Map<ModuleId, Distance> DISTANCE_X = Map.of(
             FRONT_LEFT_MODULE, HALF_WHEELBASE,
@@ -93,15 +112,7 @@ public class ChassisConstants {
             BACK_RIGHT_MODULE, HALF_TRACK_WIDTH
     );
 
-    public static SwerveModuleConstants <TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId) {
-        Angle steerOffset;
-        if (Preferences.containsKey(moduleId.moduleName() + "Offset")) {
-            steerOffset = Degrees.of(Preferences.getDouble(moduleId.moduleName() + "Offset", 0));
-        } else {
-            steerOffset = Degrees.zero();
-        }
-
-        org.tinylog.Logger.info(moduleId.moduleName() + "Offset: " + steerOffset.in(Degrees) + " degrees");
+    public static SwerveModuleConstants <TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId, Angle steerOffset) {;
         return MODULE_CONSTANTS_FACTORY
                 .createModuleConstants(moduleId.steerId(),
                         moduleId.driveId(),
@@ -109,6 +120,8 @@ public class ChassisConstants {
                         steerOffset,
                         DISTANCE_X.get(moduleId),
                         DISTANCE_Y.get(moduleId),
-                        false, false, false);
+                        false,
+                        false,
+                        false);
         }
 }

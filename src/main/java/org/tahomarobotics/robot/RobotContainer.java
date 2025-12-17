@@ -27,9 +27,6 @@ package org.tahomarobotics.robot;
 import org.tahomarobotics.robot.vision.Vision;
 import org.tahomarobotics.robot.endeffector.EndEffector;
 
-import java.io.IOError;
-import java.io.IOException;
-
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.chassis.Chassis;
 

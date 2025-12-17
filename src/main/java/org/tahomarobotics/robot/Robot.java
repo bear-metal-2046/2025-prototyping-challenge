@@ -26,12 +26,8 @@ package org.tahomarobotics.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTablesJNI;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -45,12 +41,13 @@ public class Robot extends LoggedRobot {
     private final RobotContainer robotContainer;
     private final OI oi;
 
-    // public Robot() {
-    //     this();
-    // }
-
     private Robot() {
-        this.robotContainer = new RobotContainer();
+        this(new RobotContainer());
+    }
+
+    Robot(RobotContainer robotContainer) {
+        this.robotContainer = robotContainer;
+        oi = new OI(robotContainer);
 
         if (Robot.isSimulation()) {
             WatchDog.disableWatchdog(this);
@@ -77,6 +74,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void autonomousInit() {
+
 
     }
 
