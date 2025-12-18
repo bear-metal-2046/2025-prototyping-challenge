@@ -106,9 +106,9 @@ public class ChassisConstants {
     );
 
     private static final Map<ModuleId, Distance> DISTANCE_Y = Map.of(
-            FRONT_LEFT_MODULE, HALF_TRACK_WIDTH.unaryMinus(),
+            FRONT_LEFT_MODULE, HALF_TRACK_WIDTH,
             FRONT_RIGHT_MODULE, HALF_TRACK_WIDTH,
-            BACK_LEFT_MODULE, HALF_TRACK_WIDTH.unaryMinus(),
+            BACK_LEFT_MODULE, HALF_TRACK_WIDTH,
             BACK_RIGHT_MODULE, HALF_TRACK_WIDTH
     );
 
