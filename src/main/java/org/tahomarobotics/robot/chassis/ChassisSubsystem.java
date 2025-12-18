@@ -85,7 +85,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
 
         Logger.recordOutput("BatteryVoltage", RobotController.getBatteryVoltage());
         var state = getStateCopy();
-        //Logger.recordOutput("Drive/OdometryPose", state.Pose);
+        Logger.recordOutput("Drive/OdometryPose", state.Pose);
         Logger.recordOutput("Drive/TargetStates", state.ModuleTargets);
         Logger.recordOutput("Drive/MeasuredStates", state.ModuleStates);
         Logger.recordOutput("Drive/MeasuredSpeeds", state.Speeds);

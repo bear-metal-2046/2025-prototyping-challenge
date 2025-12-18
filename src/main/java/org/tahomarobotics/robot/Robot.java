@@ -108,6 +108,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void simulationPeriodic() {
+        robotContainer.simulation.simulationPeriodic();
     }
 
     @Override

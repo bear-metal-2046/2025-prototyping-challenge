@@ -48,7 +48,7 @@ public class Simulation {
 
         SimulatedArena.overrideSimulationTimings(SIM_LOOP_PERIOD, 1);
 
-        simNotifier = new Notifier(this::simulationPeriodic);
+        simNotifier = new Notifier(this::update);
         
     }
 
@@ -60,8 +60,18 @@ public class Simulation {
         arena.resetFieldForAuto();
     }
 
-    private void simulationPeriodic() {
+    /**
+     * High rate simulation update loop.
+     */
+    private void update() {
         arena.simulationPeriodic();
+        chassisSimulation.update();
+    }
+
+    /**
+     * Called periodically during simulation mode.
+     */
+    public void simulationPeriodic() {
         chassisSimulation.simulationPeriodic();
     }
 

@@ -134,10 +134,6 @@ public class ChassisConstants {
                         .withDriveMotorInitialConfigs(DRIVE_MOTOR_CONFIG)
                         .withSteerMotorInitialConfigs(STEER_MOTOR_CONFIG)
                         .withEncoderInitialConfigs(CANCODER_CONFIG);
-        // .withSteerInertia(STEER_INERTIA)
-        // .withDriveInertia(DRIVE_INERTIA)
-        // .withSteerFrictionVoltage(STEER_FRICTION_VOLTAGE)
-        // .withDriveFrictionVoltage(DRIVE_FRICTION_VOLTAGE);
 
         private static final Map<ModuleId, Distance> DISTANCE_X = Map.of(
                         FRONT_LEFT_MODULE, HALF_WHEELBASE,

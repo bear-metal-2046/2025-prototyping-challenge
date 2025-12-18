@@ -107,15 +107,16 @@ public class ChassisSimulation extends AbstractSimulation {
     }
 
     @Override
-    public void simulationPeriodic() {
+    public void update() {
 
-        // update gyro angle
+       // update gyro angle
         gyroSimState.setRawYaw(gyroSimulation.getGyroReading().getDegrees());
         gyroSimState.setAngularVelocityZ(gyroSimulation.getMeasuredAngularVelocity());
-        //gyroSimState.setRawYaw(driveSimulation.getSimulatedDriveTrainPose().getRotation().getMeasure());
-        //gyroSimState.setAngularVelocityZ(RadiansPerSecond.of(
-        //        driveSimulation.getDriveTrainSimulatedChassisSpeedsRobotRelative().omegaRadiansPerSecond));
 
+    }
+
+    @Override
+    public void simulationPeriodic() {
         Logger.recordOutput("Sim/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
     }
 

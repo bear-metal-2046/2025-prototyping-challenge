@@ -32,6 +32,8 @@ public abstract class AbstractSimulation {
         this.name = name;
     }
 
+    public abstract void update();
+
     public abstract void simulationPeriodic();
 
 }
