@@ -23,10 +23,7 @@
  */
 package org.tahomarobotics.robot.chassis;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -39,9 +36,6 @@ import static edu.wpi.first.units.Units.*;
 
 public class Chassis implements AutoCloseable {
 
-    private static final double MAX_SPEED = ChassisConstants.MAX_LINEAR_VELOCITY.in(MetersPerSecond);
-    private static final double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond);// ChassisConstants.MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
-
     private final ChassisSubsystem chassis;
 
     public Chassis() {
@@ -52,50 +46,25 @@ public class Chassis implements AutoCloseable {
         this.chassis = chassis;
     }
 
-    public void bindTeleopDrive(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega) {
+    public void bindTeleopDrive(DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotate) {
+        final var maxSpeed = ChassisConstants.MAX_LINEAR_VELOCITY.in(MetersPerSecond);
+        final var maxRotateRate = ChassisConstants.MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
+
         final var request = new SwerveRequest.FieldCentric()
-                .withDeadband(MAX_SPEED * 0.1)
-                .withRotationalDeadband(MAX_ANGULAR_RATE * 0.1)
+                .withDeadband(maxSpeed * 0.1)
+                .withRotationalDeadband(maxRotateRate * 0.1)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         chassis.setDefaultCommand(
-                // Drivetrain will execute this command periodically
                 chassis.run(() -> chassis.setControl(request
-                        .withVelocityX(-x.getAsDouble() * MAX_SPEED)
-                        .withVelocityY(-y.getAsDouble() * MAX_SPEED)
-                        .withRotationalRate(-omega.getAsDouble() * MAX_ANGULAR_RATE))));
+                        .withVelocityX(-forward.getAsDouble() * maxSpeed)
+                        .withVelocityY(-strafe.getAsDouble() * maxSpeed)
+                        .withRotationalRate(-rotate.getAsDouble() * maxRotateRate))));
 
-    }
-
-    public void bindTeleopDrive2(DoubleSupplier x, DoubleSupplier y,
-            DoubleSupplier omega) {
-        var telopDriveCommand = chassis.run(() -> {
-            double forward = applyDesensitization(-x.getAsDouble(),
-                    ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
-            double strafe = applyDesensitization(-y.getAsDouble(),
-                    ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
-            double rot = applyDesensitization(-omega.getAsDouble(),
-                    ChassisConstants.CONTROLLER_ROTATIONAL_SENSITIVITY);
-            double dir = DriverStation.getAlliance().map(a -> a == DriverStation.Alliance.Red ? -1.0 : 1.0).orElse(1.0);
-
-            double vx = forward * MAX_SPEED * dir;
-            double vy = strafe * MAX_SPEED * dir;
-            double rotRate = rot * MAX_ANGULAR_RATE;
-            ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, rotRate);
-            chassis.setSpeeds(speeds);
-        });
-
-        chassis.setDefaultCommand(telopDriveCommand);
-
-    }
-
-    private double applyDesensitization(double value, double power) {
-        value = MathUtil.applyDeadband(value, ChassisConstants.CONTROLLER_DEADBAND);
-        value *= Math.pow(value, Math.abs(power - 1));
-        return value;
     }
 
     public void close() {
+        chassis.close();
     }
 
     public ChassisSimulation getSimulation() {

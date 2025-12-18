@@ -100,19 +100,22 @@ public class ChassisConstants {
                         .withPigeon2Id(PIGEON);
 
         private static final Current DRIVE_SLIP_CURRENT = Amps.of(120.0);
-        private static final double STEER_INERTIA = 0.00001;
-        private static final double DRIVE_INERTIA = 0.001;
-        private static final Voltage DRIVE_FRICTION_VOLTAGE = Volts.of(0.25);
-        private static final Voltage STEER_FRICTION_VOLTAGE = Volts.of(0.25);
 
         private static final Slot0Configs STEER_GAINS = new Slot0Configs()
-                        .withKP(100).withKI(0).withKD(0.5)
-                        .withKS(0.1).withKV(1.59).withKA(0)
+                        .withKP(100)
+                        .withKI(0)
+                        .withKD(0.5)
+                        .withKS(0.1)
+                        .withKV(1.59)
+                        .withKA(0)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
         private static final Slot0Configs DRIVE_GAINS = new Slot0Configs()
-                        .withKP(10).withKI(0).withKD(0)
-                        .withKS(0).withKV(0.124);
+                        .withKP(10)
+                        .withKI(0)
+                        .withKD(0)
+                        .withKS(0)
+                        .withKV(0.124);
 
         private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> MODULE_CONSTANTS_FACTORY = new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>()
                         .withDriveMotorGearRatio(DRIVE_GEAR_RATIO)
@@ -130,11 +133,11 @@ public class ChassisConstants {
                         .withFeedbackSource(STEER_FEEDBACK_TYPE)
                         .withDriveMotorInitialConfigs(DRIVE_MOTOR_CONFIG)
                         .withSteerMotorInitialConfigs(STEER_MOTOR_CONFIG)
-                        .withEncoderInitialConfigs(CANCODER_CONFIG)
-                        .withSteerInertia(STEER_INERTIA)
-                        .withDriveInertia(DRIVE_INERTIA)
-                        .withSteerFrictionVoltage(STEER_FRICTION_VOLTAGE)
-                        .withDriveFrictionVoltage(DRIVE_FRICTION_VOLTAGE);
+                        .withEncoderInitialConfigs(CANCODER_CONFIG);
+        // .withSteerInertia(STEER_INERTIA)
+        // .withDriveInertia(DRIVE_INERTIA)
+        // .withSteerFrictionVoltage(STEER_FRICTION_VOLTAGE)
+        // .withDriveFrictionVoltage(DRIVE_FRICTION_VOLTAGE);
 
         private static final Map<ModuleId, Distance> DISTANCE_X = Map.of(
                         FRONT_LEFT_MODULE, HALF_WHEELBASE,
@@ -151,7 +154,7 @@ public class ChassisConstants {
         public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(
                         ModuleId moduleId, Angle steerOffset) {
 
-                var k = MODULE_CONSTANTS_FACTORY.createModuleConstants(moduleId.steerId(),
+                var swerveModuleConfig = MODULE_CONSTANTS_FACTORY.createModuleConstants(moduleId.steerId(),
                                 moduleId.driveId(),
                                 moduleId.cancoderId(),
                                 steerOffset,
@@ -161,49 +164,33 @@ public class ChassisConstants {
                                 false,
                                 false);
 
-                if (Robot.isReal()) return k;
+                if (Robot.isSimulation()) {
+                        swerveModuleConfig.withSteerMotorGains(new Slot0Configs()
+                                        .withKP(70)
+                                        .withKI(0)
+                                        .withKD(4.5)
+                                        .withKS(0)
+                                        .withKV(1.91)
+                                        .withKA(0)
+                                        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign));
+                }
 
-                return k
-                // Disable encoder offsets
-                .withEncoderOffset(0)
-                // Disable motor inversions for drive and steer motors
-                .withDriveMotorInverted(false)
-                .withSteerMotorInverted(false)
-                // Disable CanCoder inversion
-                .withEncoderInverted(false)
-                // Adjust steer motor PID gains for simulation
-                .withSteerMotorGains(new Slot0Configs()
-                        .withKP(70)
-                        .withKI(0)
-                        .withKD(4.5)
-                        .withKS(0)
-                        .withKV(1.91)
-                        .withKA(0)
-                        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign))
-                .withSteerMotorGearRatio(16.0)
-                // Adjust friction voltages
-                .withDriveFrictionVoltage(Volts.of(0.1))
-                .withSteerFrictionVoltage(Volts.of(0.05))
-                // Adjust steer inertia
-                .withSteerInertia(KilogramSquareMeters.of(0.05));
-
-
+                return swerveModuleConfig;
         }
 
         // ---------------------------------------------------------------------------------------
         // simulation defined constants and configuration
         // ---------------------------------------------------------------------------------------
         // Robot physical constants
-        static final Mass BATTERY_MASS = Pounds.of(13.6);
-        static final Mass BUMPER_MASS = Pounds.of(16.0);
-        static final Mass CHASSIS_MASS = Pounds.of(115.0);
-        static final Mass ROBOT_MASS = CHASSIS_MASS.plus(BATTERY_MASS).plus(BUMPER_MASS);
+        private static final Mass BATTERY_MASS = Pounds.of(13.6);
+        private static final Mass BUMPER_MASS = Pounds.of(16.0);
+        private static final Mass CHASSIS_MASS = Pounds.of(50.0);
+        private static final Mass ROBOT_MASS = CHASSIS_MASS.plus(BATTERY_MASS).plus(BUMPER_MASS);
 
-        static final MomentOfInertia ROBOT_MOI = KilogramSquareMeters.of(6.518555);
-
-        public static final MomentOfInertia MOTOR_MOI = KilogramSquareMeters.of(0.05);
-        public static final Distance BUMPER_SIZE = Inches.of(34.086);
-        public static final Distance BUMPER_HALF_SIZE = BUMPER_SIZE.div(2d);
+        private static final Distance BUMPER_SIZE = Inches.of(34.086);
+        private static final MomentOfInertia STEER_INERTIA = KilogramSquareMeters.of(0.05);
+        private static final Voltage DRIVE_FRICTION_VOLTAGE = Volts.of(0.25);
+        private static final Voltage STEER_FRICTION_VOLTAGE = Volts.of(0.25);
 
         public static DriveTrainSimulationConfig driveTrainSimulationConfig() {
                 return DriveTrainSimulationConfig.Default()
@@ -218,7 +205,7 @@ public class ChassisConstants {
                                                 DRIVE_FRICTION_VOLTAGE,
                                                 STEER_FRICTION_VOLTAGE,
                                                 WHEEL_RADIUS,
-                                                MOTOR_MOI,
+                                                STEER_INERTIA,
                                                 WHEEL_COF))
                                 .withBumperSize(BUMPER_SIZE, BUMPER_SIZE);
         }

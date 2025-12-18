@@ -46,7 +46,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Angle;
 import static edu.wpi.first.units.Units.*;
 
-public class ChassisSimulation extends AbstractSimulation{
+public class ChassisSimulation extends AbstractSimulation {
 
     private final ChassisReference DRIVE_MOTOR_ORIENTATION = ChassisReference.CounterClockwise_Positive;
     private final ChassisReference STEER_MOTOR_ORIENTATION = ChassisReference.CounterClockwise_Positive;
@@ -57,33 +57,30 @@ public class ChassisSimulation extends AbstractSimulation{
     private final SwerveDriveSimulation driveSimulation;
     private final GyroSimulation gyroSimulation;
 
-    public ChassisSimulation(Pigeon2 pigeon2, SwerveModule<TalonFX,TalonFX,CANcoder>[] modules) {
+    public ChassisSimulation(Pigeon2 pigeon2, SwerveModule<TalonFX, TalonFX, CANcoder>[] modules) {
         super("Chassis Simulation");
 
         driveSimulation = new SwerveDriveSimulation(ChassisConstants.driveTrainSimulationConfig(), new Pose2d());
         Arena2025Reefscape.getInstance().setSwerveDriveSimulation(driveSimulation);
 
         SwerveModuleSimulation[] moduleSimulations = driveSimulation.getModules();
-        System.out.println("Modules: " + moduleSimulations.length);
         for (int i = 0; i < moduleSimulations.length; i++) {
             moduleSimulations[i].useDriveMotorController(getDriveSimMotorController(
-                modules[i].getDriveMotor().getSimState())
-            );
+                    modules[i].getDriveMotor().getSimState()));
             moduleSimulations[i].useSteerMotorController(getSteerSimMotorController(
-                modules[i].getSteerMotor().getSimState(),
-                modules[i].getEncoder().getSimState())
-            );
+                    modules[i].getSteerMotor().getSimState(),
+                    modules[i].getEncoder().getSimState()));
         }
 
         gyroSimState = pigeon2.getSimState();
         gyroSimulation = driveSimulation.getGyroSimulation();
     }
 
-        /**
+    /**
      * return the MapleSim controller for drive motors
      */
     private SimulatedMotorController getDriveSimMotorController(TalonFXSimState driveMotorSimState) {
-        //driveMotorSimState.Orientation = DRIVE_MOTOR_ORIENTATION;
+        driveMotorSimState.Orientation = DRIVE_MOTOR_ORIENTATION;
         return (mechanismAngle, mechanismVelocity, encoderAngle, encoderVelocity) -> {
             driveMotorSimState.setRawRotorPosition(encoderAngle);
             driveMotorSimState.setRotorVelocity(encoderVelocity);
@@ -95,28 +92,29 @@ public class ChassisSimulation extends AbstractSimulation{
     /**
      * return the MapleSim controller for steer motors and encoders
      */
-    private SimulatedMotorController getSteerSimMotorController(TalonFXSimState steerMotorSimState, CANcoderSimState steerEncoderSimState) {
-        //steerMotorSimState.Orientation = STEER_MOTOR_ORIENTATION;
-        //steerEncoderSimState.Orientation = STEER_ENCODER_ORIENTATION;
+    private SimulatedMotorController getSteerSimMotorController(TalonFXSimState steerMotorSimState,
+            CANcoderSimState steerEncoderSimState) {
+        steerMotorSimState.Orientation = STEER_MOTOR_ORIENTATION;
+        steerEncoderSimState.Orientation = STEER_ENCODER_ORIENTATION;
         return (mechanismAngle, mechanismVelocity, encoderAngle, encoderVelocity) -> {
             steerEncoderSimState.setRawPosition(mechanismAngle);
             steerEncoderSimState.setVelocity(mechanismVelocity);
-            steerEncoderSimState.setSupplyVoltage(SimulatedBattery.getBatteryVoltage());
             steerMotorSimState.setRawRotorPosition(encoderAngle);
             steerMotorSimState.setRotorVelocity(encoderVelocity);
             steerMotorSimState.setSupplyVoltage(SimulatedBattery.getBatteryVoltage());
             return steerMotorSimState.getMotorVoltageMeasure();
         };
     }
+
     @Override
     public void simulationPeriodic() {
-        
+
         // update gyro angle
-        //gyroSimState.setRawYaw(gyroSimulation.getGyroReading().getDegrees());
-        //gyroSimState.setAngularVelocityZ(gyroSimulation.getMeasuredAngularVelocity());
-        gyroSimState.setRawYaw(driveSimulation.getSimulatedDriveTrainPose().getRotation().getMeasure());
-        gyroSimState.setAngularVelocityZ(RadiansPerSecond.of(
-            driveSimulation.getDriveTrainSimulatedChassisSpeedsRobotRelative().omegaRadiansPerSecond));
+        gyroSimState.setRawYaw(gyroSimulation.getGyroReading().getDegrees());
+        gyroSimState.setAngularVelocityZ(gyroSimulation.getMeasuredAngularVelocity());
+        //gyroSimState.setRawYaw(driveSimulation.getSimulatedDriveTrainPose().getRotation().getMeasure());
+        //gyroSimState.setAngularVelocityZ(RadiansPerSecond.of(
+        //        driveSimulation.getDriveTrainSimulatedChassisSpeedsRobotRelative().omegaRadiansPerSecond));
 
         Logger.recordOutput("Sim/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
     }
@@ -127,5 +125,5 @@ public class ChassisSimulation extends AbstractSimulation{
     public void setPose(Pose2d pose) {
         driveSimulation.setSimulationWorldPose(pose);
     }
-    
+
 }

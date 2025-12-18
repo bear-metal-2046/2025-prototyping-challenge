@@ -48,7 +48,7 @@ import static edu.wpi.first.units.Units.*;
 public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
 
     private final ChassisSimulation simulation;
-    private boolean m_hasAppliedOperatorPerspective;
+    private boolean isOperatorPerspectiveApplied;
 
     public ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
             DeviceConstructor<TalonFX> steerMotorConstructor,
@@ -57,7 +57,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
 
-        simulation = Robot.isSimulation() ?  new ChassisSimulation(getPigeon2(), getModules()) : null;
+        simulation = Robot.isSimulation() ? new ChassisSimulation(getPigeon2(), getModules()) : null;
     }
 
     public ChassisSubsystem() {
@@ -76,13 +76,10 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
 
     @Override
     public void periodic() {
-        if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
+        if (!isOperatorPerspectiveApplied || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
-                setOperatorPerspectiveForward(
-                        allianceColor == Alliance.Red
-                                ? Rotation2d.k180deg
-                                : Rotation2d.kZero);
-                m_hasAppliedOperatorPerspective = true;
+                setOperatorPerspectiveForward(allianceColor == Alliance.Red ? Rotation2d.k180deg : Rotation2d.kZero);
+                isOperatorPerspectiveApplied = true;
             });
         }
 

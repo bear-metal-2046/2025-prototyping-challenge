@@ -60,7 +60,7 @@ public class Simulation {
         arena.resetFieldForAuto();
     }
 
-    public void simulationPeriodic() {
+    private void simulationPeriodic() {
         arena.simulationPeriodic();
         chassisSimulation.simulationPeriodic();
     }
