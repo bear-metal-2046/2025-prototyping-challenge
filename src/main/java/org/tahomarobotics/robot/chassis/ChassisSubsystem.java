@@ -62,10 +62,8 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
 
     @Override
     public void periodic() {
-        this.getState();
-        for (int i = 0; i < 4; i++) {
-            Logger.recordOutput("SwerveModuleStates/" + i, this.getModule(i).getCurrentState());
-        }
+        var state = this.getState();
+        Logger.recordOutput("Chassis/SwerveStates" , state.ModuleStates);
     }
 
     @Override
