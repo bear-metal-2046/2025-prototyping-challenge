@@ -14,8 +14,8 @@ import static edu.wpi.first.units.Units.*;
 import static org.tahomarobotics.robot.RobotMap.*;
 
 public class ChassisConstants {
-    public static final double CONTROLLER_ROTATIONAL_SENSITIVITY = 2d;
-    public static final double CONTROLLER_TRANSLATIONAL_SENSITIVITY = 1.3d;
+    public static final double CONTROLLER_ROTATIONAL_SENSITIVITY = 2.4d;
+    public static final double CONTROLLER_TRANSLATIONAL_SENSITIVITY = 2.4d;
     public static final double CONTROLLER_DEADBAND = 0.09d;
 
     public static final double DRIVE_GEAR_RATIO = (54d / 14d) * (25d / 32d) * (30d / 15d);
