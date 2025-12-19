@@ -40,7 +40,7 @@ public class Chassis implements AutoCloseable {
 
     private double applyDesensitization (double value, double power) {
         value = MathUtil.applyDeadband(value, ChassisConstants.CONTROLLER_DEADBAND);
-        value = value * Math.pow(value, Math.abs(power - 1));
+        value = value * Math.pow(Math.abs(value), power - 1);
         return value;
     }
 
