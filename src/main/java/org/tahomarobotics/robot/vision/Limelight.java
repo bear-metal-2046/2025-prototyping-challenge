@@ -1,5 +1,7 @@
 package org.tahomarobotics.robot.vision;
 
+import java.util.Optional;
+
 import org.tahomarobotics.robot.util.LimelightHelpers;
 
 public class Limelight {
@@ -13,12 +15,18 @@ public class Limelight {
         this.name = name;
     }
 
-    public EstimatedRobotPose getEstimatedRobotPose() {
+    public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
         LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-        return new EstimatedRobotPose(mt1, this);
+
+        if (mt1 == null) {
+            return Optional.empty();
+        }
+        return Optional.of(new EstimatedRobotPose(mt1, this));
     }
 
     public record EstimatedRobotPose(LimelightHelpers.PoseEstimate poseEstimate, Limelight camera) {}
 
-
+    public String getName() {
+        return name;
+    }
 }

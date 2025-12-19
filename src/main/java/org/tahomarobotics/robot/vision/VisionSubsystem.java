@@ -8,12 +8,14 @@ public class VisionSubsystem extends AbstractSubsystem {
     private final Limelight limelight;
 
     VisionSubsystem() {
-        this(new Limelight("Limelight"));
+        this(new Limelight("limelight"));
     }
 
     @Override
     public void subsystemPeriodic() {
-        Logger.recordOutput("Vision/Position", limelight.getEstimatedRobotPose());
+        limelight.getEstimatedRobotPose().ifPresent(
+            pose -> Logger.recordOutput("Vision/" + limelight.getName() + " Position", pose.poseEstimate().pose)
+        );
     }
 
     private VisionSubsystem(Limelight limelight){
