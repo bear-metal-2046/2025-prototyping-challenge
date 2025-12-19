@@ -47,10 +47,10 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder
 
     public ChassisSubsystem() {
         this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
-                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(-18.2)),
-                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(-28.2)),
-                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(-71.9)),
-                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(-137.7) )
+                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(195.64)),
+                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(345.06)),
+                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(-19.07)),
+                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(-861.42))
         );
     }
 
