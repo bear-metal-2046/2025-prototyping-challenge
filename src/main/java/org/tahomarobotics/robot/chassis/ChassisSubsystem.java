@@ -27,13 +27,9 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
@@ -50,16 +46,6 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
     private final ChassisSimulation simulation;
     private boolean isOperatorPerspectiveApplied;
 
-    public ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
-            DeviceConstructor<TalonFX> steerMotorConstructor,
-            DeviceConstructor<CANcoder> encoderConstructor,
-            SwerveDrivetrainConstants drivetrainConstants,
-            SwerveModuleConstants<?, ?, ?>... modules) {
-        super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
-
-        simulation = Robot.isSimulation() ? new ChassisSimulation(getPigeon2(), getModules()) : null;
-    }
-
     public ChassisSubsystem() {
         this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
                 ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(0d)),
@@ -68,10 +54,14 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
                 ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(0d)));
     }
 
-    public void setSpeeds(ChassisSpeeds speeds) {
-        setControl(new SwerveRequest.ApplyFieldSpeeds()
-                .withSpeeds(speeds)
-                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
+    ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
+            DeviceConstructor<TalonFX> steerMotorConstructor,
+            DeviceConstructor<CANcoder> encoderConstructor,
+            SwerveDrivetrainConstants drivetrainConstants,
+            SwerveModuleConstants<?, ?, ?>... modules) {
+        super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
+
+        simulation = Robot.isSimulation() ? new ChassisSimulation(getPigeon2(), getModules()) : null;
     }
 
     @Override

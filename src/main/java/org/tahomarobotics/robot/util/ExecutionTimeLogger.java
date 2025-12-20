@@ -27,10 +27,6 @@ package org.tahomarobotics.robot.util;
 import edu.wpi.first.wpilibj.RobotController;
 import org.littletonrobotics.junction.Logger;
 
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
-import java.util.List;
-
 /**
  * Utility class for measuring and logging execution times of robot operations.
  * Uses FPGA timestamp for high-precision timing and logs results via AdvantageKit.

@@ -42,11 +42,12 @@ public class RobotContainer implements AutoCloseable {
     // some of MapleSim
     private final Arena2025Reefscape arena = org.tahomarobotics.robot.sim.Arena2025Reefscape.getInstance();
 
+    
     public final Chassis chassis;
     public final Vision vision;
-    public final OI oi;
-    public final Simulation simulation;
-
+    
+    final OI oi;
+    final Simulation simulation;
 
     public RobotContainer() {
         chassis = new Chassis();

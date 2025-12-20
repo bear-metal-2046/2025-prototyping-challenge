@@ -24,31 +24,29 @@
 package org.tahomarobotics.robot;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class RobotMap {
 
-    public static final String CANBUS_NAME = "CANivore";
+        public static final String CANBUS_NAME = "CANivore";
 
-    public static final int PIGEON = 0;
+        public static final int PIGEON = 0;
 
-    public final static ModuleId FRONT_LEFT_MODULE = new ModuleId(
-            "Front Left Module", 1, 11, 21);
-    public final static ModuleId FRONT_RIGHT_MODULE = new ModuleId(
-    public final static ModuleId FRONT_RIGHT_MODULE = new ModuleId(
-            "Front Right Module", 2, 12, 22);
-    public final static ModuleId BACK_LEFT_MODULE = new ModuleId(
-            "Back Left Module", 3, 13, 23);
-    public final static ModuleId BACK_RIGHT_MODULE = new ModuleId(
-            "Front Right Module", 4, 14, 24);
+        public final static ModuleId FRONT_LEFT_MODULE  = new ModuleId("Front Left Module",  1, 11, 21);
+        public final static ModuleId FRONT_RIGHT_MODULE = new ModuleId("Front Right Module", 2, 12, 22);
+        public final static ModuleId BACK_LEFT_MODULE   = new ModuleId("Back Left Module",   3, 13, 23);
+        public final static ModuleId BACK_RIGHT_MODULE  = new ModuleId("Back Right Module",  4, 14, 24);
 
-
-
-    public record ModuleId(String moduleName, int driveId, int steerId, int cancoderId) {}
+        public record ModuleId(String moduleName, int driveId, int steerId, int cancoderId) {
+        }
 
 }
