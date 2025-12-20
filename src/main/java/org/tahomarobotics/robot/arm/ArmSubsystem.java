@@ -1,13 +1,17 @@
 package org.tahomarobotics.robot.arm;
 
-import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.sim.CANcoderSimState;
 
-import edu.wpi.first.wpilibj.CAN;
 
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
+import org.tahomarobotics.robot.util.RobustConfigurator;
+
 import org.tinylog.Logger;
 
 public class ArmSubsystem extends AbstractSubsystem {
@@ -15,42 +19,53 @@ public class ArmSubsystem extends AbstractSubsystem {
     private final TalonFX topMotor;
     private final TalonFX bottomMotor;
 
-    //Absolute encoders
-    private final CANcoder topEncoder;
-    private final CANcoder bottomEncoder;
-    private final CANcoder wristEncoder;
-
-    private final ArmSimulation armSimulataion;
+    private final MotionMagicVoltage positonControl = new MotionMagicVoltage(0);
 
 
-    ArmSubsystem() {
-        this(new TalonFX(RobotMap.ARM_TOP_MOTOR), new TalonFX(RobotMap.ARM_BOTTOM_MOTOR),
-            new CANcoder(RobotMap.ARM_TOP_ENCODER),   new CANcoder(RobotMap.ARM_BOTTOM_ENCODER),
-            new CANcoder(RobotMap.ARM_WRIST_ENCODER));
+    public ArmSubsystem() {
+
+        topMotor = new  TalonFX(RobotMap.ARM_TOP_MOTOR, RobotMap.CANBUS_NAME);
+
+        bottomMotor =  new TalonFX(RobotMap.ARM_BOTTOM_MOTOR, RobotMap.CANBUS_NAME);
+
+        RobustConfigurator.tryConfigureTalonFX("Arm Motor", topMotor, ArmConstants.armMotorConfig());
+
+        bottomMotor.setControl(new Follower(topMotor.getDeviceID(), false));
+
     }
 
-    ArmSubsystem(TalonFX topMotor, TalonFX bottomMotor, CANcoder topEncoder, CANcoder bottomEncoder, CANcoder wristEncoder) {
-        Logger.info("Creating an instance of ArmSubsystem (test constructor)...");
+    ArmSubsystem(TalonFX topMotor, TalonFX bottomMotor) {
+        Logger.info("Creating an instance of ArmSubsystem");
         this.topMotor = topMotor;
         this.bottomMotor = bottomMotor;
-        this.topEncoder = topEncoder;
-        this.bottomEncoder = bottomEncoder;
-        this.wristEncoder = wristEncoder;
-
-        armSimulataion = new ArmSimulation(
-            topMotor.getSimState(), 
-            bottomMotor.getSimState(), 
-            topEncoder.getSimState(),
-            bottomEncoder.getSimState(),
-            wristEncoder.getSimState()
-        );
     }
+
+
+    public TalonFX getTopMotor() {
+        return topMotor;
+    }
+
+
+    public void setArmPosition(Angle angle) {
+        topMotor.setControl(positonControl.withPosition(angle));
+
+    }
+
+    public void setArmPercentOutput(double percent){
+        topMotor.setControl(new DutyCycleOut(percent));
+
+    }
+
+    public Angle getArmPosition(){
+        return topMotor.getPosition().getValue();
+    }
+
+
+
     @Override
     public void subsystemPeriodic() {
 
     }
 
-    public ArmSimulation getSimulation() {
-        return armSimulataion;
-    }
+
 }

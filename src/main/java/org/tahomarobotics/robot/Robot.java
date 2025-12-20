@@ -39,6 +39,7 @@ public class Robot extends LoggedRobot {
     public static final Pose2d STARTING_ROBOT_POSE = new Pose2d(3,3, new Rotation2d());
 
     private final RobotContainer robotContainer;
+    private final OI oi;
 
     private Robot() {
         this(new RobotContainer());
@@ -46,6 +47,7 @@ public class Robot extends LoggedRobot {
 
     Robot(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
+        oi = new OI(robotContainer);
 
         if (Robot.isSimulation()) {
             WatchDog.disableWatchdog(this);

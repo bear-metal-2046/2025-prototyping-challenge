@@ -5,9 +5,13 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.measure.Voltage;
 import org.tahomarobotics.robot.RobotMap;
 
+import static edu.wpi.first.units.Units.Volts;
+
 public class EndEffectorConstants {
+    public static final Voltage MAXIMUM_VOLTAGE = Volts.of(6);
 
 
 

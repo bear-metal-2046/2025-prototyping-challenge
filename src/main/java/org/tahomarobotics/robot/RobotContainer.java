@@ -24,13 +24,12 @@
 
 package org.tahomarobotics.robot;
 
+import org.tahomarobotics.robot.vision.Vision;
 import org.tahomarobotics.robot.endeffector.EndEffector;
 
 import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.chassis.Chassis;
 import org.tahomarobotics.robot.elevator.Elevator;
-import org.tahomarobotics.robot.sim.Simulation;
-
 
 /**
  * The RobotContainer declares the robot's structure: subsystems, commands and simulations.
@@ -45,12 +44,13 @@ public class RobotContainer implements AutoCloseable {
     // - Elevator
     // - Arm
     // - End effector
-    // - Vision
+    public final Vision vision;
     // - Robot visualization and simulation components
     public final Elevator elevator;
     public final Arm arm;
     public final EndEffector endEffector;
-    public final Simulation simulation;
+    public Windmill windmill;
+
 
     public RobotContainer() {
         // NetworkTables must be loaded for Preferences to work correctly.
@@ -68,6 +68,9 @@ public class RobotContainer implements AutoCloseable {
         elevator = new Elevator();
         arm = new Arm();
         endEffector = new EndEffector();
+        windmill = new Windmill(arm, elevator);
+        vision = new Vision();
+
 
         simulation = new Simulation(arm.getSimulation());
 
