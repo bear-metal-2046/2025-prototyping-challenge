@@ -25,10 +25,7 @@
 package org.tahomarobotics.robot;
 
 import org.tahomarobotics.robot.vision.Vision;
-import org.tahomarobotics.robot.endeffector.EndEffector;
-import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.chassis.Chassis;
-import org.tahomarobotics.robot.elevator.Elevator;
 
 
 /**
@@ -46,10 +43,6 @@ public class RobotContainer implements AutoCloseable {
     // - End effector
     public final Vision vision;
     // - Robot visualization and simulation components
-    public final Elevator elevator;
-    public final Arm arm;
-    public final EndEffector endEffector;
-    public Windmill windmill;
 
 
     public RobotContainer() {
@@ -61,10 +54,6 @@ public class RobotContainer implements AutoCloseable {
         // Create subsystem instances
         chassis = new Chassis();
         // Create subsystem instances here
-        elevator = new Elevator();
-        arm = new Arm();
-        endEffector = new EndEffector();
-        windmill = new Windmill(arm, elevator);
         vision = new Vision();
 
 
