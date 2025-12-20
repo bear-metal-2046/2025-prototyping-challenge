@@ -24,39 +24,17 @@
 
 package org.tahomarobotics.robot;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.tahomarobotics.robot.chassis.Chassis;
 
-
-import static edu.wpi.first.units.Units.Volts;
-
-public class OI extends SubsystemBase {
+public class OI {
     private static final int DRIVER_CONTROLLER_INDEX = 0;
-    private static final double DEADBAND = 0.09;
-    private static final double DESENSITIZED_POWER = 1.5;
-
     final CommandXboxController driverController = new CommandXboxController(DRIVER_CONTROLLER_INDEX);
 
-    public void configureBindings() {
-    }
-
-
-    public double getLeftTrigger() {
-        return desensitizePowerBased(driverController.getLeftTriggerAxis(), DESENSITIZED_POWER);
-    }
-
     public OI(RobotContainer robotContainer) {
-
         DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
-
-        configureBindings();
-    }
-
-    public double desensitizePowerBased(double value, double power) {
-        value = MathUtil.applyDeadband(value, DEADBAND);
-        value *= Math.pow(Math.abs(value), power - 1);
-        return value;
+        Chassis chassis = robotContainer.chassis;
+        chassis.bindTeleopDrive(driverController::getLeftY, driverController::getLeftX, driverController::getRightX);
     }
 }

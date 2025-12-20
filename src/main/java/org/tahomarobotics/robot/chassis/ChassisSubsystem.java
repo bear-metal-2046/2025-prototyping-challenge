@@ -1,48 +1,71 @@
 package org.tahomarobotics.robot.chassis;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
-import org.tahomarobotics.robot.RobotMap;
-import org.tahomarobotics.robot.util.AbstractSubsystem;
-import org.tinylog.Logger;
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.*;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
-import java.util.List;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+import static org.tahomarobotics.robot.RobotMap.*;
 
-import static org.tahomarobotics.robot.RobotMap.CANBUS_NAME;
-
-public class ChassisSubsystem extends AbstractSubsystem {
-
-
-
-    //swerve Modules
-    private List<SwerveModule> modules;
-    //Gyro
-    private Pigeon2 pigeon = new Pigeon2(RobotMap.PIGEON, CANBUS_NAME);
+public class ChassisSubsystem extends SwerveDrivetrain<TalonFX,TalonFX, CANcoder> implements AutoCloseable, Subsystem {
+   @AutoLogOutput (key = "ChassisSpeeds")
+    private ChassisSpeeds speeds = new ChassisSpeeds();
 
 
-    //Constructor
-
-     ChassisSubsystem(List modules, Pigeon2 pigeon) {
-        this.modules = modules;
-        this.pigeon = pigeon;
+    public ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
+                            DeviceConstructor<TalonFX> steerMotorConstructor,
+                            DeviceConstructor<CANcoder> encoderConstructor,
+                            SwerveDrivetrainConstants drivetrainConstants,
+                            SwerveModuleConstants<?, ?, ?>... modules) {
+        super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
+//        this.registerTelemetry(this::telemeterize);
     }
-    //Constructor
-     ChassisSubsystem() {
 
-        modules = List.of(
-
-                new SwerveModule(RobotMap.FRONT_LEFT_MODULE),
-                new SwerveModule(RobotMap.FRONT_RIGHT_MODULE),
-                new SwerveModule(RobotMap.BACK_LEFT_MODULE),
-                new SwerveModule(RobotMap.BACK_RIGHT_MODULE)
-
-
+    public ChassisSubsystem() {
+        this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
+                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(195.64)),
+                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(345.06)),
+                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(-19.07)),
+                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(-861.42))
         );
-        Logger.info("Creating an instance of ChassisSubsystem...");
+    }
 
+    public void setSpeeds(ChassisSpeeds speeds) {
+        setControl(new SwerveRequest.ApplyFieldSpeeds()
+                .withSpeeds(speeds)
+                .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage));
     }
 
     @Override
-    public void subsystemPeriodic() {
-
+    public void periodic() {
+        var state = this.getState();
+        Logger.recordOutput("Chassis/SwerveStates" , state.ModuleStates);
     }
+
+    @Override
+    public void close() {}
 }
