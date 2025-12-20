@@ -36,7 +36,7 @@ import org.tahomarobotics.robot.util.WatchDog;
 
 public class Robot extends LoggedRobot {
 
-    public static final Pose2d STARTING_ROBOT_POSE = new Pose2d(3,3, new Rotation2d());
+    public static final Pose2d STARTING_ROBOT_POSE = new Pose2d(3, 3, new Rotation2d());
 
     private final RobotContainer robotContainer;
 
@@ -63,16 +63,18 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
-        // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-        // commands, running already-scheduled commands, removing finished or interrupted commands,
-        // and running subsystem periodic() methods.  This must be called from the robot's periodic
+        // Runs the Scheduler. This is responsible for polling buttons, adding
+        // newly-scheduled
+        // commands, running already-scheduled commands, removing finished or
+        // interrupted commands,
+        // and running subsystem periodic() methods. This must be called from the
+        // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
-
 
     }
 
@@ -83,7 +85,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void disabledInit() {
-        
+
     }
 
     @Override
@@ -98,12 +100,12 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void simulationInit() {
-        
+
     }
 
     @Override
     public void simulationPeriodic() {
-       
+
     }
 
     @Override

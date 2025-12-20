@@ -25,9 +25,6 @@
 package org.tahomarobotics.robot;
 
 import org.tahomarobotics.robot.vision.Vision;
-import org.tahomarobotics.robot.endeffector.EndEffector;
-
-import org.tahomarobotics.robot.arm.Arm;
 import org.tahomarobotics.robot.chassis.Chassis;
 
 
@@ -38,34 +35,20 @@ import org.tahomarobotics.robot.chassis.Chassis;
  */
 public class RobotContainer implements AutoCloseable {
 
-    // Subsystems will be declared here as public final fields, including:
-    // - Chassis (drive subsystem)
     public final Chassis chassis;
-    // - Elevator
-    // - Arm
-    // - End effector
     public final Vision vision;
-    // - Robot visualization and simulation components
-
+    
 
     public RobotContainer() {
-        // NetworkTables must be loaded for Preferences to work correctly.
-        // By default, it doesn't load until after this constructor is called, 
-        // so we want to force it to load here.
-
 
         // Arena must be created first to override the default instance provided by
         // org.ironmaple.simulation.SimulatedArena.getInstance() which is used by MapleSim
         //Arena2025Reefscape arena = org.tahomarobotics.sim.Arena2025Reefscape.getInstance();
 
-        // Create subsystem instances
         chassis = new Chassis();
-        // Create subsystem instances here
         vision = new Vision();
 
-
-
-        OI oi = new OI(this);
+        new OI(this);
     }
 
     @Override
