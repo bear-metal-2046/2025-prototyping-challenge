@@ -22,6 +22,7 @@ public class VisionConstants {
                 );
     }
 
+
     public record CameraConfiguration(String name, Transform3d offset){
         public double[] getTransformArray() {
             return new double[] {
