@@ -18,7 +18,6 @@ public class Limelight {
 
     public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
         LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-        LimelightHelpers.setCameraPose_RobotSpace();
 
         if (mt1 == null) {
             return Optional.empty();
@@ -29,12 +28,12 @@ public class Limelight {
     public void setCameraOffset(VisionConstants.CameraConfiguration cameraOffset){
         LimelightHelpers.setCameraPose_RobotSpace(
                 getName(),
-                cameraOffset.getX(),
-                offset.getY(),
-                offset.getZ(),
-                offset.getRotation().getX(),
-                offset.getRotation().getY(),
-                offset.getRotation().getZ()
+                cameraOffset.offset().getX(),
+                cameraOffset.offset().getX(),
+                cameraOffset.offset().getX(),
+                cameraOffset.offset().getRotation().getX(),
+                cameraOffset.offset().getRotation().getY(),
+                cameraOffset.offset().getRotation().getZ()
         );
     }
 
