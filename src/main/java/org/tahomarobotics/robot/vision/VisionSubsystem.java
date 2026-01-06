@@ -20,5 +20,6 @@ public class VisionSubsystem extends AbstractSubsystem {
 
     private VisionSubsystem(Limelight limelight){
         this.limelight = limelight;
+        limelight.setCameraOffset(VisionConstants.Test_Camera);
     }
 }

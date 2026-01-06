@@ -16,8 +16,8 @@ public class VisionConstants {
         Test_Camera = new CameraConfiguration(
                 "Limelight",
                 new Transform3d(
-                        new Translation3d(inchesToMeters(1), inchesToMeters(1), inchesToMeters(1)),
-                        new Rotation3d(degreesToRadians(1), degreesToRadians(1), degreesToRadians(1))
+                        new Translation3d(inchesToMeters(4.5), inchesToMeters(0), inchesToMeters(8.66142)),
+                        new Rotation3d(degreesToRadians(0), degreesToRadians(0), degreesToRadians(0))
                         )
                 );
     }
