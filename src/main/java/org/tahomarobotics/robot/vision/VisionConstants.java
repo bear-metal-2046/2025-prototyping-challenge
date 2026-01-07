@@ -4,20 +4,19 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
-import static edu.wpi.first.math.util.Units.degreesToRadians;
-import static edu.wpi.first.math.util.Units.inchesToMeters;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Degrees;
 
 public class VisionConstants {
 
-    public static CameraConfiguration Test_Camera;
+    public static CameraConfiguration TEST_CAMERA;
 
     static {
-        Test_Camera = new CameraConfiguration(
-                "Limelight",
+        TEST_CAMERA = new CameraConfiguration(
+                "limelight",
                 new Transform3d(
-                        new Translation3d(inchesToMeters(4.5), inchesToMeters(0), inchesToMeters(8.66142)),
-                        new Rotation3d(degreesToRadians(0), degreesToRadians(0), degreesToRadians(0))
+                        new Translation3d(Inches.of(4.5), Inches.of(0), Inches.of(8.66142)),
+                        new Rotation3d(Degrees.of(0), Degrees.of(0), Degrees.of(0))
                         )
                 );
     }

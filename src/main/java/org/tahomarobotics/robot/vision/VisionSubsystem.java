@@ -8,7 +8,7 @@ public class VisionSubsystem extends AbstractSubsystem {
     private final Limelight limelight;
 
     VisionSubsystem() {
-        this(new Limelight("limelight"));
+        this(new Limelight(VisionConstants.TEST_CAMERA));
     }
 
     @Override
@@ -20,6 +20,5 @@ public class VisionSubsystem extends AbstractSubsystem {
 
     private VisionSubsystem(Limelight limelight){
         this.limelight = limelight;
-        limelight.setCameraOffset(VisionConstants.Test_Camera);
     }
 }

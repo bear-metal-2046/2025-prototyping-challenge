@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import org.tahomarobotics.robot.util.LimelightHelpers;
+import org.tahomarobotics.robot.vision.VisionConstants.CameraConfiguration;
 
 public class Limelight {
 
@@ -12,8 +13,9 @@ public class Limelight {
     // --- Constructor ---
 
 
-    public Limelight(String name) {
-        this.name = name;
+    public Limelight(CameraConfiguration config) {
+        this.name = config.name();
+        setCameraOffset(config);
     }
 
     public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
@@ -27,10 +29,10 @@ public class Limelight {
 
     public void setCameraOffset(VisionConstants.CameraConfiguration cameraOffset){
         LimelightHelpers.setCameraPose_RobotSpace(
-                getName(),
+                name,
                 cameraOffset.offset().getX(),
-                cameraOffset.offset().getX(),
-                cameraOffset.offset().getX(),
+                cameraOffset.offset().getY(),
+                cameraOffset.offset().getZ(),
                 cameraOffset.offset().getRotation().getX(),
                 cameraOffset.offset().getRotation().getY(),
                 cameraOffset.offset().getRotation().getZ()
