@@ -40,7 +40,7 @@ public class RobotContainer implements AutoCloseable {
     // must be created first here this needs to override the instance provided
     // by since org.ironmaple.simulation.SimulatedArena.getInstance() is used
     // some of MapleSim
-    private final Arena2025Reefscape arena = org.tahomarobotics.robot.sim.Arena2025Reefscape.getInstance();
+    private final Arena2025Reefscape arena = Robot.isSimulation() ? org.tahomarobotics.robot.sim.Arena2025Reefscape.getInstance() : null;
 
     
     public final Chassis chassis;
