@@ -71,6 +71,11 @@ public class Chassis implements AutoCloseable {
         return chassis.getSimulation();
     }
 
+
+    public void addVisionMeasurement(Pose2d position, double timestampSeconds) {
+        chassis.addVisionMeasurement(position, timestampSeconds);
+    }
+
     /**
      * returns a reset pose command where an auto can initialize it position at the
      * starting point on the field
