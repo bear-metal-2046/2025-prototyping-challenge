@@ -1,14 +1,41 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 Bear Metal
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.tahomarobotics.robot.chassis;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import static edu.wpi.first.units.Units.*;
+
 public class Chassis implements AutoCloseable {
+
     private final ChassisSubsystem chassis;
 
     public Chassis() {
@@ -19,30 +46,38 @@ public class Chassis implements AutoCloseable {
         this.chassis = chassis;
     }
 
+    public void bindTeleopDrive(DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotate) {
+        final var maxSpeed = ChassisConstants.MAX_LINEAR_VELOCITY.in(MetersPerSecond);
+        final var maxRotateRate = ChassisConstants.MAX_ANGULAR_VELOCITY.in(RadiansPerSecond);
 
-    // Teleop drive command
-    public void bindTeleopDrive(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega) {
-            Command teleopCommand = chassis.run(() -> {
-                double forward = applyDesensitization(-x.getAsDouble(), ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
-                double strafe = applyDesensitization(-y.getAsDouble(), ChassisConstants.CONTROLLER_TRANSLATIONAL_SENSITIVITY);
-                double rot = applyDesensitization(-omega.getAsDouble(), ChassisConstants.CONTROLLER_ROTATIONAL_SENSITIVITY);
-                double dir = DriverStation.getAlliance().map(a -> a == DriverStation.Alliance.Red ? -1.0 : 1.0).orElse(1.0);
+        final var request = new SwerveRequest.FieldCentric()
+                .withDeadband(maxSpeed * 0.1)
+                .withRotationalDeadband(maxRotateRate * 0.1)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-                double vx = forward * ChassisConstants.MAX_SPEED * dir;
-                double vy = strafe * ChassisConstants.MAX_SPEED * dir;
-                double rotRate = rot * ChassisConstants.MAX_ANGULAR_RATE;
-                ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, rotRate);
-                Logger.recordOutput("ChassisSpeeds", speeds);
-                chassis.setSpeeds(speeds);
-            });
-            chassis.setDefaultCommand(teleopCommand);
+        chassis.setDefaultCommand(
+                chassis.run(() -> chassis.setControl(request
+                        .withVelocityX(-forward.getAsDouble() * maxSpeed)
+                        .withVelocityY(-strafe.getAsDouble() * maxSpeed)
+                        .withRotationalRate(-rotate.getAsDouble() * maxRotateRate))));
+
     }
 
-    private double applyDesensitization (double value, double power) {
-        value = MathUtil.applyDeadband(value, ChassisConstants.CONTROLLER_DEADBAND);
-        value = value * Math.pow(Math.abs(value), power - 1);
-        return value;
+    public void close() {
+        chassis.close();
     }
 
-    public void close() {}
+    public ChassisSimulation getSimulation() {
+        return chassis.getSimulation();
+    }
+
+    /**
+     * returns a reset pose command where an auto can initialize it position at the
+     * starting point on the field
+     */
+    public Command resetRobotPose(Pose2d pose) {
+        return Commands.runOnce(() -> chassis.setPose(pose))
+                .ignoringDisable(true)
+                .withName("chassis::resetRobotPose");
+    }
 }

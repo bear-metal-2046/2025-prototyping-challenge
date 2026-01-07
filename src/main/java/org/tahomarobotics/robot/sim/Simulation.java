@@ -24,20 +24,55 @@
 
 package org.tahomarobotics.robot.sim;
 
-public class Simulation extends AbstractSimulation {
-    
+import org.ironmaple.simulation.SimulatedArena;
+import org.tahomarobotics.robot.chassis.ChassisSimulation;
 
-    public Simulation( ) {
-        super("Simulation");
+import static edu.wpi.first.units.Units.*;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.Notifier;
 
-    }
+public class Simulation {
 
-    public void resetFieldForAuto() {
+    private static final Time SIM_LOOP_PERIOD = Seconds.of(0.002);
+    private final Notifier simNotifier;
+
+    private final Arena2025Reefscape arena;
+    private final ChassisSimulation chassisSimulation;
+
+    public Simulation(
+            Arena2025Reefscape arena,
+            ChassisSimulation chassisSimulation) {
+
+        this.arena = arena;
+        this.chassisSimulation = chassisSimulation;
+
+        SimulatedArena.overrideSimulationTimings(SIM_LOOP_PERIOD, 1);
+
+        simNotifier = new Notifier(this::update);
         
     }
 
-    @Override
-    protected void simulationPeriodic() {
-
+    public void init() {
+        simNotifier.startPeriodic(SIM_LOOP_PERIOD.in(Seconds));
     }
+
+    public void resetFieldForAuto() {
+        arena.resetFieldForAuto();
+    }
+
+    /**
+     * High rate simulation update loop.
+     */
+    private void update() {
+        arena.simulationPeriodic();
+        chassisSimulation.update();
+    }
+
+    /**
+     * Called periodically during simulation mode.
+     */
+    public void simulationPeriodic() {
+        chassisSimulation.simulationPeriodic();
+    }
+
 }
