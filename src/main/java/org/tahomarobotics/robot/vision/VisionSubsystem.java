@@ -32,6 +32,7 @@ public class VisionSubsystem extends AbstractSubsystem {
     public void processVisionMeasurement(Limelight.EstimatedRobotPose pose) {
         Logger.recordOutput("Vision/" + pose.camera().getName() + " Position", pose.poseEstimate().pose);
 
+        Logger.recordOutput("Vision/" + pose.camera().getName() + " Timestamp", pose.poseEstimate().timestampSeconds);
         visionMeasurementConsumer.accept(pose);
     }
 }
