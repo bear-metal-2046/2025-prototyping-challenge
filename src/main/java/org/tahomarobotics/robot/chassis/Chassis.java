@@ -23,6 +23,7 @@
  */
 package org.tahomarobotics.robot.chassis;
 
+import com.ctre.phoenix6.Utils;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -78,7 +79,7 @@ public class Chassis implements AutoCloseable {
 
     public void addVisionMeasurement(EstimatedRobotPose pose) {
         chassis.setVisionMeasurementStdDevs(VecBuilder.fill(0,0,0));
-        chassis.addVisionMeasurement(pose.poseEstimate().pose, pose.poseEstimate().timestampSeconds);
+        chassis.addVisionMeasurement(pose.poseEstimate().pose, Utils.fpgaToCurrentTime(pose.poseEstimate().timestampSeconds));
     }
 
     /**
