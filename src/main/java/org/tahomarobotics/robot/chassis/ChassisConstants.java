@@ -40,11 +40,13 @@ import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Voltage;
 import java.util.Map;
+import edu.wpi.first.wpilibj.Preferences;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.RobotMap.ModuleId;
+import org.tinylog.Logger;
 
 import static edu.wpi.first.units.Units.*;
 import static org.tahomarobotics.robot.RobotMap.*;
@@ -144,8 +146,7 @@ public class ChassisConstants {
                         BACK_LEFT_MODULE, HALF_TRACK_WIDTH,
                         BACK_RIGHT_MODULE, HALF_TRACK_WIDTH.unaryMinus());
 
-        public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(
-                        ModuleId moduleId, Angle steerOffset) {
+        private static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId, Angle steerOffset) {
 
                 var swerveModuleConfig = MODULE_CONSTANTS_FACTORY.createModuleConstants(moduleId.steerId(),
                                 moduleId.driveId(),
@@ -169,6 +170,13 @@ public class ChassisConstants {
                 }
 
                 return swerveModuleConfig;
+        }
+
+        public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId) {
+            if (!Preferences.containsKey(moduleId.moduleName() + "Offset")) {
+                Logger.warn("Module " + moduleId.moduleName() + "Offset not defined, setting to 0");
+            }
+            return getModuleConfig(moduleId, Degrees.of(Preferences.getDouble(moduleId.moduleName() + "Offset", 0.0)));
         }
 
         // ---------------------------------------------------------------------------------------

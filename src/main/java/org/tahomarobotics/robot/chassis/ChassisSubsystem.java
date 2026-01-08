@@ -33,12 +33,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import static org.tahomarobotics.robot.RobotMap.*;
 
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.Robot;
+import org.tahomarobotics.robot.RobotMap;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -49,10 +51,10 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
 
     public ChassisSubsystem() {
         this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
-                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : 195.64)),
-                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : -14.94)),
-                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : -19.07)),
-                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : -141.42)));
+                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE),
+                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE),
+                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE),
+                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE));
         }
             
     ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
