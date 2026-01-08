@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import java.util.function.DoubleSupplier;
 
+import org.tahomarobotics.robot.vision.Limelight.EstimatedRobotPose;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -72,8 +74,8 @@ public class Chassis implements AutoCloseable {
     }
 
 
-    public void addVisionMeasurement(Pose2d position, double timestampSeconds) {
-        chassis.addVisionMeasurement(position, timestampSeconds);
+    public void addVisionMeasurement(EstimatedRobotPose pose) {
+        chassis.addVisionMeasurement(pose.poseEstimate().pose, pose.poseEstimate().timestampSeconds);
     }
 
     /**

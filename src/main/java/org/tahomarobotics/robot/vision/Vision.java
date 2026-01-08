@@ -1,10 +1,12 @@
 package org.tahomarobotics.robot.vision;
 
+import java.util.function.Consumer;
+
 public class Vision {
     final VisionSubsystem vision;
 
-    public Vision() {
-        this(new VisionSubsystem());
+    public Vision(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer) {
+        this(new VisionSubsystem(visionMeasurementConsumer));
     }
 
     private Vision(VisionSubsystem vision) {

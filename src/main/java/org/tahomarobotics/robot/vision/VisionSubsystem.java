@@ -3,6 +3,7 @@ package org.tahomarobotics.robot.vision;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
@@ -10,21 +11,27 @@ import org.tahomarobotics.robot.util.AbstractSubsystem;
 public class VisionSubsystem extends AbstractSubsystem {
 
     private final List<Limelight> limelights;
+    private final Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer;
 
-    VisionSubsystem() {
-        this(new Limelight(VisionConstants.TEST_CAMERA));
+    VisionSubsystem(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer){
+        this(visionMeasurementConsumer, new Limelight(VisionConstants.TEST_CAMERA));
     }
 
-    private VisionSubsystem(Limelight... limelights){
+    private VisionSubsystem(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer, Limelight... limelights){
         this.limelights = Arrays.asList(limelights);
+        this.visionMeasurementConsumer = visionMeasurementConsumer;
     }
 
     @Override
     public void subsystemPeriodic() {
         for (Limelight limelight : limelights) {
-            limelight.getEstimatedRobotPose().ifPresent(
-                pose -> Logger.recordOutput("Vision/" + limelight.getName() + " Position", pose.poseEstimate().pose)
-            );
+            limelight.getEstimatedRobotPose().ifPresent(this::processVisionMeasurement);
         }
-    }    
+    }
+
+    public void processVisionMeasurement(Limelight.EstimatedRobotPose pose) {
+        Logger.recordOutput("Vision/" + pose.camera().getName() + " Position", pose.poseEstimate().pose);
+
+        visionMeasurementConsumer.accept(pose);
+    }
 }
