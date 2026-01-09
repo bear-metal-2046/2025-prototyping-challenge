@@ -76,10 +76,17 @@ public class Chassis implements AutoCloseable {
         return chassis.getSimulation();
     }
 
-
-    public void addVisionMeasurement(EstimatedRobotPose pose) {
-        chassis.setVisionMeasurementStdDevs(VecBuilder.fill(0.5,0.5,0));
+    public void addVisionMeasurement(EstimatedRobotPose pose, boolean mt2) {
+        if (mt2) {
+            chassis.setVisionMeasurementStdDevs(VecBuilder.fill(0.15,0.15, 0));
+        } else {
+            chassis.setVisionMeasurementStdDevs(VecBuilder.fill(99999,99999,0));
+        }
         chassis.addVisionMeasurement(pose.poseEstimate().pose, Utils.fpgaToCurrentTime(pose.poseEstimate().timestampSeconds));
+    }
+
+    public Pose2d getPose() {
+        return chassis.getStateCopy().Pose;
     }
 
     /**
