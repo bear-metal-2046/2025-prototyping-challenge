@@ -27,10 +27,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
+import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -61,6 +64,30 @@ public class Chassis implements AutoCloseable {
                         .withVelocityY(-strafe.getAsDouble() * maxSpeed)
                         .withRotationalRate(-rotate.getAsDouble() * maxRotateRate))));
 
+    }
+    
+    public Command alignSwerves(Trigger complete) {
+        return new FunctionalCommand(
+                this::initAlign,
+                () -> {},
+                (c) -> {if (c) {
+                    cancelAlign();
+                } else {
+                    completeAlign();
+                }},
+                complete,
+                chassis).ignoringDisable(true);
+    }
+
+    public void initAlign(){
+        System.out.println("Aligning Swerve Modules");
+    }
+    public void cancelAlign(){
+        System.out.println("Align Cancelled");
+    }
+
+    public void completeAlign(){
+        System.out.println("Swerve Modules Aligned");
     }
 
     public void close() {

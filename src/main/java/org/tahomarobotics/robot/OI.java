@@ -36,10 +36,9 @@ public class OI {
     public OI(RobotContainer robotContainer) {
     
         //DriverStation.silenceJoystickConnectionWarning(Robot.isSimulation());
-    
         chassis = robotContainer.chassis;
-    
         chassis.bindTeleopDrive(driverController::getLeftY, driverController::getLeftX, driverController::getRightX);
-        
+
+        driverController.start().toggleOnTrue(chassis.alignSwerves(driverController.back()));
     }
 }
