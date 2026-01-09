@@ -34,9 +34,9 @@ public class VisionSubsystem extends AbstractSubsystem {
         if (pose.poseEstimate().pose.getX() != 0.0 && pose.poseEstimate().pose.getY() != 0.0) {
             Logger.recordOutput("Vision/" + pose.camera().getName() + " Position", pose.poseEstimate().pose);
 
-        // Get all tag IDs used in the estimation and log
-        int[] tagIDs = Arrays.asList(pose.poseEstimate().rawFiducials).stream().mapToInt(fiducial -> fiducial.id).toArray();
-        Logger.recordOutput("Vision/ " + pose.camera().getName() + " IDs Seen", tagIDs);
+            // Get all tag IDs used in the estimation and log
+            int[] tagIDs = Arrays.asList(pose.poseEstimate().rawFiducials).stream().mapToInt(fiducial -> fiducial.id).toArray();
+            Logger.recordOutput("Vision/ " + pose.camera().getName() + " IDs Seen", tagIDs);
 
             Logger.recordOutput("Vision/" + pose.camera().getName() + " Timestamp", pose.poseEstimate().timestampSeconds);
             visionMeasurementConsumer.accept(pose);
