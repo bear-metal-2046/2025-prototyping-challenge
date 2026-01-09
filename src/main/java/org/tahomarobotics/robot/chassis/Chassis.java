@@ -78,7 +78,7 @@ public class Chassis implements AutoCloseable {
 
 
     public void addVisionMeasurement(EstimatedRobotPose pose) {
-        chassis.setVisionMeasurementStdDevs(VecBuilder.fill(0,0,0));
+        chassis.setVisionMeasurementStdDevs(VecBuilder.fill(0.5,0.5,0));
         chassis.addVisionMeasurement(pose.poseEstimate().pose, Utils.fpgaToCurrentTime(pose.poseEstimate().timestampSeconds));
     }
 

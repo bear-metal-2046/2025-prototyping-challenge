@@ -31,13 +31,15 @@ public class VisionSubsystem extends AbstractSubsystem {
     }
 
     public void processVisionMeasurement(Limelight.EstimatedRobotPose pose) {
-        Logger.recordOutput("Vision/" + pose.camera().getName() + " Position", pose.poseEstimate().pose);
+        if (pose.poseEstimate().pose.getX() != 0.0 && pose.poseEstimate().pose.getY() != 0.0) {
+            Logger.recordOutput("Vision/" + pose.camera().getName() + " Position", pose.poseEstimate().pose);
 
         // Get all tag IDs used in the estimation and log
         int[] tagIDs = Arrays.asList(pose.poseEstimate().rawFiducials).stream().mapToInt(fiducial -> fiducial.id).toArray();
         Logger.recordOutput("Vision/ " + pose.camera().getName() + " IDs Seen", tagIDs);
 
-        Logger.recordOutput("Vision/" + pose.camera().getName() + " Timestamp", pose.poseEstimate().timestampSeconds);
-        visionMeasurementConsumer.accept(pose);
+            Logger.recordOutput("Vision/" + pose.camera().getName() + " Timestamp", pose.poseEstimate().timestampSeconds);
+            visionMeasurementConsumer.accept(pose);
+        }
     }
 }
