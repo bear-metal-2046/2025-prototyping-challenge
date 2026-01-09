@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
+import org.tahomarobotics.robot.util.LimelightHelpers;
 
 public class VisionSubsystem extends AbstractSubsystem {
 
@@ -31,6 +32,10 @@ public class VisionSubsystem extends AbstractSubsystem {
 
     public void processVisionMeasurement(Limelight.EstimatedRobotPose pose) {
         Logger.recordOutput("Vision/" + pose.camera().getName() + " Position", pose.poseEstimate().pose);
+
+        // Get all tag IDs used in the estimation and log
+        int[] tagIDs = Arrays.asList(pose.poseEstimate().rawFiducials).stream().mapToInt(fiducial -> fiducial.id).toArray();
+        Logger.recordOutput("Vision/ " + pose.camera().getName() + " IDs Seen", tagIDs);
 
         Logger.recordOutput("Vision/" + pose.camera().getName() + " Timestamp", pose.poseEstimate().timestampSeconds);
         visionMeasurementConsumer.accept(pose);
