@@ -23,7 +23,7 @@ public class Limelight {
     public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
         LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 
-        if (mt1 == null) {
+        if (mt1 == null || mt1.tagCount < 1) {
             return Optional.empty();
         }
         return Optional.of(new EstimatedRobotPose(mt1, this));
