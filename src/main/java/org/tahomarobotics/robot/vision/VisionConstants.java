@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Degrees;
 public class VisionConstants {
 
     public static CameraConfiguration TEST_CAMERA;
+    public static final int CAMERA_ERROR_AVERAGE_WINDOW = 10;
 
     static {
         TEST_CAMERA = new CameraConfiguration(

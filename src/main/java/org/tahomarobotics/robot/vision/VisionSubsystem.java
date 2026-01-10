@@ -21,4 +21,8 @@ public class VisionSubsystem extends AbstractSubsystem {
     private VisionSubsystem(Limelight limelight){
         this.limelight = limelight;
     }
+
+    public Limelight getLimelight() {
+        return limelight;
+    }
 }
