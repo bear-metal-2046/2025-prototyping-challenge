@@ -40,12 +40,23 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import static org.tahomarobotics.robot.RobotMap.*;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.Robot;
+import org.tahomarobotics.robot.RobotMap.ModuleId;
 
 import static edu.wpi.first.units.Units.*;
 
 public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
+
+    private static final ModuleId[] MODULE_IDS = new ModuleId[] {
+            FRONT_LEFT_MODULE,
+            FRONT_RIGHT_MODULE,
+            BACK_LEFT_MODULE,
+            BACK_RIGHT_MODULE
+    };
 
     private final ChassisSimulation simulation;
     private boolean isOperatorPerspectiveApplied;
@@ -56,7 +67,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
                 ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE),
                 ChassisConstants.getModuleConfig(BACK_LEFT_MODULE),
                 ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE));
-        }
+    }
 
     ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
             DeviceConstructor<TalonFX> steerMotorConstructor,
@@ -101,43 +112,62 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
     }
 
     Angle[] oldOffsets = new Angle[getModules().length];
+    private final static Angle[] ZERO_OFFSETS = new Angle[] {
+            Degrees.of(0.0),
+            Degrees.of(0.0),
+            Degrees.of(0.0),
+            Degrees.of(0.0)
+    };
 
     public void initAlign() {
         coast();
-        oldOffsets = getAndSetOffset(0.0);
+        oldOffsets = getAndSetOffset(ZERO_OFFSETS);
 
         System.out.println("Aligning Swerve Modules");
         org.tinylog.Logger.info("Aligning Swerve Modules");
     }
 
-    public void cancelAlign() {
+    private void cancelAlign() {
         brake();
         for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
-            getAndSetOffset(oldOffsets[moduleNum].in(Degrees));
-            org.tinylog.Logger.info("Cancelling Swerve Module ReAlignment");
-            System.out.println("Align Cancelled");
+            getAndSetOffset(oldOffsets);
+        }
+        org.tinylog.Logger.info("Cancelling Swerve Module ReAlignment");
+        System.out.println("Align Cancelled");
         /*
-         Restore offsets
-         Reset coast
+         * Restore offsets
+         * Reset coast
          */
-        }}
+    }
 
-    public void completeAlign() {
+    private void completeAlign() {
         /*
-        Get current angles and negate as new offsets
-        Save new offsets in preferences
-        Apply new offsets
-        Reset coast
-        */
+         * Get current angles and negate as new offsets
+         * Save new offsets in preferences
+         * Apply new offsets
+         * Reset coast
+         */
         brake();
+        Angle[] newOffsets = new Angle[getModules().length];
         for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
-            Preferences.setDouble(getModule(moduleNum) + "_OFFSET", getModule(moduleNum).getCurrentState().angle.unaryMinus().getDegrees());
-            getAndSetOffset(Preferences.getDouble(getModule(moduleNum) + "_OFFSET", oldOffsets[moduleNum].in(Degrees)));
+            newOffsets[moduleNum] = getModule(moduleNum).getCurrentState().angle.getMeasure().unaryMinus();
+            Preferences.setDouble(ChassisConstants.getModuleOffKey(MODULE_IDS[moduleNum]),
+                    newOffsets[moduleNum].in(Degrees));
+            getAndSetOffset(newOffsets);
         }
         org.tinylog.Logger.info("Swerve Modules Aligned");
         System.out.println("Swerve Modules Aligned");
     }
 
+    public Consumer<Boolean> finishAlign() {
+        return (canceled) -> {
+            if (canceled) {
+                cancelAlign();
+            } else {
+                completeAlign();
+            }
+        };
+    }
 
     public void coast() {
         for (var module = 0; module < getModules().length; module++) {
@@ -151,23 +181,30 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
         }
     }
 
-    public Angle[] getAndSetOffset(double offset) {
+    public Angle[] getAndSetOffset(Angle[] newOffsets) {
         MagnetSensorConfigs cfg = new MagnetSensorConfigs();
-        Angle[] offsets = new Angle[getModules().length];
-        for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
+        int moduleCount = getModules().length;
+        Angle[] offsets = new Angle[moduleCount];
+        for (var moduleNum = 0; moduleNum < moduleCount; moduleNum++) {
+            var configurator = getModule(moduleNum).getEncoder().getConfigurator();
+            // read current offset
+            configurator.refresh(cfg);
             offsets[moduleNum] = cfg.getMagnetOffsetMeasure();
-            getModule(moduleNum).getEncoder().getConfigurator().refresh(cfg.withMagnetOffset(offset));
+            // set new offset
+            cfg.withMagnetOffset(newOffsets[moduleNum]);
+            configurator.apply(cfg);
+
         }
         return offsets;
     }
 
     // modules encoder config refresh
     //
-//
-//    public void newOffsets() {
-//        for (var module : getModules()) {
-//            Preferences.setDouble(module+ "Offset", module.getCurrentState().angle.getDegrees() * -1);
-//
-//        }
-    }
-
+    //
+    // public void newOffsets() {
+    // for (var module : getModules()) {
+    // Preferences.setDouble(module+ "Offset",
+    // module.getCurrentState().angle.getDegrees() * -1);
+    //
+    // }
+}

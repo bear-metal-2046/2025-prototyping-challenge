@@ -69,17 +69,11 @@ public class Chassis implements AutoCloseable {
     public Command alignSwerves(Trigger complete) {
         return new FunctionalCommand(
                 chassis::initAlign,
-                () -> {
-                },
-                (c) -> {
-                    if (c) {
-                        chassis.cancelAlign();
-                    } else {
-                        chassis.completeAlign();
-                    }
-                },
+                () -> {},
+                chassis.finishAlign(),
                 complete,
-                chassis).ignoringDisable(true);
+                chassis)
+            .ignoringDisable(true);
     }
 
     public void close() {

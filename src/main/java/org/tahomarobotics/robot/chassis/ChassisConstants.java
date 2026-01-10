@@ -172,9 +172,13 @@ public class ChassisConstants {
                 return swerveModuleConfig;
         }
 
+        public static final String getModuleOffKey(ModuleId id) {
+                return "Chassis/Modules/" + id.moduleName() + "_Offset";
+        }
+
         public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId) {
-            if (!Preferences.containsKey(moduleId.moduleName() + "Offset")) {
-                Logger.warn("Module " + moduleId.moduleName() + "Offset not defined, setting to 0");
+            if (!Preferences.containsKey(getModuleOffKey(moduleId))) {
+                Logger.warn("Module " + moduleId.moduleName() + " offset not defined, setting to 0");
             }
             return getModuleConfig(moduleId, Degrees.of(Preferences.getDouble(moduleId.moduleName() + "Offset", 0.0)));
         }
