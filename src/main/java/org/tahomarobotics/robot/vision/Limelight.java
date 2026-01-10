@@ -6,11 +6,9 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.Angle;
-import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Degrees;
 
-import org.dyn4j.geometry.Transform;
 import org.tahomarobotics.robot.util.LimelightHelpers;
-import org.tahomarobotics.robot.util.LimelightHelpers.LimelightResults;
 import org.tahomarobotics.robot.vision.VisionConstants.CameraConfiguration;
 
 public class Limelight {
@@ -41,7 +39,7 @@ public class Limelight {
         }
 
         Angle yaw = mt1.get().poseEstimate().pose.getRotation().getMeasure();
-        LimelightHelpers.SetRobotOrientation(name, yaw.in(Radians), 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(name, yaw.in(Degrees), 0, 0, 0, 0, 0);
 
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
 
