@@ -79,12 +79,12 @@ public class Chassis implements AutoCloseable {
         return chassis.getSimulation();
     }
 
-    public void addVisionPositionMeasurement(EstimatedRobotPose pose, Vector<N3> stdDevs) {
+    public void addVisionPositionMeasurement(Pose2d pose, double timestampSeconds, Vector<N3> stdDevs) {
         chassis.setVisionMeasurementStdDevs(stdDevs);
         // Time in Networktables (where the position estimation time comes from) is recorded in FPGA time, 
         // while the CTRE Swerve pose estimator uses current time, so we have to convert to current time here. 
         // See https://www.chiefdelphi.com/t/ctre-swerve-addvisionmeasurment-having-no-effect/482024/5
-        chassis.addVisionMeasurement(pose.poseEstimate().pose, Utils.fpgaToCurrentTime(pose.poseEstimate().timestampSeconds));
+        chassis.addVisionMeasurement(pose, Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
     public Pose2d getPose() {
