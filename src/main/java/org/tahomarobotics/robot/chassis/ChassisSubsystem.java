@@ -23,8 +23,10 @@
  */
 package org.tahomarobotics.robot.chassis;
 
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -40,7 +42,6 @@ import static org.tahomarobotics.robot.RobotMap.*;
 
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.Robot;
-import org.tahomarobotics.robot.RobotMap;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -56,7 +57,7 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
                 ChassisConstants.getModuleConfig(BACK_LEFT_MODULE),
                 ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE));
         }
-            
+
     ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
             DeviceConstructor<TalonFX> steerMotorConstructor,
             DeviceConstructor<CANcoder> encoderConstructor,
@@ -98,4 +99,75 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
             simulation.setPose(pose);
         }
     }
-}
+
+    Angle[] oldOffsets = new Angle[getModules().length];
+
+    public void initAlign() {
+        coast();
+        oldOffsets = getAndSetOffset(0.0);
+
+        System.out.println("Aligning Swerve Modules");
+        org.tinylog.Logger.info("Aligning Swerve Modules");
+    }
+
+    public void cancelAlign() {
+        brake();
+        for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
+            getAndSetOffset(oldOffsets[moduleNum].in(Degrees));
+            org.tinylog.Logger.info("Cancelling Swerve Module ReAlignment");
+            System.out.println("Align Cancelled");
+        /*
+         Restore offsets
+         Reset coast
+         */
+        }}
+
+    public void completeAlign() {
+        /*
+        Get current angles and negate as new offsets
+        Save new offsets in preferences
+        Apply new offsets
+        Reset coast
+        */
+        brake();
+        for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
+            Preferences.setDouble(getModule(moduleNum) + "_OFFSET", getModule(moduleNum).getCurrentState().angle.unaryMinus().getDegrees());
+            getAndSetOffset(Preferences.getDouble(getModule(moduleNum) + "_OFFSET", oldOffsets[moduleNum].in(Degrees)));
+        }
+        org.tinylog.Logger.info("Swerve Modules Aligned");
+        System.out.println("Swerve Modules Aligned");
+    }
+
+
+    public void coast() {
+        for (var module = 0; module < getModules().length; module++) {
+            getModule(module).getSteerMotor().setNeutralMode(NeutralModeValue.Coast);
+        }
+    }
+
+    public void brake() {
+        for (var module = 0; module < getModules().length; module++) {
+            getModule(module).getSteerMotor().setNeutralMode(NeutralModeValue.Brake);
+        }
+    }
+
+    public Angle[] getAndSetOffset(double offset) {
+        MagnetSensorConfigs cfg = new MagnetSensorConfigs();
+        Angle[] offsets = new Angle[getModules().length];
+        for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
+            offsets[moduleNum] = cfg.getMagnetOffsetMeasure();
+            getModule(moduleNum).getEncoder().getConfigurator().refresh(cfg.withMagnetOffset(offset));
+        }
+        return offsets;
+    }
+
+    // modules encoder config refresh
+    //
+//
+//    public void newOffsets() {
+//        for (var module : getModules()) {
+//            Preferences.setDouble(module+ "Offset", module.getCurrentState().angle.getDegrees() * -1);
+//
+//        }
+    }
+
