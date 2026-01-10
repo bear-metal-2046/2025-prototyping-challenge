@@ -13,13 +13,13 @@ import org.tahomarobotics.robot.util.LimelightHelpers;
 public class VisionSubsystem extends AbstractSubsystem {
 
     private final List<Limelight> limelights;
-    private final BiConsumer<Limelight.EstimatedRobotPose, Boolean> visionMeasurementConsumer;
+    private final Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer;
 
-    VisionSubsystem(BiConsumer<Limelight.EstimatedRobotPose, Boolean> visionMeasurementConsumer){
+    VisionSubsystem(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer){
         this(visionMeasurementConsumer, new Limelight(VisionConstants.TEST_CAMERA));
     }
 
-    private VisionSubsystem(BiConsumer<Limelight.EstimatedRobotPose, Boolean> visionMeasurementConsumer, Limelight... limelights){
+    private VisionSubsystem(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer, Limelight... limelights){
         this.limelights = Arrays.asList(limelights);
         this.visionMeasurementConsumer = visionMeasurementConsumer;
     }
@@ -28,12 +28,12 @@ public class VisionSubsystem extends AbstractSubsystem {
     public void subsystemPeriodic() {
         for (Limelight limelight : limelights) {
             limelight.getEstimatedRobotPoseMegaTag2()
-                .ifPresent(positionMeasurement -> processVisionMeasurement(positionMeasurement, true)
+                .ifPresent(positionMeasurement -> processVisionMeasurement(positionMeasurement)
             );
         }
     }
 
-    public void processVisionMeasurement(Limelight.EstimatedRobotPose pose, boolean mt2) {
+    public void processVisionMeasurement(Limelight.EstimatedRobotPose pose) {
         Logger.recordOutput("Vision/" + pose.camera().getName() + " Position", pose.poseEstimate().pose);
 
         // Get all tag IDs used in the estimation and log
@@ -41,6 +41,6 @@ public class VisionSubsystem extends AbstractSubsystem {
         Logger.recordOutput("Vision/ " + pose.camera().getName() + " IDs Seen", tagIDs);
 
         Logger.recordOutput("Vision/" + pose.camera().getName() + " Timestamp", pose.poseEstimate().timestampSeconds);
-        visionMeasurementConsumer.accept(pose, mt2);
+        visionMeasurementConsumer.accept(pose);
     }
 }

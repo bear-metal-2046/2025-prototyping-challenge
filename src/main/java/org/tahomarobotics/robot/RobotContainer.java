@@ -51,7 +51,7 @@ public class RobotContainer implements AutoCloseable {
 
     public RobotContainer() {
         chassis = new Chassis();
-        vision = new Vision(chassis::addVisionMeasurement);
+        vision = new Vision(chassis::addVisionPositionMeasurement);
         oi = new OI(this);
 
         simulation = Robot.isSimulation() ? 

@@ -1,8 +1,11 @@
 package org.tahomarobotics.robot.vision;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.Units;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Degrees;
@@ -36,7 +39,6 @@ public class VisionConstants {
 
     }
 
-
-
-
+    public static final Vector<N3> VISION_ROTATION_MEASUREMENT_STANDARD_DEVATIONS = VecBuilder.fill(99999,99999, 0);
+    public static final Vector<N3> VISION_POSITION_MEASUREMENT_STANDARD_DEVATIONS = VecBuilder.fill(0.15,0.15, 0);
 }
