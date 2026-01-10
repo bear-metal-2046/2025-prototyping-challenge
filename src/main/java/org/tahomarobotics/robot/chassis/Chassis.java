@@ -25,7 +25,9 @@ package org.tahomarobotics.robot.chassis;
 
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -77,16 +79,8 @@ public class Chassis implements AutoCloseable {
         return chassis.getSimulation();
     }
 
-    public void addVisionRotationMeasurement(EstimatedRobotPose pose) {
-        chassis.setVisionMeasurementStdDevs(VisionConstants.VISION_ROTATION_MEASUREMENT_STANDARD_DEVATIONS);
-        // Time in Networktables (where the position estimation time comes from) is recorded in FPGA time, 
-        // while the CTRE Swerve pose estimator uses current time, so we have to convert to current time here. 
-        // See https://www.chiefdelphi.com/t/ctre-swerve-addvisionmeasurment-having-no-effect/482024/5
-        chassis.addVisionMeasurement(pose.poseEstimate().pose, Utils.fpgaToCurrentTime(pose.poseEstimate().timestampSeconds));
-    }
-
-    public void addVisionPositionMeasurement(EstimatedRobotPose pose) {
-        chassis.setVisionMeasurementStdDevs(VisionConstants.VISION_POSITION_MEASUREMENT_STANDARD_DEVATIONS);
+    public void addVisionPositionMeasurement(EstimatedRobotPose pose, Vector<N3> stdDevs) {
+        chassis.setVisionMeasurementStdDevs(stdDevs);
         // Time in Networktables (where the position estimation time comes from) is recorded in FPGA time, 
         // while the CTRE Swerve pose estimator uses current time, so we have to convert to current time here. 
         // See https://www.chiefdelphi.com/t/ctre-swerve-addvisionmeasurment-having-no-effect/482024/5

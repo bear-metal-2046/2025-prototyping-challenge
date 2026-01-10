@@ -1,11 +1,14 @@
 package org.tahomarobotics.robot.vision;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.numbers.N3;
 
 public class Vision {
     final VisionSubsystem vision;
 
-    public Vision(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer) {
+    public Vision(BiConsumer<Limelight.EstimatedRobotPose, Vector<N3>> visionMeasurementConsumer) {
         this(new VisionSubsystem(visionMeasurementConsumer));
     }
 

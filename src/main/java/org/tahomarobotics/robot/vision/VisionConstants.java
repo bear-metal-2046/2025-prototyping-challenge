@@ -39,6 +39,6 @@ public class VisionConstants {
 
     }
 
-    public static final Vector<N3> VISION_ROTATION_MEASUREMENT_STANDARD_DEVATIONS = VecBuilder.fill(99999,99999, 0);
-    public static final Vector<N3> VISION_POSITION_MEASUREMENT_STANDARD_DEVATIONS = VecBuilder.fill(0.15,0.15, 0);
+    public static final Vector<N3> MEGATAG1_STANDARD_DEVIATIONS = VecBuilder.fill(99999,99999, 0);
+    public static final Vector<N3> MEGATAG2_STANDARD_DEVIATIONS = VecBuilder.fill(0.15,0.15, 0);
 }

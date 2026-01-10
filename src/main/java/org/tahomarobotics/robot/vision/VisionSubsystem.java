@@ -10,16 +10,19 @@ import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 import org.tahomarobotics.robot.util.LimelightHelpers;
 
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.numbers.N3;
+
 public class VisionSubsystem extends AbstractSubsystem {
 
     private final List<Limelight> limelights;
-    private final Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer;
+    private final BiConsumer<Limelight.EstimatedRobotPose, Vector<N3>> visionMeasurementConsumer;
 
-    VisionSubsystem(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer){
+    VisionSubsystem(BiConsumer<Limelight.EstimatedRobotPose, Vector<N3>> visionMeasurementConsumer){
         this(visionMeasurementConsumer, new Limelight(VisionConstants.TEST_CAMERA));
     }
 
-    private VisionSubsystem(Consumer<Limelight.EstimatedRobotPose> visionMeasurementConsumer, Limelight... limelights){
+    private VisionSubsystem(BiConsumer<Limelight.EstimatedRobotPose, Vector<N3>> visionMeasurementConsumer, Limelight... limelights){
         this.limelights = Arrays.asList(limelights);
         this.visionMeasurementConsumer = visionMeasurementConsumer;
     }
@@ -41,6 +44,6 @@ public class VisionSubsystem extends AbstractSubsystem {
         Logger.recordOutput("Vision/ " + pose.camera().getName() + " IDs Seen", tagIDs);
 
         Logger.recordOutput("Vision/" + pose.camera().getName() + " Timestamp", pose.poseEstimate().timestampSeconds);
-        visionMeasurementConsumer.accept(pose);
+        visionMeasurementConsumer.accept(pose, VisionConstants.MEGATAG2_STANDARD_DEVIATIONS);
     }
 }
