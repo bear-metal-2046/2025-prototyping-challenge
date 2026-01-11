@@ -24,19 +24,24 @@
 package org.tahomarobotics.robot.chassis;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import static org.tahomarobotics.robot.RobotMap.*;
 
@@ -77,6 +82,24 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
         super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
 
         simulation = Robot.isSimulation() ? new ChassisSimulation(getPigeon2(), getModules()) : null;
+        SmartDashboard.putNumber("Steer kP", 0);
+        SmartDashboard.putNumber("Steer kI", 0);
+        SmartDashboard.putNumber("Steer kD", 0);
+        SmartDashboard.putNumber("Steer kS", 0);
+        SmartDashboard.putNumber("Steer kV", 0);
+        SmartDashboard.putNumber("Steer kA", 0);
+        SmartDashboard.putData("Apply Steer PID", Commands.runOnce(
+            () -> {
+                Slot0Configs cfg = new Slot0Configs();
+                cfg.kP = SmartDashboard.getNumber("Steer kP", 0);
+                cfg.kI = SmartDashboard.getNumber("Steer kI", 0);
+                cfg.kD = SmartDashboard.getNumber("Steer kD", 0);
+                cfg.kS = SmartDashboard.getNumber("Steer kS", 0);
+                cfg.kV = SmartDashboard.getNumber("Steer kV", 0);
+                cfg.kA = SmartDashboard.getNumber("Steer kA", 0);
+                setSteerSlot0Configs(cfg);
+            }
+        ).ignoringDisable(true));
     }
 
     @Override
@@ -196,6 +219,12 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
 
         }
         return offsets;
+    }
+
+    public void setSteerSlot0Configs(Slot0Configs cfg) {
+        for (SwerveModule<TalonFX, TalonFX, CANcoder> module : getModules()) {
+            module.getSteerMotor().getConfigurator().apply(cfg);
+        }
     }
 
     // modules encoder config refresh

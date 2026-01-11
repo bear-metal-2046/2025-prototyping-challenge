@@ -180,7 +180,7 @@ public class ChassisConstants {
             if (!Preferences.containsKey(getModuleOffKey(moduleId))) {
                 Logger.warn("Module " + moduleId.moduleName() + " offset not defined, setting to 0");
             }
-            return getModuleConfig(moduleId, Degrees.of(Preferences.getDouble(moduleId.moduleName() + "Offset", 0.0)));
+            return getModuleConfig(moduleId, Degrees.of(Preferences.getDouble(getModuleOffKey(moduleId), 0.0)));
         }
 
 
