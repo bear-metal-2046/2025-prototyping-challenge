@@ -47,6 +47,7 @@ import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.RobotMap.ModuleId;
 import org.tinylog.Logger;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import static edu.wpi.first.units.Units.*;
 import static org.tahomarobotics.robot.RobotMap.*;
@@ -101,11 +102,11 @@ public class ChassisConstants {
         private static final Current DRIVE_SLIP_CURRENT = Amps.of(120.0);
 
         private static final Slot0Configs STEER_GAINS = new Slot0Configs()
-                        .withKP(100)
+                        .withKP(120)
                         .withKI(0)
-                        .withKD(0.5)
-                        .withKS(0.1)
-                        .withKV(1.59)
+                        .withKD(0)
+                        .withKS(0)
+                        .withKV(0)
                         .withKA(0)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
@@ -216,4 +217,68 @@ public class ChassisConstants {
                                                 WHEEL_COF))
                                 .withBumperSize(BUMPER_SIZE, BUMPER_SIZE);
         }
+
+        /* Swerve requests to apply during SysId characterization */
+        private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
+        private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
+        private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+        /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
+        private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
+                new SysIdRoutine.Config(
+                null,        // Use default ramp rate (1 V/s)
+                Volts.of(4), // Reduce dynamic step voltage to 4 V to prevent brownout
+                null,        // Use default timeout (10 s)
+                // Log state with SignalLogger class
+                state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())
+                ),
+                new SysIdRoutine.Mechanism(
+                output -> setControl(m_translationCharacterization.withVolts(output)),
+                null,
+                this
+                )
+        );
+
+        /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
+        private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
+                new SysIdRoutine.Config(
+                null,        // Use default ramp rate (1 V/s)
+                Volts.of(7), // Use dynamic voltage of 7 V
+                null,        // Use default timeout (10 s)
+                // Log state with SignalLogger class
+                state -> SignalLogger.writeString("SysIdSteer_State", state.toString())
+                ),
+                new SysIdRoutine.Mechanism(
+                volts -> setControl(m_steerCharacterization.withVolts(volts)),
+                null,
+                this
+                )
+        );
+
+        /*
+        * SysId routine for characterizing rotation.
+        * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
+        * See the documentation of SwerveRequest.SysIdSwerveRotation for info on importing the log to SysId.
+        */
+        private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
+                new SysIdRoutine.Config(
+                /* This is in radians per second², but SysId only supports "volts per second" */
+                Volts.of(Math.PI / 6).per(Second),
+                /* This is in radians per second, but SysId only supports "volts" */
+                Volts.of(Math.PI),
+                null, // Use default timeout (10 s)
+                // Log state with SignalLogger class
+                state -> SignalLogger.writeString("SysIdRotation_State", state.toString())
+                ),
+                new SysIdRoutine.Mechanism(
+                output -> {
+                        /* output is actually radians per second, but SysId only supports "volts" */
+                        setControl(m_rotationCharacterization.withRotationalRate(output.in(Volts)));
+                        /* also log the requested output for SysId */
+                        SignalLogger.writeDouble("Rotational_Rate", output.in(Volts));
+                },
+                null,
+                this
+                )
+        );
 }
