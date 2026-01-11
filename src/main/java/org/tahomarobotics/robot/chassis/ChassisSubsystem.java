@@ -153,8 +153,8 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
             newOffsets[moduleNum] = getModule(moduleNum).getCurrentState().angle.getMeasure().unaryMinus();
             Preferences.setDouble(ChassisConstants.getModuleOffKey(MODULE_IDS[moduleNum]),
                     newOffsets[moduleNum].in(Degrees));
-            getAndSetOffset(newOffsets);
         }
+        getAndSetOffset(newOffsets);
         org.tinylog.Logger.info("Swerve Modules Aligned");
         System.out.println("Swerve Modules Aligned");
     }
