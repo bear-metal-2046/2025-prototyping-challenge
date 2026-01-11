@@ -1,9 +1,15 @@
 package org.tahomarobotics.robot.vision;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.Units;
+
+import java.io.IOException;
+
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -11,6 +17,24 @@ public class VisionConstants {
 
     public static CameraConfiguration TEST_CAMERA;
     public static final int CAMERA_ERROR_AVERAGE_WINDOW = 10;
+
+    public interface StandardDeviationScaling {
+        Vector<N3> scaleStandardDeviations(Vector<N3> stdDevs, double distance, int targetCount);
+
+        StandardDeviationScaling DEFAULT = (stdDevs, distance, targetCount) -> stdDevs;
+    }
+
+
+    //todo: IFFY
+    public static AprilTagFieldLayout FIELD_LAYOUT;
+    static {
+        try {
+            FIELD_LAYOUT = AprilTagFieldLayout.loadFromResource("tag_maps/c101_1-9-2026.fmap");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     static {
         TEST_CAMERA = new CameraConfiguration(

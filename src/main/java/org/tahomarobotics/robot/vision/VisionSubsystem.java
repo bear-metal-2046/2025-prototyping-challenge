@@ -13,6 +13,7 @@ public class VisionSubsystem extends AbstractSubsystem {
 
     @Override
     public void subsystemPeriodic() {
+        CameraMountEstimation.stream((pose) -> limelight.getEstimatedRobotPose().get(), this);
         limelight.getEstimatedRobotPose().ifPresent(
             pose -> Logger.recordOutput("Vision/" + limelight.getName() + " Position", pose.poseEstimate().pose)
         );
@@ -22,7 +23,15 @@ public class VisionSubsystem extends AbstractSubsystem {
         this.limelight = limelight;
     }
 
+    public void applyEstimatedCameraOffsets() {
+        org.tinylog.Logger.info("Applying estimated camera offsets.");
+        limelight.applyEstimatedOffsets();
+        org.tinylog.Logger.info("Finished applying estimated camera offsets.");
+    }
+
+
     public Limelight getLimelight() {
         return limelight;
     }
+
 }

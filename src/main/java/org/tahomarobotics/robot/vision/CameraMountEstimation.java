@@ -26,11 +26,12 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.photonvision.targeting.PhotonTrackedTarget;
+import org.tahomarobotics.robot.util.LimelightHelpers;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,22 +49,11 @@ public class CameraMountEstimation {
         SmartDashboard.putData(
                 "Estimate Camera Positions", Commands.runOnce(() -> estimate.replaceAll((n, v) -> true)).ignoringDisable(true)
         );
-        /*
-        SmartDashboard.putData(
-                "Update Camera Positions", Commands.runOnce(() -> vision.updateCameraConfigurations()).ignoringDisable(true)
-        );
-*/
-        /*
-        SmartDashboard.putData(
-                "Save Camera Positions", Commands.runOnce(() -> vision.saveCurrentCameraConfigurations()).ignoringDisable(true)
-        );
-        */
 
-        /*
         SmartDashboard.putData(
-                "Check Camera Error", new CheckCameraErrorCommand(VisionConstants.CAMERA_ERROR_AVERAGE_WINDOW).ignoringDisable(true)
+                "Update Camera Positions", Commands.runOnce(() -> vision.applyEstimatedCameraOffsets()).ignoringDisable(true)
         );
-         */
+
 
         SmartDashboard.putNumber("Actual Chassis Pose X (Meters)", 0);
         SmartDashboard.putNumber("Actual Chassis Pose Y (Meters)", 0);
@@ -76,13 +66,14 @@ public class CameraMountEstimation {
                 double h = Units.degreesToRadians(SmartDashboard.getNumber("Actual Chassis Pose Heading (Degrees)", 0));
 
                 Pose2d actualChassisPose = new Pose2d(x, y, new Rotation2d(h));
-
-                for (PhotonTrackedTarget target : estimatedRobotPose.targets()) {
+                LimelightHelpers.RawFiducial[] tags = LimelightHelpers.getRawFiducials(vision.getLimelight().getName());
+                for (LimelightHelpers.RawFiducial tag : tags) {
                     // Get the camera-to-target transform
-                    Transform3d cameraToTargetTranspose = target.getBestCameraToTarget();
+                    Transform3d cameraToTargetTranspose = new Transform3d(new Pose3d(0.0,0.0,0.0, new Rotation3d(0.0,0.0,0.0)), LimelightHelpers.getCameraPose3d_TargetSpace(vision.getLimelight().getName()));
 
                     // Get the expected field-pose of the corresponding apriltag on the field
-                    Pose3d targetPose = FIELD_LAYOUT.getTagPose(target.getFiducialId()).orElseThrow();
+                    Pose3d targetPose = VisionConstants.FIELD_LAYOUT.getTagPose(tag.id).orElseThrow();
+
 
                     // Subtract the camera-to-target transform from the target field-pose to get the expected field-to-camera position
                     Pose3d cameraPose = targetPose.plus(cameraToTargetTranspose.inverse());
@@ -90,7 +81,7 @@ public class CameraMountEstimation {
                     // Subtract the field-to-camera pose from the actual field-to-chassis pose to get the expected camera-to-chassis transform
                     Transform3d cameraToRobotTransform = cameraPose.minus(new Pose3d(actualChassisPose));
 
-                    // Decompose the transformation into it's components
+                    // Decompose the transformation into its components
                     Translation3d t = cameraToRobotTransform.getTranslation();
                     Rotation3d r = cameraToRobotTransform.getRotation();
 
