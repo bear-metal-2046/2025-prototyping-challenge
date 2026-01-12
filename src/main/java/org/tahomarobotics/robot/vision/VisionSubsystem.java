@@ -1,11 +1,15 @@
 package org.tahomarobotics.robot.vision;
 
+import edu.wpi.first.wpilibj.Notifier;
 import org.littletonrobotics.junction.Logger;
+import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.util.AbstractSubsystem;
 
 public class VisionSubsystem extends AbstractSubsystem {
 
     private final Limelight limelight;
+    private final Notifier offsetsWatcher;
+
 
     VisionSubsystem() {
         this(new Limelight(VisionConstants.TEST_CAMERA));
@@ -21,6 +25,8 @@ public class VisionSubsystem extends AbstractSubsystem {
 
     private VisionSubsystem(Limelight limelight){
         this.limelight = limelight;
+        offsetsWatcher = new Notifier(CameraMountEstimation.stream(this.getLimelight()::getEstimatedRobotPose, this));
+        offsetsWatcher.startPeriodic(Robot.defaultPeriodSecs);
     }
 
     public void applyEstimatedCameraOffsets() {
@@ -33,5 +39,4 @@ public class VisionSubsystem extends AbstractSubsystem {
     public Limelight getLimelight() {
         return limelight;
     }
-
 }

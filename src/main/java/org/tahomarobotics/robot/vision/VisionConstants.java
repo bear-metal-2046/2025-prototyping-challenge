@@ -29,7 +29,8 @@ public class VisionConstants {
     public static AprilTagFieldLayout FIELD_LAYOUT;
     static {
         try {
-            FIELD_LAYOUT = AprilTagFieldLayout.loadFromResource("tag_maps/c101_1-9-2026.fmap");
+            //todo: do NOT commit with this
+            FIELD_LAYOUT = new AprilTagFieldLayout("C:\\Users\\tahom\\IdeaProjects\\2025-prototyping-challenge\\tag_maps\\LabCarpet.json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

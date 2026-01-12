@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 
 public class CameraMountEstimation {
     private static final HashMap<String, double[]> mountPositions = new HashMap<>();
-
     public static Consumer<Limelight.EstimatedRobotPose> stream(Consumer<Limelight.EstimatedRobotPose> original, VisionSubsystem vision) {
         // Whether to estimate the next AprilTag update from each camera.
         Map<String, Boolean> estimate =
@@ -53,7 +52,6 @@ public class CameraMountEstimation {
         SmartDashboard.putData(
                 "Update Camera Positions", Commands.runOnce(() -> vision.applyEstimatedCameraOffsets()).ignoringDisable(true)
         );
-
 
         SmartDashboard.putNumber("Actual Chassis Pose X (Meters)", 0);
         SmartDashboard.putNumber("Actual Chassis Pose Y (Meters)", 0);
@@ -99,7 +97,7 @@ public class CameraMountEstimation {
                     estimate.put(estimatedRobotPose.camera().getName(), false);
                 }
             }
-            original.accept(estimatedRobotPose);
+            original.accept(estimatedRobotPose.camera().getEstimatedRobotPose());
         };
     }
 
