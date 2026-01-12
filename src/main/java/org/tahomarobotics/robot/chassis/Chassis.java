@@ -23,12 +23,19 @@
  */
 package org.tahomarobotics.robot.chassis;
 
-
+import com.ctre.phoenix6.Utils;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.Logger;
+import org.tahomarobotics.robot.vision.VisionConstants;
+import org.tahomarobotics.robot.vision.Limelight.EstimatedRobotPose;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -83,6 +90,18 @@ public class Chassis implements AutoCloseable {
 
     public ChassisSimulation getSimulation() {
         return chassis.getSimulation();
+    }
+
+    public void addVisionPositionMeasurement(Pose2d pose, double timestampSeconds, Vector<N3> stdDevs) {
+        chassis.setVisionMeasurementStdDevs(stdDevs);
+        // Time in Networktables (where the position estimation time comes from) is recorded in FPGA time, 
+        // while the CTRE Swerve pose estimator uses current time, so we have to convert to current time here. 
+        // See https://www.chiefdelphi.com/t/ctre-swerve-addvisionmeasurment-having-no-effect/482024/5
+        chassis.addVisionMeasurement(pose, Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public Pose2d getPose() {
+        return chassis.getStateCopy().Pose;
     }
 
     /**
