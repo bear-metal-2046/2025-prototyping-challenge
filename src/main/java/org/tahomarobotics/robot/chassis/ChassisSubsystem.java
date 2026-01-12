@@ -82,24 +82,24 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
         super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
 
         simulation = Robot.isSimulation() ? new ChassisSimulation(getPigeon2(), getModules()) : null;
-        SmartDashboard.putNumber("Steer kP", 0);
-        SmartDashboard.putNumber("Steer kI", 0);
-        SmartDashboard.putNumber("Steer kD", 0);
-        SmartDashboard.putNumber("Steer kS", 0);
-        SmartDashboard.putNumber("Steer kV", 0);
-        SmartDashboard.putNumber("Steer kA", 0);
-        SmartDashboard.putData("Apply Steer PID", Commands.runOnce(
-            () -> {
-                Slot0Configs cfg = new Slot0Configs();
-                cfg.kP = SmartDashboard.getNumber("Steer kP", 0);
-                cfg.kI = SmartDashboard.getNumber("Steer kI", 0);
-                cfg.kD = SmartDashboard.getNumber("Steer kD", 0);
-                cfg.kS = SmartDashboard.getNumber("Steer kS", 0);
-                cfg.kV = SmartDashboard.getNumber("Steer kV", 0);
-                cfg.kA = SmartDashboard.getNumber("Steer kA", 0);
-                setSteerSlot0Configs(cfg);
-            }
-        ).ignoringDisable(true));
+        // SmartDashboard.putNumber("Steer kP", 0);
+        // SmartDashboard.putNumber("Steer kI", 0);
+        // SmartDashboard.putNumber("Steer kD", 0);
+        // SmartDashboard.putNumber("Steer kS", 0);
+        // SmartDashboard.putNumber("Steer kV", 0);
+        // SmartDashboard.putNumber("Steer kA", 0);
+        // SmartDashboard.putData("Apply Steer PID", Commands.runOnce(
+        //     () -> {
+        //         Slot0Configs cfg = new Slot0Configs();
+        //         cfg.kP = SmartDashboard.getNumber("Steer kP", 0);
+        //         cfg.kI = SmartDashboard.getNumber("Steer kI", 0);
+        //         cfg.kD = SmartDashboard.getNumber("Steer kD", 0);
+        //         cfg.kS = SmartDashboard.getNumber("Steer kS", 0);
+        //         cfg.kV = SmartDashboard.getNumber("Steer kV", 0);
+        //         cfg.kA = SmartDashboard.getNumber("Steer kA", 0);
+        //         setSteerSlot0Configs(cfg);
+        //     }
+        // ).ignoringDisable(true));
     }
 
     @Override
