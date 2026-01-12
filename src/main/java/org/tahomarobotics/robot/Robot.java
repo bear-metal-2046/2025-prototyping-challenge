@@ -40,13 +40,8 @@ public class Robot extends LoggedRobot {
 
     private final RobotContainer robotContainer;
 
-
-    private Robot() {
-        this(new RobotContainer());
-    }
-
-    Robot(RobotContainer robotContainer) {
-        this.robotContainer = robotContainer;
+    Robot() {
+        this.robotContainer = new RobotContainer();
        
         if (Robot.isSimulation()) {
             WatchDog.disableWatchdog(this);

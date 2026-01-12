@@ -23,38 +23,57 @@
  */
 package org.tahomarobotics.robot.chassis;
 
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import static org.tahomarobotics.robot.RobotMap.*;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+
 import org.littletonrobotics.junction.Logger;
 import org.tahomarobotics.robot.Robot;
+import org.tahomarobotics.robot.RobotMap.ModuleId;
 
 import static edu.wpi.first.units.Units.*;
 
 public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
+
+    private static final ModuleId[] MODULE_IDS = new ModuleId[] {
+            FRONT_LEFT_MODULE,
+            FRONT_RIGHT_MODULE,
+            BACK_LEFT_MODULE,
+            BACK_RIGHT_MODULE
+    };
 
     private final ChassisSimulation simulation;
     private boolean isOperatorPerspectiveApplied;
 
     public ChassisSubsystem() {
         this(TalonFX::new, TalonFX::new, CANcoder::new, ChassisConstants.DRIVETRAIN_CONSTANTS,
-                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : 195.64)),
-                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : -14.94)),
-                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : -19.07)),
-                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE, Degrees.of(Robot.isSimulation() ? 0d : -141.42)));
-        }
-            
+                ChassisConstants.getModuleConfig(FRONT_LEFT_MODULE),
+                ChassisConstants.getModuleConfig(FRONT_RIGHT_MODULE),
+                ChassisConstants.getModuleConfig(BACK_LEFT_MODULE),
+                ChassisConstants.getModuleConfig(BACK_RIGHT_MODULE));
+    }
+
     ChassisSubsystem(DeviceConstructor<TalonFX> driveMotorConstructor,
             DeviceConstructor<TalonFX> steerMotorConstructor,
             DeviceConstructor<CANcoder> encoderConstructor,
@@ -63,6 +82,24 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
         super(driveMotorConstructor, steerMotorConstructor, encoderConstructor, drivetrainConstants, modules);
 
         simulation = Robot.isSimulation() ? new ChassisSimulation(getPigeon2(), getModules()) : null;
+        // SmartDashboard.putNumber("Steer kP", 0);
+        // SmartDashboard.putNumber("Steer kI", 0);
+        // SmartDashboard.putNumber("Steer kD", 0);
+        // SmartDashboard.putNumber("Steer kS", 0);
+        // SmartDashboard.putNumber("Steer kV", 0);
+        // SmartDashboard.putNumber("Steer kA", 0);
+        // SmartDashboard.putData("Apply Steer PID", Commands.runOnce(
+        //     () -> {
+        //         Slot0Configs cfg = new Slot0Configs();
+        //         cfg.kP = SmartDashboard.getNumber("Steer kP", 0);
+        //         cfg.kI = SmartDashboard.getNumber("Steer kI", 0);
+        //         cfg.kD = SmartDashboard.getNumber("Steer kD", 0);
+        //         cfg.kS = SmartDashboard.getNumber("Steer kS", 0);
+        //         cfg.kV = SmartDashboard.getNumber("Steer kV", 0);
+        //         cfg.kA = SmartDashboard.getNumber("Steer kA", 0);
+        //         setSteerSlot0Configs(cfg);
+        //     }
+        // ).ignoringDisable(true));
     }
 
     @Override
@@ -96,4 +133,107 @@ public class ChassisSubsystem extends SwerveDrivetrain<TalonFX, TalonFX, CANcode
             simulation.setPose(pose);
         }
     }
+
+    Angle[] oldOffsets = new Angle[getModules().length];
+    private final static Angle[] ZERO_OFFSETS = new Angle[] {
+            Degrees.of(0.0),
+            Degrees.of(0.0),
+            Degrees.of(0.0),
+            Degrees.of(0.0)
+    };
+
+    public void initAlign() {
+        coast();
+        oldOffsets = getAndSetOffset(ZERO_OFFSETS);
+
+        System.out.println("Aligning Swerve Modules");
+        org.tinylog.Logger.info("Aligning Swerve Modules");
+    }
+
+    private void cancelAlign() {
+        brake();
+        for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
+            getAndSetOffset(oldOffsets);
+        }
+        org.tinylog.Logger.info("Cancelling Swerve Module ReAlignment");
+        System.out.println("Align Cancelled");
+        /*
+         * Restore offsets
+         * Reset coast
+         */
+    }
+
+    private void completeAlign() {
+        /*
+         * Get current angles and negate as new offsets
+         * Save new offsets in preferences
+         * Apply new offsets
+         * Reset coast
+         */
+        brake();
+        Angle[] newOffsets = new Angle[getModules().length];
+        for (var moduleNum = 0; moduleNum < getModules().length; moduleNum++) {
+            newOffsets[moduleNum] = getModule(moduleNum).getCurrentState().angle.getMeasure().unaryMinus();
+            Preferences.setDouble(ChassisConstants.getModuleOffKey(MODULE_IDS[moduleNum]),
+                    newOffsets[moduleNum].in(Degrees));
+        }
+        getAndSetOffset(newOffsets);
+        org.tinylog.Logger.info("Swerve Modules Aligned");
+        System.out.println("Swerve Modules Aligned");
+    }
+
+    public Consumer<Boolean> finishAlign() {
+        return (canceled) -> {
+            if (canceled) {
+                cancelAlign();
+            } else {
+                completeAlign();
+            }
+        };
+    }
+
+    public void coast() {
+        for (var module = 0; module < getModules().length; module++) {
+            getModule(module).getSteerMotor().setNeutralMode(NeutralModeValue.Coast);
+        }
+    }
+
+    public void brake() {
+        for (var module = 0; module < getModules().length; module++) {
+            getModule(module).getSteerMotor().setNeutralMode(NeutralModeValue.Brake);
+        }
+    }
+
+    public Angle[] getAndSetOffset(Angle[] newOffsets) {
+        MagnetSensorConfigs cfg = new MagnetSensorConfigs();
+        int moduleCount = getModules().length;
+        Angle[] offsets = new Angle[moduleCount];
+        for (var moduleNum = 0; moduleNum < moduleCount; moduleNum++) {
+            var configurator = getModule(moduleNum).getEncoder().getConfigurator();
+            // read current offset
+            configurator.refresh(cfg);
+            offsets[moduleNum] = cfg.getMagnetOffsetMeasure();
+            // set new offset
+            cfg.withMagnetOffset(newOffsets[moduleNum]);
+            configurator.apply(cfg);
+
+        }
+        return offsets;
+    }
+
+    public void setSteerSlot0Configs(Slot0Configs cfg) {
+        for (SwerveModule<TalonFX, TalonFX, CANcoder> module : getModules()) {
+            module.getSteerMotor().getConfigurator().apply(cfg);
+        }
+    }
+
+    // modules encoder config refresh
+    //
+    //
+    // public void newOffsets() {
+    // for (var module : getModules()) {
+    // Preferences.setDouble(module+ "Offset",
+    // module.getCurrentState().angle.getDegrees() * -1);
+    //
+    // }
 }

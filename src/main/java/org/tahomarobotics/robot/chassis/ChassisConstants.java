@@ -40,11 +40,14 @@ import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Voltage;
 import java.util.Map;
+import edu.wpi.first.wpilibj.Preferences;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.tahomarobotics.robot.Robot;
 import org.tahomarobotics.robot.RobotMap.ModuleId;
+import org.tinylog.Logger;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import static edu.wpi.first.units.Units.*;
 import static org.tahomarobotics.robot.RobotMap.*;
@@ -99,11 +102,11 @@ public class ChassisConstants {
         private static final Current DRIVE_SLIP_CURRENT = Amps.of(120.0);
 
         private static final Slot0Configs STEER_GAINS = new Slot0Configs()
-                        .withKP(100)
+                        .withKP(120)
                         .withKI(0)
-                        .withKD(0.5)
-                        .withKS(0.1)
-                        .withKV(1.59)
+                        .withKD(0)
+                        .withKS(0)
+                        .withKV(0)
                         .withKA(0)
                         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
@@ -144,8 +147,7 @@ public class ChassisConstants {
                         BACK_LEFT_MODULE, HALF_TRACK_WIDTH,
                         BACK_RIGHT_MODULE, HALF_TRACK_WIDTH.unaryMinus());
 
-        public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(
-                        ModuleId moduleId, Angle steerOffset) {
+        private static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId, Angle steerOffset) {
 
                 var swerveModuleConfig = MODULE_CONSTANTS_FACTORY.createModuleConstants(moduleId.steerId(),
                                 moduleId.driveId(),
@@ -170,6 +172,19 @@ public class ChassisConstants {
 
                 return swerveModuleConfig;
         }
+
+        public static final String getModuleOffKey(ModuleId id) {
+                return "Chassis/Modules/" + id.moduleName() + "_Offset";
+        }
+
+        public static SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getModuleConfig(ModuleId moduleId) {
+            if (!Preferences.containsKey(getModuleOffKey(moduleId))) {
+                Logger.warn("Module " + moduleId.moduleName() + " offset not defined, setting to 0");
+            }
+            return getModuleConfig(moduleId, Degrees.of(Preferences.getDouble(getModuleOffKey(moduleId), 0.0)));
+        }
+
+
 
         // ---------------------------------------------------------------------------------------
         // simulation defined constants and configuration

@@ -39,6 +39,8 @@ import org.tahomarobotics.robot.vision.Limelight.EstimatedRobotPose;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -71,9 +73,20 @@ public class Chassis implements AutoCloseable {
 
     }
 
+    public Command alignSwerves(Trigger complete) {
+        return new FunctionalCommand(
+                chassis::initAlign,
+                () -> {},
+                chassis.finishAlign(),
+                complete,
+                chassis)
+            .ignoringDisable(true);
+    }
+
     public void close() {
         chassis.close();
     }
+
 
     public ChassisSimulation getSimulation() {
         return chassis.getSimulation();
